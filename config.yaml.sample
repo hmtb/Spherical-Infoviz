@@ -1,0 +1,70 @@
+participantID: "p04"
+
+################################################################################
+# Pilot study setup:
+# 4 phases, total 360s = 6 minutes per condition
+# Within subject, 3 conditions:
+################################################################################
+
+# Step 1: Tutorial in unstricted mode:
+# condition: "unstricted"
+# randomizePhases: [ "Training" ]
+
+
+# Step 2: Randomly shuffle the conditions:
+
+randomizePhases: [ "Setting0", "Setting1", "Setting2", "Setting3" ]
+# condition: "totally-blocked"
+condition: "indicate-border"
+# condition: "hololens"
+
+
+scene: "gotocafe"
+
+phases:
+  - name: "Training"
+    duration: 60
+    spawnInterval: null
+    life: null
+    minimumNumberOfObjects: 3
+
+    # Target never disappear, 3 at a time (Myungho's first pilot)
+  - name: "Setting0"
+    duration: 90
+    spawnInterval: null
+    life: null
+    minimumNumberOfObjects: 3
+
+    # One at a time, short lived targets
+  - name: "Setting1"
+    duration: 90
+    
+    spawnInterval: null
+    life: [ 3, 5 ]
+    minimumNumberOfObjects: 1
+  
+    # Max 3 at a time, long lived targets
+  - name: "Setting2"
+    duration: 90
+    
+    spawnInterval: [ 4, 6 ]
+    life: [ 6, 12 ]
+    minimumNumberOfObjects: 1
+
+    # Max 8 at a time, long lived targets
+  - name: "Setting3"
+    duration: 90
+    
+    spawnInterval: [ 2, 3 ]
+    life: [ 10, 16 ]
+    minimumNumberOfObjects: 1
+
+################################################################################
+## SCRATCH
+################################################################################
+
+# condition: "unrestricted"
+
+
+# scene: "visitors-center"
+# scene: "cs-conference-room"

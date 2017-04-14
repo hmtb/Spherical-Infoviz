@@ -1,0 +1,7 @@
+OpenVR: true
+
+broadcasting:
+    renderer:
+        sub: tcp://127.0.0.1:7000
+    simulator:
+        pub: tcp://127.0.0.1:7000

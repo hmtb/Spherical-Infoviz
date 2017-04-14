@@ -1,0 +1,30 @@
+{
+  "name": "@foureyes/hololens-fov-study",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "allofw-run dist/app.js",
+    "participant": "node dist/makeParticipant.js",
+    "build": "tsc -p src",
+    "watch": "tsc -p src -w"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "allofw": "0.0.8",
+    "allofw-utils": "0.0.8",
+    "av": "^0.4.9",
+    "js-yaml": "^3.8.1",
+    "node-hid": "^0.5.4",
+    "speaker": "^0.3.0",
+    "web-audio-api": "^0.2.2",
+    "zmq": "^2.15.3"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^3.5.29",
+    "@types/node": "^7.0.5",
+    "@types/zmq": "0.0.20",
+    "typescript": "^2.1.6"
+  }
+}
