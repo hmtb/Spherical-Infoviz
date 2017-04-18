@@ -64,7 +64,7 @@ export class StudyScene {
 
         this.config = yaml.load(fs.readFileSync("config.yaml", "utf-8")) as IConfig;
 
-        this.logger = new Logger(`logs/${this.config.participantID}.${this.config.condition}.log`, true);
+     //   this.logger = new Logger(`logs/${this.config.participantID}.${this.config.condition}.log`, true);
 
         switch (this.config.scene) {
             case "world": {
