@@ -3,7 +3,7 @@ import * as zmq from "zmq";
 import * as yaml from "js-yaml";
 import * as repl from "repl";
 
-import { GL3 as GL } from "allofw";
+import { GL3 as GL } from "http://localhost:10800/";
 import { IRendererRuntime, WindowNavigation, Vector3, Quaternion, Pose, ISimulatorRuntime } from "allofw-utils";
 
 import { SceneObject, OBJMeshObject, Matterport3DModel, FOVBlockerObject } from "./objects/objects";
