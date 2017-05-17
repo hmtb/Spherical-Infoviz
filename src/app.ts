@@ -3,7 +3,7 @@ import * as zmq from "zmq";
 import * as yaml from "js-yaml";
 import * as repl from "repl";
 
-import { GL3 as GL } from "allofw";
+import { GL3 as GL } from "allofw"; //http://localhost:10800/
 import { IRendererRuntime, WindowNavigation, Vector3, Quaternion, Pose, ISimulatorRuntime } from "allofw-utils";
 
 import { SceneObject, OBJMeshObject, Matterport3DModel, FOVBlockerObject } from "./objects/objects";
@@ -13,6 +13,8 @@ import { PlantsSmoke } from "./objects/smoke";
 
 // Import utility functions
 import { randomRange, slerp, slerpDistance } from "./utils";
+
+import { PlanetSteam } from "./objects/steam";
 
 // The schema of the "config.yaml" file
 export interface IConfig {
@@ -55,6 +57,7 @@ export class StudyScene {
 
 
     private smoke: any;
+    private steam: PlanetSteam;
 
     private time: number;
 
@@ -83,7 +86,9 @@ export class StudyScene {
             this.nav.setPosition(new Vector3(0, 1.60, 0));
         }
 
-        this.smoke = PlantsSmoke(app.omni);
+        // this.smoke = PlantsSmoke(app.omni);
+
+        this.steam = new PlanetSteam(app.window, app.omni);
 
         this.time = 0;
 
@@ -109,7 +114,10 @@ export class StudyScene {
             this.headPose = this.nav.pose;
         }
 
-        this.smoke.setTime(this.time, 0);
+        // this.smoke.setTime(this.time, 0);
+
+        this.steam.setTime(this.time);
+        this.steam.frame();
         this.world.frame();
     }
 
@@ -124,7 +132,9 @@ export class StudyScene {
 
         this.world.render();
 
-        this.smoke.render();
+        // this.smoke.render();
+
+        this.steam.render();
 
         GL.disable(GL.BLEND);
     }
