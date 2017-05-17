@@ -4,17 +4,10 @@ import * as allofw from "allofw";
 import * as allofwutils from "allofw-utils";
 import { GL3 as GL } from "allofw";
 import { SceneObject } from "./object";
-import { SteamParticleObject } from "../utils/steamParticles";
 var shape3d = require("allofw-shape3d");
-// var Stardust = require("stardust-core");
-// var StardustWebGL = require("stardust-webgl");
 
 import * as Stardust from "stardust-core";
 import * as StardustAllofw from "stardust-allofw";
-
-shape3d.particles = function () {
-    return new (SteamParticleObject as any)();
-};
 
 
 
