@@ -118,7 +118,7 @@ export class PlanetSteam extends SceneObject {
 
 
         //get csv data
-        this.data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/plants_data_50.csv", "utf-8"));
+        this.data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry2009Top50.csv", "utf-8"));
 
         this.dataBuffer = [];
         for (let item of this.data) {
@@ -128,6 +128,7 @@ export class PlanetSteam extends SceneObject {
                     lat: item.lat,
                     random: Math.random(),
                     random2: Math.random(),
+
                     spanTime: i
                 })
             }
@@ -154,13 +155,13 @@ export class PlanetSteam extends SceneObject {
             .attr("vec3", "up", "vec3(0, 1, 0)")
             .attr("vec3", "normal", "-normalize(pos)")
             .attr("float", "scale", "0.0005 * len")
-            .text((d: any) => (d.val))
+            .text((d: any) => (d.Country))
             // Variables are bound to data.
             .variable("vec3", "pos", (d: any) => [
                 Math.sin(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180),
                 Math.sin(d.lat * Math.PI / 180),
                 Math.cos(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180)])
-            .variable("float", "len", (d: any) => (maxlen * d.val / maxval))
+            .variable("float", "len", (d: any) => (maxlen * d.Country / maxval))
             .compile(omni)
             .data(this.data);
         this.texts = texts;
