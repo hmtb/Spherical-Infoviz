@@ -1,4 +1,4 @@
-Country,ISO country code,lat,lon,val
+id,name,lat,lon,val
 China,CN,35.86166,104.195397,7710.5
 United States,US,37.09024,-95.712891,5424.53
 India,IN,20.593684,78.96288,1602.12

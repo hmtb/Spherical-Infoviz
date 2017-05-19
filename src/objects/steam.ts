@@ -34,6 +34,7 @@ export class PlanetSteam extends SceneObject {
     private dataBuffer: any[];
 
     private data: any;
+    private dataText: any;
     private timer: number;
     private cubeSpec: Stardust.Specification.Mark;
     private platform: StardustAllofw.AllofwPlatform3D;
@@ -48,7 +49,7 @@ export class PlanetSteam extends SceneObject {
 
             //create mark and extend the constructor with the values you need
 
-            mark Mark(lon: float, lat: float, random: float, t: float,spanTime: float, random2: float) {
+            mark Mark(lon: float, lat: float, random: float, t: float,spanTime: float, random2: float, speed: float) {
 
                 let duration = 60;
                 let size = 5;
@@ -118,17 +119,17 @@ export class PlanetSteam extends SceneObject {
 
 
         //get csv data
-        this.data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry2009Top50.csv", "utf-8"));
+        this.data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry2009.csv", "utf-8"));
 
         this.dataBuffer = [];
         for (let item of this.data) {
-            for (let i = 0; i < 60; i++) {
+            for (let i = 0; i < 200; i++) {
                 this.dataBuffer.push({
                     lon: item.lon,
                     lat: item.lat,
                     random: Math.random(),
                     random2: Math.random(),
-
+                    speed: i,
                     spanTime: i
                 })
             }
@@ -145,25 +146,25 @@ export class PlanetSteam extends SceneObject {
         this.cubes = cubes;
 
 
-
+        this.dataText = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry2009Top50.csv", "utf-8"));
         //text
         var maxlen = 4.0;
-        var maxval = 20000000;
+        var maxval = 1000; //13448000.13 //7710.5
         var texts = shape3d.texts()
             //    .attr("vec3", "center", "5.0 * normalize(pos)")
-            .attr("vec3", "center", "5.0 * normalize(pos)")
+            .attr("vec3", "center", "6.0 * normalize(pos)")
             .attr("vec3", "up", "vec3(0, 1, 0)")
             .attr("vec3", "normal", "-normalize(pos)")
             .attr("float", "scale", "0.0005 * len")
-            .text((d: any) => (d.Country))
+            .text((d: any) => (d.val))
             // Variables are bound to data.
             .variable("vec3", "pos", (d: any) => [
                 Math.sin(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180),
                 Math.sin(d.lat * Math.PI / 180),
                 Math.cos(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180)])
-            .variable("float", "len", (d: any) => (maxlen * d.Country / maxval))
+            .variable("float", "len", (d: any) => (maxlen * Math.pow(d.val / maxval, 0.5)))
             .compile(omni)
-            .data(this.data);
+            .data(this.dataText);
         this.texts = texts;
     }
 
@@ -182,7 +183,6 @@ export class PlanetSteam extends SceneObject {
 
         this.cubes.attr("t", this.time);
 
-        var test = this.cubes.data;
     }
 
 }
