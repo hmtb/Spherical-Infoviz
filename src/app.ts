@@ -67,7 +67,7 @@ export class StudyScene {
 
         this.config = yaml.load(fs.readFileSync("config.yaml", "utf-8")) as IConfig;
 
-     //   this.logger = new Logger(`logs/${this.config.participantID}.${this.config.condition}.log`, true);
+        //   this.logger = new Logger(`logs/${this.config.participantID}.${this.config.condition}.log`, true);
 
         switch (this.config.scene) {
             case "world": {
@@ -80,10 +80,11 @@ export class StudyScene {
         }
         if (this.isRunningInVR()) {
             this.app.window.setSwapInterval(0);
+            this.nav.setHomePosition(new Vector3(0, -targetHeight, 0));
+            this.nav.setPosition(new Vector3(0, -targetHeight, 0));
         } else {
             this.nav = new WindowNavigation(app.window, app.omni);
-            this.nav.setHomePosition(new Vector3(0, 1.60, 0));
-            this.nav.setPosition(new Vector3(0, 1.60, 0));
+
         }
 
         // this.smoke = PlantsSmoke(app.omni);

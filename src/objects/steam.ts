@@ -12,6 +12,7 @@ import * as StardustAllofw from "stardust-allofw";
 
 
 export class PlanetSteam extends SceneObject {
+
     private _program: GL.Program;
     private _vertexArray: GL.VertexArray;
     private _buffer: GL.Buffer;
@@ -30,43 +31,94 @@ export class PlanetSteam extends SceneObject {
     private texts: any;
     private time: number;
 
+    private dataBuffer: any[];
+
+    private data: any;
+    private timer: number;
+    private cubeSpec: Stardust.Specification.Mark;
+    private platform: StardustAllofw.AllofwPlatform3D;
+
     constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo) {
         super(omni)
-        let platform = new StardustAllofw.AllofwPlatform3D(window, omni);
-
-        let cubeSpec = Stardust.mark.compile(`
+        this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
+        this.timer = 0;
+        this.cubeSpec = Stardust.mark.compile(`
+            //import the object you wanna use see https://github.com/stardustjs/stardust-core/blob/master/src/core/library/primitives3d.ts
             import { Cube } from P3D;
 
-            mark Mark(lon: float, lat: float, random: float, t: float) {
+            //create mark and extend the constructor with the values you need
+
+            mark Mark(lon: float, lat: float, random: float, t: float,spanTime: float) {
+
+                let duration = 60;
+                let size = 5;
+                let cx = 0;
+                let cy = 0;
+                let cz = 0;
+                let progress = (t%duration) - spanTime;
+
+
+
+                 if(progress < 2){
+
+                    cx = (size-progress/4) * cos(lon + random * 0.2) * cos(lat + random * 0.2);
+                    cy = (size-progress/4) * sin(lat + random * 0.2);
+                    cz = (size-progress/4) * sin(lon + random * 0.2) * cos(lat + random * 0.2);
+
+                 } else if(progress < 16 ){
+
+                    cx = (size-progress/4)* cos( lon + (progress-2)/2 + random * 0.2) * cos(lat + random * 0.2);
+                    cy = (size-progress/4)* sin(lat + random * 0.2);
+                    cz = (size-progress/4) * sin(lon + (progress-2)/2 + random * 0.2) * cos(lat + random * 0.2); 
+
+                 } else {
+
+                    cx = 1 * cos( lon + (progress-2)/2 + random * 0.2) * cos(lat + random * 0.2);
+                    cy = 1 * sin(lat + random * 0.2);
+                    cz = 1 * sin(lon + (progress-2)/2 + random * 0.2) * cos(lat + random * 0.2); 
+                 }
+
+                // let cubeTime = t-spanTime;
+                // let size = 5;
                 // Calculate cx, cy, cz for the cube
-                let cx = 4 * cos(lon + t + random * 0.2) * cos(lat);
-                let cz = 4 * sin(lon + t + random * 0.2) * cos(lat);
-                let cy = 4 * sin(lat);
-                Cube(Vector3(cx, cy, cz), 0.05, Color(1, 1, 1, 0.1));
+
+               
+                 Cube(Vector3(cx, cy, cz), 0.01, Color(1, 1, 1, 0.2));
+
+
+
             }
         `)["Mark"];
 
-        let cubes = Stardust.mark.create(cubeSpec, platform);
 
-        var data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/plants_data_50.csv", "utf-8"));
-        let newData = [];
-        for (let item of data) {
-            for (let i = 0; i < 10; i++) {
-                newData.push({
+
+        //get csv data
+        this.data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/plants_data_50.csv", "utf-8"));
+
+        this.dataBuffer = [];
+        for (let item of this.data) {
+            for (let i = 0; i < 60; i++) {
+                this.dataBuffer.push({
                     lon: item.lon,
                     lat: item.lat,
-                    random: Math.random()
+                    random: Math.random(),
+                    spanTime: i
                 })
             }
-        }
 
+        }
+        let cubes = Stardust.mark.create(this.cubeSpec, this.platform);
         cubes.attr("lon", d => d.lon * Math.PI / 180);
         cubes.attr("lat", d => d.lat * Math.PI / 180);
         cubes.attr("random", d => d.random);
         cubes.attr("t", 0);
-        cubes.data(newData);
-
+        cubes.attr("spanTime", d => d.spanTime);
+        cubes.data(this.dataBuffer);
         this.cubes = cubes;
+
+
+
+        //text
         var maxlen = 4.0;
         var maxval = 20000000;
         var texts = shape3d.texts()
@@ -83,8 +135,7 @@ export class PlanetSteam extends SceneObject {
                 Math.cos(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180)])
             .variable("float", "len", (d: any) => (maxlen * d.val / maxval))
             .compile(omni)
-            .data(data);
-
+            .data(this.data);
         this.texts = texts;
     }
 
@@ -93,6 +144,7 @@ export class PlanetSteam extends SceneObject {
     }
 
     public render(): void {
+
         this.cubes.render();
         this.texts.render(this.omni);
     }
@@ -100,9 +152,8 @@ export class PlanetSteam extends SceneObject {
     public frame(): void {
 
         this.cubes.attr("t", this.time);
-        ///transformation function over time
 
-
+        var test = this.cubes.data;
     }
 
 }
