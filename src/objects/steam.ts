@@ -44,11 +44,11 @@ export class PlanetSteam extends SceneObject {
         this.timer = 0;
         this.cubeSpec = Stardust.mark.compile(`
             //import the object you wanna use see https://github.com/stardustjs/stardust-core/blob/master/src/core/library/primitives3d.ts
-            import { Cube } from P3D;
+            import { Triangle, Cube } from P3D;
 
             //create mark and extend the constructor with the values you need
 
-            mark Mark(lon: float, lat: float, random: float, t: float,spanTime: float) {
+            mark Mark(lon: float, lat: float, random: float, t: float,spanTime: float, random2: float) {
 
                 let duration = 60;
                 let size = 5;
@@ -58,32 +58,57 @@ export class PlanetSteam extends SceneObject {
                 let progress = (t%duration) - spanTime;
 
 
-
                  if(progress < 2){
-
-                    cx = (size-progress/4) * cos(lon + random * 0.2) * cos(lat + random * 0.2);
+                    cx = (size-progress/4) * sin(lon + random * 0.2) * cos(lat );
                     cy = (size-progress/4) * sin(lat + random * 0.2);
-                    cz = (size-progress/4) * sin(lon + random * 0.2) * cos(lat + random * 0.2);
-
+                    cz = (size-progress/4) * cos(lon + random * 0.2) * cos(lat );
                  } else if(progress < 16 ){
-
-                    cx = (size-progress/4)* cos( lon + (progress-2)/2 + random * 0.2) * cos(lat + random * 0.2);
-                    cy = (size-progress/4)* sin(lat + random * 0.2);
-                    cz = (size-progress/4) * sin(lon + (progress-2)/2 + random * 0.2) * cos(lat + random * 0.2); 
-
+                    cx = (size-progress/4)* sin( lon + (progress-2)/2 + random * 0.2) * cos(lat);
+                    cy = (size-progress/4)* sin(lat );
+                    cz = (size-progress/4) * cos(lon + (progress-2)/2 + random * 0.2) * cos(lat); 
                  } else {
-
-                    cx = 1 * cos( lon + (progress-2)/2 + random * 0.2) * cos(lat + random * 0.2);
-                    cy = 1 * sin(lat + random * 0.2);
-                    cz = 1 * sin(lon + (progress-2)/2 + random * 0.2) * cos(lat + random * 0.2); 
+                    cx = 1 * sin( lon + (progress-2)/2 + random * 0.2) * cos(lat);
+                    cy = 1 * sin(lat );
+                    cz = 1 * cos(lon + (progress-2)/2 + random * 0.2) * cos(lat); 
                  }
 
                 // let cubeTime = t-spanTime;
                 // let size = 5;
                 // Calculate cx, cy, cz for the cube
 
-               
-                 Cube(Vector3(cx, cy, cz), 0.01, Color(1, 1, 1, 0.2));
+                 
+                 let center = Vector3(cx, cy, cz);
+                 let normal = normalize(center);
+                 let up = Vector3(0, 1, 0);
+                 let scale = 0.1 + 0.05 * random2;
+                 let eX = normalize(cross(normal, up)) * scale;
+                 let eY = normalize(cross(normal, eX)) * scale;
+                 let alpha = 0.2;
+
+                 emit [
+                     { position: center, color: Color(1, 1, 1, alpha), normal: normal },
+                     { position: center + eX + eY, color: Color(1, 1, 1, 0), normal: normal },
+                     { position: center - eX + eY, color: Color(1, 1, 1, 0), normal: normal },
+
+                     { position: center, color: Color(1, 1, 1, alpha), normal: normal },
+                     { position: center - eX + eY, color: Color(1, 1, 1, 0), normal: normal },
+                     { position: center - eX - eY, color: Color(1, 1, 1, 0), normal: normal },
+
+                     { position: center, color: Color(1, 1, 1, alpha), normal: normal },
+                     { position: center - eX - eY, color: Color(1, 1, 1, 0), normal: normal },
+                     { position: center + eX - eY, color: Color(1, 1, 1, 0), normal: normal },
+
+                     { position: center, color: Color(1, 1, 1, alpha), normal: normal },
+                     { position: center + eX - eY, color: Color(1, 1, 1, 0), normal: normal },
+                     { position: center + eX + eY, color: Color(1, 1, 1, 0), normal: normal }
+                 ];
+
+                //  Triangle(
+                //      center + eX,
+                //      center - eX * 0.5 + eY * 0.86602540378,
+                //      center - eX * 0.5 - eY * 0.86602540378,
+                //      Color(1, 1, 1, 0.2)
+                // );
 
 
 
@@ -102,6 +127,7 @@ export class PlanetSteam extends SceneObject {
                     lon: item.lon,
                     lat: item.lat,
                     random: Math.random(),
+                    random2: Math.random(),
                     spanTime: i
                 })
             }
@@ -111,6 +137,7 @@ export class PlanetSteam extends SceneObject {
         cubes.attr("lon", d => d.lon * Math.PI / 180);
         cubes.attr("lat", d => d.lat * Math.PI / 180);
         cubes.attr("random", d => d.random);
+        cubes.attr("random2", d => d.random2);
         cubes.attr("t", 0);
         cubes.attr("spanTime", d => d.spanTime);
         cubes.data(this.dataBuffer);
@@ -144,9 +171,10 @@ export class PlanetSteam extends SceneObject {
     }
 
     public render(): void {
-
+        GL.disable(GL.DEPTH_TEST);
         this.cubes.render();
         this.texts.render(this.omni);
+        GL.enable(GL.DEPTH_TEST);
     }
 
     public frame(): void {

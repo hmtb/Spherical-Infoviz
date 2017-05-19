@@ -1,5 +1,5 @@
 0 info it worked if it ends with ok
-1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'run', 'start' ]
+1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'start' ]
 2 info using npm@3.10.10
 3 info using node@v6.10.0
 4 verbose run-script [ 'prestart', 'start', 'poststart' ]
@@ -25,7 +25,7 @@
 15 verbose pkgid @foureyes/hololens-fov-study@1.0.0
 16 verbose cwd /Users/martin/Documents/Spherical-InfoViz/SphericalInfoviz
 17 error Darwin 16.5.0
-18 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "run" "start"
+18 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "start"
 19 error node v6.10.0
 20 error npm  v3.10.10
 21 error code ELIFECYCLE
