@@ -173,10 +173,10 @@ export class PlanetSteam extends SceneObject {
     }
 
     public render(): void {
-        GL.disable(GL.DEPTH_TEST);
+        GL.depthMask(GL.FALSE);
         this.cubes.render();
-        this.texts.render(this.omni);
-        GL.enable(GL.DEPTH_TEST);
+     //   this.texts.render(this.omni);
+        GL.depthMask(GL.TRUE);
     }
 
     public frame(): void {

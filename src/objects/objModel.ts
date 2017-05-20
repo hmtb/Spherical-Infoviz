@@ -181,7 +181,7 @@ export class OBJMeshObject extends SceneObject {
 
     public render() {
         // GL.enable(GL.CULL_FACE);
-        // GL.cullFace(GL.BACK);
+        GL.cullFace(GL.BACK);
         GL.useProgram(this._program);
         this.omni.setUniforms(this._program.id());
         GL.bindVertexArray(this._vertexArray);

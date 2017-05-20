@@ -123,7 +123,7 @@ var FPlantsSmoke = function (omni: any) {
     // }
 
     // read in plant data from a CSV file
-    var data = require("d3").csvParse(require("fs").readFileSync("preprocessed/plants_data_50.csv", "utf-8"));
+    var data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/plants_data_50.csv", "utf-8"));
 
     var RNG_Uniform = function (a: any, b: any) {
         return Math.random() * (b - a) + a;

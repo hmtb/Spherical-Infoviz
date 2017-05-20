@@ -80,6 +80,7 @@ export class StudyScene {
         }
         if (this.isRunningInVR()) {
             this.app.window.setSwapInterval(0);
+            this.nav = new WindowNavigation(app.window, app.omni);
             this.nav.setHomePosition(new Vector3(0, -targetHeight, 0));
             this.nav.setPosition(new Vector3(0, -targetHeight, 0));
         } else {
@@ -87,7 +88,7 @@ export class StudyScene {
 
         }
 
-        // this.smoke = PlantsSmoke(app.omni);
+        //   this.smoke = PlantsSmoke(app.omni);
 
         this.steam = new PlanetSteam(app.window, app.omni);
 
@@ -110,12 +111,13 @@ export class StudyScene {
             let headPosition = new Vector3(p[0], p[1], p[2]);
             let headOrientation = new Quaternion(new Vector3(p[3], p[4], p[5]), p[6]).normalize();
             this.headPose = new Pose(headPosition, headOrientation);
+            this.nav.update();
         } else {
             this.nav.update();
             this.headPose = this.nav.pose;
         }
 
-        // this.smoke.setTime(this.time, 0);
+        //   this.smoke.setTime(this.time, 0);
 
         this.steam.setTime(this.time);
         this.steam.frame();
@@ -126,18 +128,23 @@ export class StudyScene {
     }
 
     public render() {
-        GL.clearColor(0.7, 0.7, 0.7, 1);
+        GL.clearColor(0, 0, 0, 1);
         GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
         GL.enable(GL.BLEND);
         GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
-
+        GL.enable(GL.DEPTH_TEST);
         this.world.render();
 
-        // this.smoke.render();
-
+        //  this.smoke.render();
         this.steam.render();
 
+        // console.log(GL.getError());
+
         GL.disable(GL.BLEND);
+
+        GL.activeTexture(GL.TEXTURE0);
+        GL.disable(GL.DEPTH_TEST);
+        GL.disable(GL.CULL_FACE);
     }
 }
 
