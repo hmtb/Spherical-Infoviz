@@ -160,18 +160,18 @@ export class Simulator {
             this.app.networking.broadcast("time", new Date().getTime() / 1000 - this.tStart);
         }, 5);
 
-        app.server.on("clickme", (param1: number) => {
-            this.tStart -= 10;
-            console.log("clickme", param1);
-        });
+        // app.server.on("clickme", (param1: number) => {
+        //     this.tStart -= 10;
+        //     console.log("clickme", param1);
+        // });
 
-        app.server.rpc("test", (a: number, b: number) => {
-            return a + b;
-        })
+        // app.server.rpc("test", (a: number, b: number) => {
+        //     return a + b;
+        // })
 
-        setInterval(() => {
-            app.server.broadcast("hello");
-        }, 1000);
+        // setInterval(() => {
+        //     app.server.broadcast("hello");
+        // }, 1000);
 
     }
 }
