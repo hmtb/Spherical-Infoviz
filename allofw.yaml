@@ -1,4 +1,12 @@
-OpenVR: true
+OpenVR: false
+
+omnistereo:
+    resolution: 2048
+    resolution_scale: 2
+    capture_method: per_projection
+    warpblend:
+        generate: perspective
+        generate_fov: 90
 
 broadcasting:
     renderer:

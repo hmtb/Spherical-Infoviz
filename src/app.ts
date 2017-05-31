@@ -29,9 +29,10 @@ export interface IConfig {
     randomizePhases: string[];
 }
 
-
+//variables for the study
 let currentID = 1;
 let targetHeight = 1.65;
+let duration = 60;
 
 export class StudyScene {
     private app: IRendererRuntime;
@@ -60,6 +61,7 @@ export class StudyScene {
     private steam: PlanetSteam;
 
     private time: number;
+    private visualisationTime: number;
 
 
     constructor(app: IRendererRuntime) {
@@ -150,19 +152,31 @@ export class StudyScene {
 
 export class Simulator {
     tStart: number;
+    isRunning: boolean;
     app: ISimulatorRuntime;
 
     constructor(app: ISimulatorRuntime) {
         this.app = app;
+        this.isRunning = false;
 
         this.tStart = new Date().getTime() / 1000;
         setInterval(() => {
-            this.app.networking.broadcast("time", new Date().getTime() / 1000 - this.tStart);
+            if (this.isRunning) {
+                this.app.networking.broadcast("time", (new Date().getTime() / 1000 - this.tStart));
+                console.log(new Date().getTime() / 1000 - this.tStart);
+            }
+
         }, 5);
 
-        app.server.on("clickme", (param1: number) => {
-            this.tStart -= 10;
-            console.log("clickme", param1);
+        app.server.on("start", () => {
+            this.tStart = new Date().getTime() / 1000;
+            this.isRunning = true;
+            console.log("start");
+        });
+        app.server.on("stop", () => {
+            this.isRunning = false;
+            this.app.networking.broadcast("time", 0);
+            console.log("stop");
         });
 
         app.server.rpc("test", (a: number, b: number) => {

@@ -49,59 +49,62 @@ export class PlanetSteam extends SceneObject {
 
             //create mark and extend the constructor with the values you need
 
-            mark Mark(lon: float, lat: float, random: float, t: float,spanTime: float, random2: float, speed: float) {
+            mark Mark(lon: float, lat: float, random: float, t: float,speed: float) {
 
+                //static variables
                 let duration = 60;
-                let size = 5;
-                let cx = 0;
-                let cy = 0;
-                let cz = 0;
-                let progress = (t%duration) - spanTime;
+                let size = 6;
+
+                
+                // all start at one point a bit randomised
+                let cx = size *  sin(lon * PI/-180) * cos(lat * PI/180);
+                let cy = size *  sin(lat  * PI/180);
+                let cz = size *  cos(lon * PI/-180) * cos(lat * PI/180);
 
 
-                 if(progress < 2){
-                    cx = (size-progress/4) * sin(lon + random * 0.2) * cos(lat );
-                    cy = (size-progress/4) * sin(lat + random * 0.2);
-                    cz = (size-progress/4) * cos(lon + random * 0.2) * cos(lat );
-                 } else if(progress < 16 ){
-                    cx = (size-progress/4)* sin( lon + (progress-2)/2 + random * 0.2) * cos(lat);
-                    cy = (size-progress/4)* sin(lat );
-                    cz = (size-progress/4) * cos(lon + (progress-2)/2 + random * 0.2) * cos(lat); 
-                 } else {
-                    cx = 1 * sin( lon + (progress-2)/2 + random * 0.2) * cos(lat);
-                    cy = 1 * sin(lat );
-                    cz = 1 * cos(lon + (progress-2)/2 + random * 0.2) * cos(lat); 
-                 }
+                //  if(progress < 2){
+                //     cx = (size-progress/4) * sin(lon + random * 0.2) * cos(lat );
+                //     cy = (size-progress/4) * sin(lat + random * 0.2);
+                //     cz = (size-progress/4) * cos(lon + random * 0.2) * cos(lat );
+                //  } else if(progress < 16 ){
+                //     cx = (size-progress/4)* sin( lon + (progress-2)/2 + random * 0.2) * cos(lat);
+                //     cy = (size-progress/4)* sin(lat );
+                //     cz = (size-progress/4) * cos(lon + (progress-2)/2 + random * 0.2) * cos(lat); 
+                //  } else {
+                //     cx = 1 * sin( lon + (progress-2)/2 + random * 0.2) * cos(lat);
+                //     cy = 1 * sin(lat );
+                //     cz = 1 * cos(lon + (progress-2)/2 + random * 0.2) * cos(lat); 
+                //  }
 
-                // let cubeTime = t-spanTime;
-                // let size = 5;
-                // Calculate cx, cy, cz for the cube
+               
 
                  
                  let center = Vector3(cx, cy, cz);
                  let normal = normalize(center);
                  let up = Vector3(0, 1, 0);
-                 let scale = 0.1 + 0.05 * random2;
+                 let scale = 0.1 + 0.05 * random;
                  let eX = normalize(cross(normal, up)) * scale;
                  let eY = normalize(cross(normal, eX)) * scale;
                  let alpha = 0.2;
+                 let colorCenter = Color(1,0,0,alpha);
+                 let colorEdge = Color(1,0,0,0);
 
                  emit [
-                     { position: center, color: Color(1, 1, 1, alpha), normal: normal },
-                     { position: center + eX + eY, color: Color(1, 1, 1, 0), normal: normal },
-                     { position: center - eX + eY, color: Color(1, 1, 1, 0), normal: normal },
+                     { position: center, color: colorCenter, normal: normal },
+                     { position: center + eX + eY, color: colorEdge, normal: normal },
+                     { position: center - eX + eY, color: colorEdge, normal: normal },
 
-                     { position: center, color: Color(1, 1, 1, alpha), normal: normal },
-                     { position: center - eX + eY, color: Color(1, 1, 1, 0), normal: normal },
-                     { position: center - eX - eY, color: Color(1, 1, 1, 0), normal: normal },
+                     { position: center, color: colorCenter, normal: normal },
+                     { position: center - eX + eY, color: colorEdge, normal: normal },
+                     { position: center - eX - eY, color: colorEdge, normal: normal },
 
-                     { position: center, color: Color(1, 1, 1, alpha), normal: normal },
-                     { position: center - eX - eY, color: Color(1, 1, 1, 0), normal: normal },
-                     { position: center + eX - eY, color: Color(1, 1, 1, 0), normal: normal },
+                     { position: center, color: colorCenter, normal: normal },
+                     { position: center - eX - eY, color: colorEdge, normal: normal },
+                     { position: center + eX - eY, color: colorEdge, normal: normal },
 
-                     { position: center, color: Color(1, 1, 1, alpha), normal: normal },
-                     { position: center + eX - eY, color: Color(1, 1, 1, 0), normal: normal },
-                     { position: center + eX + eY, color: Color(1, 1, 1, 0), normal: normal }
+                     { position: center, color: colorCenter, normal: normal },
+                     { position: center + eX - eY, color: colorEdge, normal: normal },
+                     { position: center + eX + eY, color: colorEdge, normal: normal }
                  ];
 
                 //  Triangle(
@@ -119,29 +122,24 @@ export class PlanetSteam extends SceneObject {
 
 
         //get csv data
-        this.data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry2009.csv", "utf-8"));
+        this.data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry2009Top50.csv", "utf-8"));
 
         this.dataBuffer = [];
         for (let item of this.data) {
-            for (let i = 0; i < 200; i++) {
-                this.dataBuffer.push({
-                    lon: item.lon,
-                    lat: item.lat,
-                    random: Math.random(),
-                    random2: Math.random(),
-                    speed: i,
-                    spanTime: i
-                })
-            }
 
+            this.dataBuffer.push({
+                lon: item.lon,
+                lat: item.lat,
+                random: Math.random(),
+                speed: Math.random() * 10
+            })
         }
         let cubes = Stardust.mark.create(this.cubeSpec, this.platform);
-        cubes.attr("lon", d => d.lon * Math.PI / 180);
-        cubes.attr("lat", d => d.lat * Math.PI / 180);
+        cubes.attr("lon", d => d.lon);
+        cubes.attr("lat", d => d.lat);
         cubes.attr("random", d => d.random);
-        cubes.attr("random2", d => d.random2);
         cubes.attr("t", 0);
-        cubes.attr("spanTime", d => d.spanTime);
+        cubes.attr("speed", d => d.speed);
         cubes.data(this.dataBuffer);
         this.cubes = cubes;
 
