@@ -1,8 +1,18 @@
 OpenVR: false
 
+<<<<<<< HEAD
 omnistereo:
     resolution: 2048
     resolution_scale: 2
+=======
+# http:
+#     port: 10800
+#     static: "static"
+
+omnistereo:
+    resolution: 2048
+    resolution_scale: 1
+>>>>>>> 6ed24ff0ad39da58c65fea1b08f99105f50b46ad
     capture_method: per_projection
     warpblend:
         generate: perspective
@@ -13,7 +23,3 @@ broadcasting:
         sub: tcp://127.0.0.1:7000
     simulator:
         pub: tcp://127.0.0.1:7000
-
-http:
-    port: 8080
-    static: static

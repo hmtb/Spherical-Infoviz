@@ -21,7 +21,8 @@
     "node-hid": "^0.5.4",
     "speaker": "^0.3.0",
     "web-audio-api": "^0.2.2",
-    "zmq": "^2.15.3"
+    "zmq": "^2.15.3",
+    "d3": "3.5.0"
   },
   "devDependencies": {
     "@types/js-yaml": "^3.5.29",
