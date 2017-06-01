@@ -163,7 +163,6 @@ export class Simulator {
         setInterval(() => {
             if (this.isRunning) {
                 this.app.networking.broadcast("time", (new Date().getTime() / 1000 - this.tStart));
-                console.log(new Date().getTime() / 1000 - this.tStart);
             }
 
         }, 5);

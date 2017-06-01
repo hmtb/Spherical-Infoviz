@@ -52,29 +52,36 @@ export class PlanetSteam extends SceneObject {
             mark Mark(lon: float, lat: float, random: float, t: float,speed: float) {
 
                 //static variables
-                let duration = 60;
+                let duration = 100;
                 let size = 6;
 
                 
                 // all start at one point a bit randomised
-                let cx = size *  sin(lon * PI/-180) * cos(lat * PI/180);
+                let cx = size *  sin(lon * PI/-180) * cos(lat * PI/180 );
                 let cy = size *  sin(lat  * PI/180);
-                let cz = size *  cos(lon * PI/-180) * cos(lat * PI/180);
+                let cz = size *  cos(lon * PI/-180) * cos(lat * PI/180 );
 
 
-                //  if(progress < 2){
-                //     cx = (size-progress/4) * sin(lon + random * 0.2) * cos(lat );
-                //     cy = (size-progress/4) * sin(lat + random * 0.2);
-                //     cz = (size-progress/4) * cos(lon + random * 0.2) * cos(lat );
-                //  } else if(progress < 16 ){
-                //     cx = (size-progress/4)* sin( lon + (progress-2)/2 + random * 0.2) * cos(lat);
-                //     cy = (size-progress/4)* sin(lat );
-                //     cz = (size-progress/4) * cos(lon + (progress-2)/2 + random * 0.2) * cos(lat); 
-                //  } else {
-                //     cx = 1 * sin( lon + (progress-2)/2 + random * 0.2) * cos(lat);
-                //     cy = 1 * sin(lat );
-                //     cz = 1 * cos(lon + (progress-2)/2 + random * 0.2) * cos(lat); 
-                //  }
+                //depending on t and speed the particle mooves on in the sphere
+                let progress = (t*speed)%duration;
+
+                    //  cx = (size-progress/4) *  sin(lon * PI/-180) * cos(lat * PI/180 );
+                    // cy = (size-progress/4) *  sin(lat  * PI/180);
+                    // cz = (size-progress/4) *  cos(lon * PI/-180) * cos(lat * PI/180 );
+
+                 if(progress < 2){
+                    cx = (size-progress/4) *  sin(lon * PI/-180) * cos(lat * PI/180 );
+                    cy = (size-progress/4) *  sin(lat  * PI/180);
+                    cz = (size-progress/4) *  cos(lon * PI/-180) * cos(lat * PI/180 );
+                 } else if(progress < 20 ){
+                    cx = (size-progress/4)* sin(lon* PI/-180 + (progress-2)/20 ) * cos(lat * PI/180);
+                    cy = (size-progress/4)* sin(lat  * PI/180);
+                    cz = (size-progress/4) * cos(lon * PI/180 + (progress-2)/20 ) * cos(lat * PI/180); 
+                 } else {
+                    cx = (1-progress/40)  * sin( lon* PI/-180 + (progress-2)/20 ) * cos(lat * PI/180 );
+                    cy = (1-progress/40)  * sin(lat   * PI/180);
+                    cz = (1-progress/40)  * cos(lon   * PI/180 + (progress-2)/20 ) * cos(lat * PI/180); 
+                 }
 
                
 
@@ -82,7 +89,7 @@ export class PlanetSteam extends SceneObject {
                  let center = Vector3(cx, cy, cz);
                  let normal = normalize(center);
                  let up = Vector3(0, 1, 0);
-                 let scale = 0.1 + 0.05 * random;
+                 let scale = 0.01 + 0.05 * random;
                  let eX = normalize(cross(normal, up)) * scale;
                  let eY = normalize(cross(normal, eX)) * scale;
                  let alpha = 0.2;
@@ -126,13 +133,17 @@ export class PlanetSteam extends SceneObject {
 
         this.dataBuffer = [];
         for (let item of this.data) {
-
-            this.dataBuffer.push({
-                lon: item.lon,
-                lat: item.lat,
-                random: Math.random(),
-                speed: Math.random() * 10
-            })
+            for (let i = 0; i < item.val; i++) {
+                let ilon: number = item.lon - ((Math.random() - 0.5) * item.val / 1000);
+                let ilat: number = item.lat - ((Math.random() - 0.5) * item.val / 1000);
+                console.log(ilon)
+                this.dataBuffer.push({
+                    lon: ilon,
+                    lat: ilat,
+                    random: Math.random(),
+                    speed: Math.random() * 10
+                })
+            }
         }
         let cubes = Stardust.mark.create(this.cubeSpec, this.platform);
         cubes.attr("lon", d => d.lon);
