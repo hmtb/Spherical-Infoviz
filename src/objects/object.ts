@@ -27,4 +27,9 @@ export class SceneObject {
 
     public frame(): void {
     }
+
+    public setTime(t: number): void {
+    }
+    public setYear(t: number): void {
+    }
 }

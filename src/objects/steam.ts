@@ -30,6 +30,7 @@ export class PlanetSteam extends SceneObject {
     private cubes: Stardust.Mark;
     private texts: any;
     private time: number;
+    private currentYear: number;
 
     private dataBuffer: any[];
 
@@ -39,7 +40,7 @@ export class PlanetSteam extends SceneObject {
     private cubeSpec: Stardust.Specification.Mark;
     private platform: StardustAllofw.AllofwPlatform3D;
 
-    constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo) {
+    constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, data: any) {
         super(omni)
         this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
         this.timer = 0;
@@ -49,7 +50,12 @@ export class PlanetSteam extends SceneObject {
 
             //create mark and extend the constructor with the values you need
 
-            mark Mark(lon: float, lat: float, random: float, t: float,speed: float) {
+            mark Mark(lon: float, lat: float, random: float, t: float,speed: float,year:float,currentYear:float) {
+              
+            
+
+
+                if(year == currentYear){
 
                 //static variables
                 let duration = 100;
@@ -60,8 +66,6 @@ export class PlanetSteam extends SceneObject {
                 let cx = size *  sin(lon * PI/-180) * cos(lat * PI/180 );
                 let cy = size *  sin(lat  * PI/180);
                 let cz = size *  cos(lon * PI/-180) * cos(lat * PI/180 );
-
-
                 //depending on t and speed the particle mooves on in the sphere
                 let progress = (t*speed)%duration;
 
@@ -120,29 +124,30 @@ export class PlanetSteam extends SceneObject {
                 //      center - eX * 0.5 - eY * 0.86602540378,
                 //      Color(1, 1, 1, 0.2)
                 // );
-
-
-
             }
+}
         `)["Mark"];
 
 
 
-        //get csv data
-        this.data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry2009Top50.csv", "utf-8"));
+
 
         this.dataBuffer = [];
-        for (let item of this.data) {
-            for (let i = 0; i < item.val; i++) {
-                let ilon: number = item.lon - ((Math.random() - 0.5) * item.val / 1000);
-                let ilat: number = item.lat - ((Math.random() - 0.5) * item.val / 1000);
-                console.log(ilon)
-                this.dataBuffer.push({
-                    lon: ilon,
-                    lat: ilat,
-                    random: Math.random(),
-                    speed: Math.random() * 10
-                })
+        for (let item of data) {
+            for (let i = 1980; i < 2010; i++) {
+                let value: number = item[i.toString()];
+                for (let y = 0; y < value; y++) {
+
+                    let ilon: number = item.lon - ((Math.random() - 0.5));
+                    let ilat: number = item.lat - ((Math.random() - 0.5));
+                    this.dataBuffer.push({
+                        lon: ilon,
+                        lat: ilat,
+                        random: Math.random(),
+                        speed: Math.random() * 10,
+                        year: i
+                    })
+                }
             }
         }
         let cubes = Stardust.mark.create(this.cubeSpec, this.platform);
@@ -151,7 +156,10 @@ export class PlanetSteam extends SceneObject {
         cubes.attr("random", d => d.random);
         cubes.attr("t", 0);
         cubes.attr("speed", d => d.speed);
+        cubes.attr("year", d => d.year);
+        cubes.attr("currentYear", 1990)
         cubes.data(this.dataBuffer);
+        // console.log(this.dataBuffer);
         this.cubes = cubes;
 
 
@@ -180,6 +188,10 @@ export class PlanetSteam extends SceneObject {
     public setTime(t: number) {
         this.time = t;
     }
+    public setYear(y: number) {
+        this.currentYear = y;
+        // console.log('setcurrentyear', y)
+    }
 
     public render(): void {
         GL.depthMask(GL.FALSE);
@@ -191,6 +203,8 @@ export class PlanetSteam extends SceneObject {
     public frame(): void {
 
         this.cubes.attr("t", this.time);
+
+        this.cubes.attr("currentYear", this.currentYear);
 
     }
 
