@@ -133,6 +133,7 @@ export class PlanetSteam extends SceneObject {
 
 
         this.dataBuffer = [];
+        this.dataText = [];
         for (let item of data) {
             for (let i = 1980; i < 2010; i++) {
                 let value: number = item[i.toString()];
@@ -148,6 +149,17 @@ export class PlanetSteam extends SceneObject {
                         year: i
                     })
                 }
+                let ilon: number = item.lon - ((Math.random() - 0.5));
+                let ilat: number = item.lat - ((Math.random() - 0.5));
+                this.dataText.push({
+                    lon: ilon,
+                    lat: ilat,
+                    random: Math.random(),
+                    speed: Math.random() * 10,
+                    year: i,
+                    val: value
+
+                })
             }
         }
         let cubes = Stardust.mark.create(this.cubeSpec, this.platform);

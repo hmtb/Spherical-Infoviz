@@ -73,8 +73,7 @@ export class StudyScene {
         this.world = new OBJMeshObject(app.omni, "./3DModels/earth/earth.obj", { flipX: true });
         this.world.pose.position = new Vector3(0, 0, 0);
         this.world.pose.scale = 0.02;
-        this.currentYear = 1990;
-
+        this.currentYear = 1980;
 
         if (this.isRunningInVR()) {
             this.app.window.setSwapInterval(0);
@@ -104,11 +103,7 @@ export class StudyScene {
             this.currentVisualisation = null;
             this.data = null;
         });
-
-
-
     }
-
     public loadVisualisation(city: number, modality: string) {
         if (modality == 'immense') {
             switch (city) {
