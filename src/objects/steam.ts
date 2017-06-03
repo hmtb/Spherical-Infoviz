@@ -175,10 +175,36 @@ export class PlanetSteam extends SceneObject {
         this.cubes = cubes;
 
 
-        this.dataText = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry2009Top50.csv", "utf-8"));
-        //text
+
+    }
+
+    public setTime(t: number) {
+        this.time = t;
+    }
+
+    public setYear(y: number) {
+        if (y == this.currentYear) return;
+        this.currentYear = y;
+        this.updateText(y);
+    }
+
+    private updateText(year: number) {
+
         var maxlen = 4.0;
-        var maxval = 1000; //13448000.13 //7710.5
+        var maxval = 1000.00; //13448000.13 //7710.5
+
+
+        let currentTextData = [];
+        for (let item of this.dataText) {
+            if (item.year == year && item.val != undefined) {
+                currentTextData.push(item);
+                if (item.val > maxval) {
+                    maxval = Math.round(item.val);
+                }
+            }
+        }
+        console.log(maxval);
+
         var texts = shape3d.texts()
             //    .attr("vec3", "center", "5.0 * normalize(pos)")
             .attr("vec3", "center", "6.0 * normalize(pos)")
@@ -191,18 +217,10 @@ export class PlanetSteam extends SceneObject {
                 Math.sin(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180),
                 Math.sin(d.lat * Math.PI / 180),
                 Math.cos(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180)])
-            .variable("float", "len", (d: any) => (maxlen * Math.pow(d.val / maxval, 0.5)))
-            .compile(omni)
-            .data(this.dataText);
+            .variable("float", "len", (d: any) => (maxlen * Math.pow(Math.round(d.val) / (maxval / 10), 0.5)))
+            .compile(this.omni)
+            .data(currentTextData);
         this.texts = texts;
-    }
-
-    public setTime(t: number) {
-        this.time = t;
-    }
-    public setYear(y: number) {
-        this.currentYear = y;
-        // console.log('setcurrentyear', y)
     }
 
     public render(): void {
