@@ -87,8 +87,8 @@ export class StudyScene {
 
         }
 
-        //   this.smoke = PlantsSmoke(app.omni);
-
+           this.smoke = PlantsSmoke(app.omni);
+this.currentVisualisation = this.smoke;
         this.time = 0;
         this.app.networking.on("time", (t: number) => {
             this.time = t;
@@ -176,7 +176,6 @@ export class StudyScene {
         if (this.currentVisualisation != null) {
             this.currentVisualisation.render();
         }
-
 
         GL.disable(GL.BLEND);
         GL.activeTexture(GL.TEXTURE0);

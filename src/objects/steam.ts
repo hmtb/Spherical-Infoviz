@@ -82,9 +82,9 @@ export class PlanetSteam extends SceneObject {
                     cy = (size-progress/4)* sin(lat  * PI/180);
                     cz = (size-progress/4) * cos(lon * PI/180 + (progress-2)/20 ) * cos(lat * PI/180); 
                  } else {
-                    cx = (1-progress/40)  * sin( lon* PI/-180 + (progress-2)/20 ) * cos(lat * PI/180 );
-                    cy = (1-progress/40)  * sin(lat   * PI/180);
-                    cz = (1-progress/40)  * cos(lon   * PI/180 + (progress-2)/20 ) * cos(lat * PI/180); 
+                    cx = (3)  * sin( lon* PI/-180 + (progress-2)/20 ) * cos(lat * PI/180 );
+                    cy = (3)  * sin(lat   * PI/180);
+                    cz = (3)  * cos(lon   * PI/180 + (progress-2)/20 ) * cos(lat * PI/180); 
                  }
 
                
@@ -97,8 +97,8 @@ export class PlanetSteam extends SceneObject {
                  let eX = normalize(cross(normal, up)) * scale;
                  let eY = normalize(cross(normal, eX)) * scale;
                  let alpha = 0.2;
-                 let colorCenter = Color(1,0,0,alpha);
-                 let colorEdge = Color(1,0,0,0);
+                 let colorCenter = Color(1,1,1,alpha);
+                 let colorEdge = Color(1,1,1,0);
 
                  emit [
                      { position: center, color: colorCenter, normal: normal },
