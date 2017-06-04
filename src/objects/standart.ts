@@ -70,14 +70,19 @@ export class StandartView extends SceneObject {
         //     .attr("width", "20")
         //     .attr("height", "20");
 
+        let img = allofw.graphics.loadImageData(require("fs").readFileSync("preprocessed/standart.png"));
+
         var imgs = shape3d.images()
-            .attr("image", "preprocessed/standart.png")
-            .attr("vec3", "center", "normalize(1, 1, 0)")
+            .image(img, img.width(), img.height())
+            .attr("vec3", "center", "3 * normalize(vec3(0, 1, 1))")
             .attr("vec3", "up", "vec3(0, 1, 0)")
-            .attr("vec3", "normal", "-normalize(0, 1, 1)")
-            .attr("float", "scale", "1")
-            .attr("texImage", "blabla")
-            .compile(this.omni);
+            .attr("vec3", "normal", "-normalize(vec3(0, 1, 1))")
+            .attr("float", "scale", "0.001")
+            .xywh((d: any) => {
+                return { x: 0, y: 0, width: img.width(), height: img.height() }
+            })
+            .compile(this.omni)
+            .data([0]);
 
 
         this.texts = imgs;

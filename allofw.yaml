@@ -1,33 +1,19 @@
 OpenVR: false
 
-
 omnistereo:
-  stereo_mode: active
-
-  eye_separation: 0.065
-  sphere_radius: 5
-  near: 0.01
-  far: 100
-
-  # Use per projection mode.
-  capture_method: per_projection
-  resolution_scale: 2
-  # Cubemap mode
-  #capture_method: cubemap
-  #resolution: 2048
-  warpblend:
-    allosphere_calibration: /home/sphere/calibration-current
-
-window:
-  fullscreen: yes
-  active_stereo: yes
-  hide_cursor: yes
+    resolution: 2048
+    resolution_scale: 2
+    capture_method: per_projection
+    warpblend:
+        generate: perspective
+        generate_fov: 90
 
 broadcasting:
     renderer:
-        sub: tcp://192.168.10.80:50002
+        sub: tcp://127.0.0.1:7000
     simulator:
-        pub: tcp://192.168.10.80:50002
+        pub: tcp://127.0.0.1:7000
+
 
 http:
     port: 8080
