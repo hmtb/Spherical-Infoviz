@@ -1,87 +1,293 @@
 <!DOCTYPE html>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Spherical InfoVis</title>
-<script src="assets/socket.io-1.3.7.js" type="text/javascript"></script>
-<script src="assets/d3.min.js" charset="utf-8"></script>
-<script src="io.js" charset="utf-8"></script>
-<script src="assets/jquery-3.2.1.js" charset="utf-8"></script>
-<script src="assets/bootstrap.js" charset="utf-8"></script>
-<link href="assets/bootstrap.css" rel="stylesheet">
-<link href="assets/style.css" rel="stylesheet">
+<html>
 
-<div class="container">
-    <div class="mt-1">
-        <h1>Spherical InfoVis Study</h1>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="user-scalable=0,initial-scale=1,minimum-scale=1,maximum-scale=1">
+    <!-- <meta name="viewport" content="width=1024" /> -->
+
+    <title>Spherical InfoVis Controller</title>
+
+    <link rel="stylesheet" type="text/css" href="assets/reset.css" />
+    <link rel="stylesheet/less" type="text/css" href="assets/style.less" />
+
+    <script src="assets/socket.io-1.3.7.js" type="text/javascript"></script>
+    <script src="assets/d3.min.js" charset="utf-8"></script>
+    <script src="assets/less.min.js" charset="utf-8"></script>
+    <script src="assets/knockout-3.4.0.js" charset="utf-8"></script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="container">
+            <h1>Narrator's Controller</h1>
+
+            <h2>Scene</h2>
+            <div style="margin: 10px 10px; float: right">
+                <button class="btn" onclick=" server.message('stop')">Kill ALL</button>
+            </div>
+            <p data-bind="foreach: scenes">
+                <button class="btn" data-bind="
+                    text: $data.name,
+                    css: { active: $root.current_scene() == $data },
+                    click: function() { $root.current_scene($data) }
+                "></button>
+            </p>
+
+            <p data-bind="if: current_scene().id == 'welcome'">
+                Welcome the audience, introduce the project, move from local to global perspective.
+            </p>
+            <p data-bind="if: current_scene().id == 'power-plants'">
+            </p>
+            <p data-bind="if: current_scene().id == 'plasim'">
+                TODO: Message for plasim simulations.
+            </p>
+
+            <h2>Media</h2>
+            <div data-bind="foreach: current_scene().media">
+                <div class="media-entry" style="border-bottom: 1px solid #333">
+                    <div style="float: left">
+                        <button class="btn" data-bind="click: $root.showMedia">Show</button>
+                        <button class="btn" data-bind="click: $root.hideMedia">Hide</button>
+                    </div>
+                    <div style="margin-left: 140px">
+                        <p style="color: #EEE" data-bind="text: $data.name"></p>
+                        <p style="font-style: italic" data-bind="text: $data.description"></p>
+                    </div>
+                    <div style="clear: both"></div>
+                </div>
+            </div>
+
+
+
+            <h2>Simulations</h2>
+            <div class="media-entry" style="border-bottom: 1px solid #333">
+                <div data-bind="foreach: current_scene().simulations">
+                    <p>
+                        <button class="btn" data-bind="click: $root.launchSimulation">Launch</button>
+                        <button class="btn" data-bind="click: $root.stopSimulation">Stop</button>
+                        <span data-bind="text: $data.name"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="mt-1">
-        <p>Spherical Infoviz Study Controller</p>
 
-    </div>
+    <script type="text/javascript">
+        var server = (function () {
+            var socket = io();
+            return {
+                message: function (path) {
+                    socket.emit('m', [
+                        path, Array.prototype.slice.call(arguments, 1)
+                    ]);
+                }
+            };
+        })();
 
+        var ViewModel = function (first, last) {
+            var self = this;
+            this.scenes = [
+                {
+                    id: "welcome", name: "Welcome",
+                    media: [
+                        {
+                            type: "video",
+                            name: "Obama on Carbon",
+                            description: "President Obama on Reducing Carbon Pollution in Our Power Plants",
+                            filename: "videos/reducing-carbon-pollution-in-our-power-plants.mp4",
+                            "fps": 30,
+                            location: { lon: 180, lat: 10 }
+                        },
+                        {
+                            type: "video",
+                            name: "Assuming a global perspective",
+                            description: "A camera flight from the allosphere to a view of the earth from space",
+                            filename: "videos/intro-1-small.mov",
+                            "duration": 200, "fps": 30,
+                            location: { lon: 180, lat: 10 }
+                        },
+                        {
+                            type: "panoramic-image",
+                            name: "Beautiful Earth Backdrop",
+                            description: "A beautiful image of the earth's surface",
+                            filename: "preprocessed/earth.jpg"
+                        }
+                    ]
+                },
+                {
+                    id: "panovideos", name: "NASA Simulations",
+                    media: [
+                        {
+                            type: "panoramic-video",
+                            name: "A Year in the Life of Earth's CO2",
+                            description: "A Year in the Life of Earth's CO2",
+                            filename: "videos/a-year-in-the-life-of-earths-co2.mp4",
+                            "fps": 60
+                        },
+                        {
+                            type: "panoramic-video",
+                            name: "NASA GEOS-5 Aerosols Distribution",
+                            description: "Dust (red), sea salt (blue), organic/black carbon (green), and sulfates (white) displayed by their extinction aerosol optical thickness.",
+                            filename: "videos/geos5_aerosols_svs030017_2048x1024.mp4",
+                            "fps": 30
+                        },
+                        {
+                            type: "panoramic-video",
+                            name: "NASA GEOS-5 Surface Temperature",
+                            description: "Surface temperature (colors 270-310 Kelvin) and outgoing longwave radiation at the top of the atmosphere (white) representative of clouds in the model.",
+                            filename: "videos/geos5_outgoing_radiation_svs030017_2048x1024.mp4",
+                            "fps": 30
+                        },
+                        {
+                            type: "panoramic-video",
+                            name: "NASA GEOS-5 Precipitable Water",
+                            description: "Total precipitable water (white) and rainfall (colors 0-15 millimeters/hour; red=highest).",
+                            filename: "videos/geos5_precipitable_water_svs030017_2048x1024.mp4",
+                            "fps": 30
+                        },
+                        {
+                            type: "panoramic-video",
+                            name: "NASA GEOS-5 Surface Winds",
+                            description: "Surface winds (white 0-40 meters/second) and upper-level (250 hPa) winds (colors 0-175 meters/second; red=faster).",
+                            filename: "videos/geos5_surface_winds_svs030017_2048x1024.mp4",
+                            "fps": 30
+                        }
+                    ]
+                },
+                {
+                    id: "mediasnippets", name: "Media snippets",
+                    media: [
+                        {
+                            type: "panoramic-image",
+                            name: "Beautiful Earth Backdrop",
+                            description: "A beautiful image of the earth's surface",
+                            filename: "preprocessed/earth.jpg"
+                        },
+                        {
+                            type: "video",
+                            name: "Rising Sea Levels",
+                            description: "Information visualization about rising sea levels from An Inconvenient Truth",
+                            filename: "videos/inconvenienttruthwtc-mov.mp4",
+                            "fps": 30,
+                            location: { lon: -40, lat: 40 }
+                        },
+                        {
+                            type: "image",
+                            name: "McCarty Glacier",
+                            description: "A photo of McCarty Glacier, Alaska, in 1909 and 2004",
+                            filename: "preprocessed/McCarty_Glacier.jpg",
+                            location: { lon: -150, lat: 59 }
+                        },
+                        {
+                            type: "image",
+                            name: "Rhone Glacier",
+                            description: "A photo of Rhone Glacier, Swiss Alps, in 1860, 1970 and 2050 (projected)",
+                            filename: "preprocessed/HBOG3Pzr_Pxgen_r_1100xA.jpg",
+                            location: { lon: -8, lat: 46 }
+                        }
+                    ]
+                },
+                {
+                    id: "power-plants", name: "Power Plants CO2",
+                    media: [
+                        {
+                            type: "simulation_smoke",
+                            name: "Powerplants producing C02",
+                            description: "Information visualization about powerplants c02 production",
+                        },
+                        {
+                            type: "video",
+                            name: "Rising Sea Levels",
+                            description: "Information visualization about rising sea levels from An Inconvenient Truth",
+                            filename: "videos/inconvenienttruth-wtc.mp4",
+                            filename_audio: "videos/inconvenienttruth-wtc.wav",
+                            "fps": 59.93,
+                            location: { lon: -40, lat: 40 }
+                        },
+                        {
+                            type: "video",
+                            name: "Rising Sea Levels CO2",
+                            description: "Information visualization about rising sea levels from An Inconvenient Truth",
+                            filename: "videos/inconvenienttruth-co2.mp4",
+                            filename_audio: "videos/inconvenienttruth-co2.wav",
+                            "fps": 59.93,
+                            location: { lon: -40, lat: 40 }
+                        },
+                        {
+                            type: "video",
+                            name: "Obama Video",
+                            description: "Obama: Reducing Carbon Pollution in Our Power Plants",
+                            filename: "videos/reducing-carbon-pollution-in-our-power-plants.mp4",
+                            filename_audio: "videos/reducing-carbon-pollution-in-our-power-plants.wav",
+                            "fps": 29.97,
+                            location: { lon: 180, lat: 0 }
+                        }
+                    ]
+                },
+                {
+                    id: "co2-data", name: "Climate Change Study",
+                    media: [
+                        {
+                            type: "simulation_steam",
+                            name: "C02 Data last 30 years",
+                            description: "Showes the C02 Data from the last 30 years",
+                        },
+                        {
+                            type: "simulation_standart",
+                            name: "Standart",
+                            description: "standart Chart",
+                        }
+                    ]
+                },
+                {
+                    id: "plasim", name: "Plasim Simulation",
+                    simulations: [
+                        {
+                            name: "Default Parameters",
+                            type: "plasim",
+                            filename: "preprocessed/plaism-default-128x64-tas-denser.nc"
+                        },
+                        {
+                            name: "Default, 200year",
+                            type: "plasim",
+                            filename: "preprocessed/t42-default-200yr-yearly.npy"
+                        },
+                        {
+                            name: "Double CO2, 200year",
+                            type: "plasim",
+                            filename: "preprocessed/t42-double-co2-200yr-yearly.npy"
+                        }
+                    ]
+                }
+            ];
+            this.current_scene = ko.observable(this.scenes[0]);
 
-    <div class="mt-1">
-        <input type=range min="1980" onclick="server.message('year',value)" max="2009" step="1">Year Selector</button>
-    </div>
+            this.current_scene.subscribe(function (value) {
+                server.message("scene/set", value.id);
+            });
 
-    <div class="mt-1">
-        </br>
-    </div>
-    <div class="mt-1">
-        <p>Visualisation 1 ( AllosPhere)</p>
-        <button onclick="start(1,'immense')">City 1 immens</button>
-        <button onclick="start(1,'standart')">City 1 standart</button>
-    </div>
-    <div class="mt-1">
-        </br>
-    </div>
+            this.showMedia = function (media) {
+                server.message("media/show", media);
+            };
+            this.hideMedia = function (media) {
+                server.message("media/hide", media);
+            };
 
-    <div class="mt-1">
-        <p>Visualisation 2 ( AllosPhere)</p>
-        <button onclick="start(2,'immense')">City 2 immens</button>
-        <button onclick="start(2,'standart')">City 2 standart</button>
-    </div>
+            this.launchSimulation = function (simulation) {
+                if (simulation.type == "plasim") {
+                    server.message("plasim/stream/start", simulation.filename);
+                }
+            };
+            this.stopSimulation = function (simulation) {
+                if (simulation.type == "plasim") {
+                    server.message("plasim/stream/stop");
+                }
+            };
+        };
 
-    <div class="mt-1">
-        </br>
-    </div>
-    <div class="mt-1">
-        <p>Visualisation 1 ( Vive)</p>
-        <button onclick="start(2,'immense')">City 2 immens</button>
-        <button onclick="start(2,'standart')">City 12 standart</button>
-    </div>
-    <div class="mt-1">
-        </br>
-    </div>
-    <div class="mt-1">
-        <button onclick=" server.message('stop')">Stop</button>
-    </div>
+        ko.applyBindings(new ViewModel());
+    </script>
+</body>
 
-
-
-
-</div>
-
-
-<footer class="footer">
-    <div class="container">
-        <span class="text-muted">Spherical Infoviz 2017</span>
-    </div>
-</footer>
-
-
-<script>
-    function start(cityNumber, modality) {
-        console.log(cityNumber)
-        server.message('start', cityNumber, modality)
-    }
-
-
-    server.rpc("test", 1, 2).then((c) => {
-        console.log(c)
-    });
-    server.on("hello", () => {
-        console.log("hello");
-    })
-
-</script>
+</html>

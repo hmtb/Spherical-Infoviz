@@ -39,11 +39,13 @@ export class PlanetSteam extends SceneObject {
     private timer: number;
     private cubeSpec: Stardust.Specification.Mark;
     private platform: StardustAllofw.AllofwPlatform3D;
+    private time_start: number;
 
     constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, data: any) {
         super(omni)
         this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
         this.timer = 0;
+        this.time_start = new Date().getTime() / 1000;
         this.cubeSpec = Stardust.mark.compile(`
             //import the object you wanna use see https://github.com/stardustjs/stardust-core/blob/master/src/core/library/primitives3d.ts
             import { Triangle, Cube } from P3D;
@@ -179,7 +181,7 @@ export class PlanetSteam extends SceneObject {
     }
 
     public setTime(t: number) {
-        this.time = t;
+        this.time = t - this.time_start;
     }
 
     public setYear(y: number) {

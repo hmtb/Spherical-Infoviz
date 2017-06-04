@@ -60,7 +60,11 @@ export class StudyScene {
 
 
     private smoke: any;
-    private currentVisualisation: SceneObject;
+    private steam: PlanetSteam;
+    private standart: StandartView;
+
+
+    private currentVisualisation: SceneObject[];
 
     private time: number;
     private currentYear: number;
@@ -87,8 +91,7 @@ export class StudyScene {
 
         }
 
-           this.smoke = PlantsSmoke(app.omni);
-this.currentVisualisation = this.smoke;
+        this.currentVisualisation = [];
         this.time = 0;
         this.app.networking.on("time", (t: number) => {
             this.time = t;
@@ -96,42 +99,56 @@ this.currentVisualisation = this.smoke;
         this.app.networking.on("year", (y: number) => {
             this.currentYear = y;
         });
-        this.app.networking.on("load", (city: number, modality: string) => {
-            this.loadVisualisation(city, modality);
+        this.app.networking.on("media/show", (media: JSON) => {
+            // console.log('renderer received', media);
+            this.loadVisualisation(media);
         });
-
-        //stop Current Visualisation
+        this.app.networking.on("media/hide", (media: JSON) => {
+            // console.log('renderer received', media);
+            this.hideVisualisation(media);
+        });
+        //stop All Visualisation
         this.app.networking.on("stop", () => {
-            this.currentVisualisation = null;
+            this.currentVisualisation = [];
             this.data = null;
         });
     }
-    public loadVisualisation(city: number, modality: string) {
-        if (modality == 'immense') {
-            switch (city) {
-                case 1:
-                    this.data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry.csv", "utf-8"));
-                    this.currentVisualisation = new PlanetSteam(this.app.window, this.app.omni, this.data);
-                    break;
-                case 2:
-                    this.currentVisualisation = null;
-            }
+
+
+
+    public loadVisualisation(media: any) {
+        if (media.type == 'simulation_steam') {
+            this.data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry.csv", "utf-8"));
+            this.steam = new PlanetSteam(this.app.window, this.app.omni, this.data);
         }
-        if (modality == 'standart') {
-            switch (city) {
-                case 1:
-                    //   this.data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry.csv", "utf-8"));
-                    this.currentVisualisation = new StandartView(this.app.window, this.app.omni);
-                    break;
-                case 2:
-                    this.currentVisualisation = null;
-            }
+        if (media.type == 'simulation_standart') {
+            this.standart = new StandartView(this.app.window, this.app.omni);
+        }
+
+        if (media.type == 'simulation_smoke') {
+            this.smoke = PlantsSmoke(this.app.omni);
+        }
+    }
+    public hideVisualisation(media: any) {
+        if (media.type == 'simulation_steam') {
+            this.steam = null;
+        }
+        if (media.type == 'simulation_standart') {
+            this.standart = null;
+        }
+
+        if (media.type == 'simulation_smoke') {
+            this.smoke = null;
+            // this.currentVisualisation.push(this.smoke);
         }
     }
 
     public isRunningInVR() {
         return (this.app.config as any).OpenVR == true;
     }
+
+
+
 
 
     public frame() {
@@ -145,13 +162,29 @@ this.currentVisualisation = this.smoke;
             this.nav.update();
             this.headPose = this.nav.pose;
         }
+        // if (this.currentVisualisation != null) {
+        //     for (let visu of this.currentVisualisation) {
+        //         visu.setTime(this.time);
+        //         visu.setYear(this.currentYear);
+        //         visu.frame();
+        //     }
+        // }
 
-        //render only if there is a current visualisation selected
-        if (this.currentVisualisation != null) {
-            this.currentVisualisation.setTime(this.time);
-            this.currentVisualisation.frame();
-            this.currentVisualisation.setYear(this.currentYear);
+        if (this.steam != null) {
+            this.steam.setTime(this.time);
+            this.steam.setYear(this.currentYear);
+            this.steam.frame();
         }
+        if (this.smoke != null) {
+            this.smoke.setTime(this.time);
+            this.smoke.frame();
+        }
+        if (this.standart != null) {
+            this.standart.frame();
+        }
+
+
+
 
 
         this.world.frame();
@@ -173,9 +206,23 @@ this.currentVisualisation = this.smoke;
         this.world.render();
 
         //render only if there is a current visualisation selected
-        if (this.currentVisualisation != null) {
-            this.currentVisualisation.render();
+        // if (this.currentVisualisation != null) {
+        //     for (let visu of this.currentVisualisation) {
+        //         visu.render();
+        //     }
+        // }
+
+
+        if (this.steam != null) {
+            this.steam.render();
         }
+        if (this.smoke != null) {
+            this.smoke.render();
+        }
+        if (this.standart != null) {
+            this.standart.render();
+        }
+
 
         GL.disable(GL.BLEND);
         GL.activeTexture(GL.TEXTURE0);
@@ -186,47 +233,75 @@ this.currentVisualisation = this.smoke;
 
 export class Simulator {
     tStart: number;
+    time: number;
     isRunning: boolean;
     app: ISimulatorRuntime;
 
     constructor(app: ISimulatorRuntime) {
         this.app = app;
         this.isRunning = false;
-
-        this.tStart = new Date().getTime() / 1000;
         setInterval(() => {
-            this.app.networking.broadcast("time", (new Date().getTime() / 1000 - this.tStart));
+            this.app.networking.broadcast("time", (new Date().getTime() / 1000));
         }, 5);
-
-        app.server.on("start", (cityNumber: number, modality: string) => {
-            console.log("start", cityNumber, modality);
-            //broadcast needed Data
-            this.app.networking.broadcast("load", cityNumber, modality);
-            //set Timer
-            this.tStart = new Date().getTime() / 1000;
-        });
-
-        app.server.on("stop", () => {
-            this.app.networking.broadcast("stop");
-            console.log("stop");
-        });
 
         app.server.on("year", (year: number) => {
             this.app.networking.broadcast("year", year);
         });
 
+        app.server.on("scene/set", function (scene_id: string) {
+            console.log("scene/set", scene_id)
+            // Receive a message from the web interface, tell the renderers to switch scene.
+            // app.networking.broadcast("scene/set", scene_id);
+            // app.networking.broadcast("scene/start", this.GetCurrentTime() + 0.1);
+        });
+
+
+        app.server.on("media/show", (media: JSON) => {
+            // console.log("media/show", media);
+            this.app.networking.broadcast("media/show", media);
+        });
+
+        app.server.on("media/hide", (media: JSON) => {
+            //  console.log("media/hide", media);
+            this.app.networking.broadcast("media/hide", media);
+        });
 
 
 
-        // app.server.rpc("test", (a: number, b: number) => {
-        //     return a + b;
-        // })
-        // setInterval(() => {
-        //     app.server.broadcast("hello");
-        // }, 1000);
+        // app.server.on("plasim/stream/start", (fielname: string) => {
+        //     console.log("plasim/stream/start", fielname);
+        // });
+        // app.server.on("plasim/stream/stop", (fielname: string) => {
+        //     console.log("plasim/stream/stop");
+
+        // });
 
     }
+
+    // public GetCurrentTime = function () {
+    //     return new Date().getTime() / 1000 - this.tstart;
+    // };
+
+
+    // public TransitionControl(duration: any, callback: any, onend: any) {
+    //     var transition_time = duration;
+    //     var time = this.GetCurrentTime();
+    //     var timerStart: any = setInterval(function () {
+    //         var time: any = this.GetCurrentTime() - timerStart;
+    //         var t = Math.min(1.0, time / transition_time);
+    //         t = Math.sqrt(t);
+    //         if (callback) callback(t);
+    //         if (time > transition_time) {
+    //             clearInterval(timerStart);
+    //             if (onend) onend();
+    //         }
+    //     }, 5);
+    // };
+
+
 }
+
+
 
 export let simulator = Simulator;
 export let renderer = StudyScene;

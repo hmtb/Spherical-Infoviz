@@ -39,12 +39,14 @@ export class StandartView extends SceneObject {
     private timer: number;
     private cubeSpec: Stardust.Specification.Mark;
     private platform: StardustAllofw.AllofwPlatform3D;
+    private time_start: number;
+
 
     constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo) {
         super(omni)
         this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
         this.timer = 0;
-
+        this.time_start = new Date().getTime() / 1000;
 
         // var texts = shape3d.image
         //     //    .attr("vec3", "center", "5.0 * normalize(pos)")
@@ -89,7 +91,7 @@ export class StandartView extends SceneObject {
     }
 
     public setTime(t: number) {
-        this.time = t;
+        this.time = t - this.time_start;;
     }
 
     public setYear(y: number) {

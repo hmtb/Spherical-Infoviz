@@ -199,15 +199,16 @@ var FPlantsSmoke = function (omni: any) {
     var current_time = 0;
     var time_start = new Date().getTime() / 1000;
     this.setTime = function (t: any) {
-        current_time = t;
+        current_time = t - time_start;
     };
-this.setYear = function() {}
-this.frame = function() {}
-    this.render = function () {
-        smoke.uniform("float", "time", current_time - time_start);
 
+    this.setYear = function () { }
+    this.frame = function () { }
+    this.render = function () {
+
+        smoke.uniform("float", "time", current_time);
         GL.depthMask(GL.FALSE);
-        //smoke.render(omni);
+        smoke.render(omni);
         GL.depthMask(GL.TRUE);
         texts.render(omni);
     };
