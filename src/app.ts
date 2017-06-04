@@ -16,6 +16,8 @@ import { randomRange, slerp, slerpDistance } from "./utils";
 
 import { PlanetSteam } from "./objects/steam";
 
+import { StandartView } from "./objects/standart";
+
 // The schema of the "config.yaml" file
 export interface IConfig {
     // Specify the scene to use
@@ -110,6 +112,16 @@ export class StudyScene {
                 case 1:
                     this.data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry.csv", "utf-8"));
                     this.currentVisualisation = new PlanetSteam(this.app.window, this.app.omni, this.data);
+                    break;
+                case 2:
+                    this.currentVisualisation = null;
+            }
+        }
+        if (modality == 'standart') {
+            switch (city) {
+                case 1:
+                    //   this.data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry.csv", "utf-8"));
+                    this.currentVisualisation = new StandartView(this.app.window, this.app.omni);
                     break;
                 case 2:
                     this.currentVisualisation = null;
