@@ -21,6 +21,9 @@ import { StandartView } from "./objects/standart";
 import { Coastlines } from "./panorama/coastlines";
 import { PanoramaImage } from "./panorama/panorama_image";
 import { PlanarVideoPlayer } from "./media/planar_video_player";
+import { PanoramaVideoPlayer } from "./media/panorama_video_player";
+
+var allofwutils = require("allofw-utils");
 
 
 export class MyNavigator {
@@ -43,6 +46,11 @@ export class MyNavigator {
         }
         if (media.id == 'sphere_coastlines') {
             return Coastlines(this.app.omni);
+        }
+        if (media.id == "a-year-in-the-life-of-earths-co2") {
+            let player = PanoramaVideoPlayer(this.app.omni, media.filename, media.fps);
+            player.start(new Date().getTime() / 1000);
+            return player;
         }
     }
 
@@ -69,6 +77,22 @@ export class MyNavigator {
                 object: PlantsSmoke(this.app.omni)
             }
             this.currentVisu[id] = media;
+        }
+        if (id == 'reducing-carbon-pollution-in-our-power-plants') {
+            console.log("hier")
+            var media2: any = {
+                object: PlanarVideoPlayer(this.app.omni, media.filename, media.fps)
+            }
+            var center = new allofwutils.Vector3(
+                Math.sin(media.location.lon * Math.PI / -180) * Math.cos(media.location.lat * Math.PI / 180),
+                Math.sin(media.location.lat * Math.PI / 180),
+                Math.cos(media.location.lon * Math.PI / -180) * Math.cos(media.location.lat * Math.PI / 180)
+            ).normalize().scale(3.0);
+            var ex = center.cross(new allofwutils.Vector3(0, 1, 0)).normalize();
+            var ey = ex.cross(center).normalize();
+            media2.object.setLocation(center, ex, ey, 2);
+            media2.object.start(new Date().getTime() / 1000);
+            this.currentVisu[id] = media2;
         }
 
     }

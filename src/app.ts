@@ -5,23 +5,8 @@ import * as repl from "repl";
 
 import { GL3 as GL } from "allofw"; //http://localhost:10800/
 import { IRendererRuntime, WindowNavigation, Vector3, Quaternion, Pose, ISimulatorRuntime } from "allofw-utils";
-
-import { SceneObject, OBJMeshObject, Matterport3DModel, FOVBlockerObject } from "./objects/objects";
 import { Logger } from "./logger";
-
-import { PlantsSmoke } from "./objects/smoke";
-
-// Import utility functions
-import { randomRange, slerp, slerpDistance } from "./utils";
-
-import { PlanetSteam } from "./objects/steam";
-
-import { StandartView } from "./objects/standart";
-
-import { Coastlines } from "./panorama/coastlines";
 import { PanoramaImage } from "./panorama/panorama_image";
-import { PlanarVideoPlayer } from "./media/planar_video_player";
-
 import { MyNavigator } from "./navigator";
 
 // The schema of the "config.yaml" file
@@ -75,7 +60,7 @@ export class MainScene {
 
 
 
-        //set navigation Mode
+        //set  Mode
         if (this.isRunningInVR()) {
             this.app.window.setSwapInterval(0);
             this.nav = new WindowNavigation(app.window, app.omni);
@@ -85,7 +70,6 @@ export class MainScene {
             this.nav = new WindowNavigation(app.window, app.omni);
 
         }
-
 
         //Navigaton
         this.app.networking.on("media/show", (media: any) => {
@@ -139,6 +123,7 @@ export class MainScene {
         //update Panorama if available
         if (this.currentPanorama != null) {
             this.currentPanorama.frame && this.currentPanorama.frame();
+            this.currentPanorama.setTime && this.currentPanorama.setTime(this.time);
         }
 
         //update current Visualisation Objects
@@ -146,7 +131,9 @@ export class MainScene {
             var visu: any = this.currentVisu[key]
             visu.object.setTime && visu.object.setTime(this.time);
             visu.object.setYear && visu.object.setYear(this.currentYear);
-            visu.object.frame && visu.object.frame();
+            // visu.object.frame && visu.object.frame();
+            //  visu.object.start && visu.object.frame();
+            //add objects function if nesecesry
         }
     }
 

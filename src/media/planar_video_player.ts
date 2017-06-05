@@ -106,12 +106,12 @@ function FTexturedPlaneRenderer(omni: any) {
         GL.uniform1i(GL.getUniformLocation(program, "texImage"), 0);
         mesh.render();
         GL.useProgram(0);
-        allofwutils.utils.checkGLError("video");
+        allofwutils.checkGLError("video");
     };
 }
 
 function FPlanarVideoPlayer(omni: any, source: any, fps: any) {
-    var plane: any = FTexturedPlaneRenderer(omni);
+    var plane: any = new (FTexturedPlaneRenderer as any)(omni);
 
     var video = new allofw.graphics.VideoSurface2D(source);
 
@@ -144,13 +144,15 @@ function FPlanarVideoPlayer(omni: any, source: any, fps: any) {
     var time = 0;
     var start_time = 0;
     var is_started = false;
-    this.setTime = function (t: any, t_start: any) {
-        time = t;
+
+    var currentTime = new Date().getTime() / 1000;
+    this.setTime = function (t: any) {
+        time = t - currentTime;
     };
 
     this.start = function (timestamp: any) {
         is_started = true;
-        start_time = timestamp;
+        start_time = timestamp - currentTime;
         video.seek(0);
         current_frame_timestamp = 0;
     };
@@ -173,9 +175,9 @@ function FPlanarVideoPlayer(omni: any, source: any, fps: any) {
     };
 
     this.setLocation(
-        new allofwutils.math.Vector3(0, 0, -1),
-        new allofwutils.math.Vector3(1, 0, 0),
-        new allofwutils.math.Vector3(0, 1, 0),
+        new allofwutils.Vector3(0, 0, -1),
+        new allofwutils.Vector3(1, 0, 0),
+        new allofwutils.Vector3(0, 1, 0),
         1
     );
 }

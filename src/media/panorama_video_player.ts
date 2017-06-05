@@ -100,7 +100,7 @@ function FPanoramaVideoPlayer(omni: any, filename: any, fps: any) {
     GL.bindTexture(GL.TEXTURE_2D, 0);
 
     // Make the cube. We render the earth on a cube surface.
-    var sphere = require("./panorama.js").MakeSphereMesh(40, 20);
+    var sphere = require("../media/panorama.js").MakeSphereMesh(5, 20);
 
     var current_frame_timestamp = 0;
 
@@ -140,13 +140,15 @@ function FPanoramaVideoPlayer(omni: any, filename: any, fps: any) {
     var quaternion = [0, 0, 0, 1];
     var mirror = true;
 
-    this.setTime = function (t: any, t_start: any) {
-        time = t;
+
+    var currentTime = new Date().getTime() / 1000;
+    this.setTime = function (t: any) {
+        time = t - currentTime;
     };
 
     this.start = function (timestamp: any) {
         is_started = true;
-        start_time = timestamp;
+        start_time = timestamp - currentTime;
         video.seek(0);
         current_frame_timestamp = 0;
     };
