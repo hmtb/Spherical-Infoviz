@@ -81,6 +81,8 @@ export class StudyScene {
     private visualisationTime: number;
     public data: any;
 
+    private current_media: any;
+
 
     constructor(app: IRendererRuntime) {
         this.app = app;
@@ -106,7 +108,7 @@ export class StudyScene {
         this.world.pose.position = new Vector3(0, 0, 0);
         this.world.pose.scale = 0.02;
         // this.currentScene = this.world;
-
+        this.current_media = {};
         this.currentScene = PanoramaImage(this.app.omni, "preprocessed/earth.jpg")
 
         this.app.networking.on("time", (t: number) => {
@@ -133,16 +135,28 @@ export class StudyScene {
 
 
     public loadVisualisation(media: any) {
+        var key = media.type;
+        if (this.current_media[key]) return;
+
         if (media.type == 'simulation_steam') {
             this.data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry.csv", "utf-8"));
-            this.currentVisualisation = new PlanetSteam(this.app.window, this.app.omni, this.data);
+            var media: any = {
+                object: new PlanetSteam(this.app.window, this.app.omni, this.data)
+            }
+            this.current_media[key] = media;
         }
         if (media.type == 'simulation_standart') {
-            this.currentVisualisation = new StandartView(this.app.window, this.app.omni);
+            var media: any = {
+                object: new StandartView(this.app.window, this.app.omni)
+            }
+            this.current_media['simulation_standart'] = media;
         }
 
         if (media.type == 'simulation_smoke') {
-            this.currentVisualisation = PlantsSmoke(this.app.omni);
+            var media: any = {
+                object: PlantsSmoke(this.app.omni)
+            }
+            this.current_media[media.type] = media;
         }
         if (media.type == 'sphere_coastlines') {
             this.currentScene = Coastlines(this.app.omni);
@@ -157,17 +171,21 @@ export class StudyScene {
 
 
     public hideVisualisation(media: any) {
-        if (media.type == 'simulation_steam') {
-            this.currentVisualisation = null;
-        }
-        if (media.type == 'simulation_standart') {
-            this.standart = null;
-        }
+        var key = media.type;
+        if (!this.current_media[key]) return;
+        delete this.current_media[key];
+        // if (key == 'simulation_steam') {
+        //     delete this.current_media[key];
+        //     console.log(this.current_media)
+        // }
+        // if (key == 'simulation_standart') {
+        //     delete this.current_media[key];
+        // }
 
-        if (media.type == 'simulation_smoke') {
-            this.smoke = null;
+        // if (media.type == 'simulation_smoke') {
+        //     this.smoke = null;
 
-        }
+        // }
     }
 
     public isRunningInVR() {
@@ -190,15 +208,17 @@ export class StudyScene {
             this.headPose = this.nav.pose;
         }
         if (this.currentScene != null) {
-
             this.currentScene.frame && this.currentScene.frame();
         }
 
-        if (this.currentVisualisation != null) {
-            this.currentVisualisation.setTime && this.currentVisualisation.setTime(this.time);
-            this.currentVisualisation.setYear && this.currentVisualisation.setYear(this.currentYear);
-            this.currentVisualisation.frame && this.currentVisualisation.frame();
+        for (let v_key in this.current_media) {
+            var visu: any = this.current_media[v_key]
+            visu.object.setTime && visu.object.setTime(this.time);
+            visu.object.setYear && visu.object.setYear(this.currentYear);
+            visu.object.frame && visu.object.frame();
         }
+
+
 
     }
 
@@ -219,9 +239,12 @@ export class StudyScene {
         if (this.currentScene != null) {
             this.currentScene.render();
         }
-        if (this.currentVisualisation != null) {
-            this.currentVisualisation.render();
+
+        for (let v_key in this.current_media) {
+            var visu: any = this.current_media[v_key]
+            visu.object.render && visu.object.render();
         }
+
 
         GL.disable(GL.BLEND);
         GL.activeTexture(GL.TEXTURE0);
