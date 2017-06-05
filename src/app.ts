@@ -22,6 +22,8 @@ import { Coastlines } from "./panorama/coastlines";
 import { PanoramaImage } from "./panorama/panorama_image";
 import { PlanarVideoPlayer } from "./media/planar_video_player";
 
+import { MyNavigator } from "./navigator";
+
 // The schema of the "config.yaml" file
 export interface IConfig {
     // Specify the scene to use
@@ -38,50 +40,26 @@ export interface IConfig {
 //variables for the study
 let currentID = 1;
 let targetHeight = 1.65;
-let duration = 60;
 
-export class StudyScene {
+export class MainScene {
     private app: IRendererRuntime;
 
     private nav: WindowNavigation;
 
-    private world: SceneObject;
-    private targetObject: OBJMeshObject;
-    private targetObjectBaseRotation: Quaternion;
-    private originObject: OBJMeshObject;
-
     private headPose: Pose;
-
     private config: IConfig;
     private logger: Logger;
-
-
     private soundSocket: zmq.Socket;
 
-    private imageModels: { name: string, model: OBJMeshObject }[];
-    private imageModelCurrent: number;
-    private imageModelTSwitch: number;
+    //SceneObjects
+    private currentPanorama: any;
+    private currentVisu: any;
 
-
-    private panoramaVideoPlayer: any;
-    private planarVideoPlayer: any;
-
-    private smoke: any;
-    private coastlines: any;
-    private steam: PlanetSteam;
-    private standart: StandartView;
-
-
-    private currentVisualisation: any;
-    private currentScene: any;
-
-
+    //Global Vars
     private time: number;
     private currentYear: number;
-    private visualisationTime: number;
-    public data: any;
 
-    private current_media: any;
+    private navigator: MyNavigator;
 
 
     constructor(app: IRendererRuntime) {
@@ -91,6 +69,11 @@ export class StudyScene {
         this.config = yaml.load(fs.readFileSync("config.yaml", "utf-8")) as IConfig;
         this.currentYear = 1980;
         this.time = 0;
+        this.currentVisu = {};
+        this.currentPanorama = PanoramaImage(this.app.omni, "preprocessed/earth.jpg")
+        this.navigator = new MyNavigator(this.app, this.currentVisu)
+
+
 
         //set navigation Mode
         if (this.isRunningInVR()) {
@@ -103,96 +86,42 @@ export class StudyScene {
 
         }
 
-        //load default world
-        this.world = new OBJMeshObject(app.omni, "./3DModels/earth/earth.obj", { flipX: true });
-        this.world.pose.position = new Vector3(0, 0, 0);
-        this.world.pose.scale = 0.02;
-        // this.currentScene = this.world;
-        this.current_media = {};
-        this.currentScene = PanoramaImage(this.app.omni, "preprocessed/earth.jpg")
 
+        //Navigaton
+        this.app.networking.on("media/show", (media: any) => {
+            if (media.type == 'visu')
+                this.navigator.loadVisualisation(media);
+            if (media.type == 'panorama') {
+                this.currentPanorama = this.navigator.loadPanorama(media);
+            }
+        });
+        this.app.networking.on("media/hide", (media: any) => {
+            if (media.type == 'visu')
+                this.navigator.hideVisualisation(media);
+            if (media.type == 'panorama')
+                this.currentPanorama = null;
+        });
+        //stop All Visualisation
+        this.app.networking.on("stop", () => {
+            this.currentVisu = [];
+            this.currentPanorama = [];
+        });
+
+        //updateCall
         this.app.networking.on("time", (t: number) => {
             this.time = t;
         });
         this.app.networking.on("year", (y: number) => {
             this.currentYear = y;
         });
-        this.app.networking.on("media/show", (media: JSON) => {
-            this.loadVisualisation(media);
-        });
-        this.app.networking.on("media/hide", (media: JSON) => {
-            this.hideVisualisation(media);
-        });
 
-        //stop All Visualisation
-        this.app.networking.on("stop", () => {
-            this.currentVisualisation = [];
-            this.currentScene = [];
-            this.data = null;
-        });
     }
 
 
-
-    public loadVisualisation(media: any) {
-        var key = media.type;
-        if (this.current_media[key]) return;
-
-        if (media.type == 'simulation_steam') {
-            this.data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry.csv", "utf-8"));
-            var media: any = {
-                object: new PlanetSteam(this.app.window, this.app.omni, this.data)
-            }
-            this.current_media[key] = media;
-        }
-        if (media.type == 'simulation_standart') {
-            var media: any = {
-                object: new StandartView(this.app.window, this.app.omni)
-            }
-            this.current_media['simulation_standart'] = media;
-        }
-
-        if (media.type == 'simulation_smoke') {
-            var media: any = {
-                object: PlantsSmoke(this.app.omni)
-            }
-            this.current_media[media.type] = media;
-        }
-        if (media.type == 'sphere_coastlines') {
-            this.currentScene = Coastlines(this.app.omni);
-        }
-        if (media.type == 'panoramic-video') {
-            //   this.panoramaVideoPlayer = PanoramaVideoPlayer(this.app.omni, media.filename, media.fps, stereo_mode)
-        }
-        if (media.type == 'video') {
-            //    
-        }
-    }
-
-
-    public hideVisualisation(media: any) {
-        var key = media.type;
-        if (!this.current_media[key]) return;
-        delete this.current_media[key];
-        // if (key == 'simulation_steam') {
-        //     delete this.current_media[key];
-        //     console.log(this.current_media)
-        // }
-        // if (key == 'simulation_standart') {
-        //     delete this.current_media[key];
-        // }
-
-        // if (media.type == 'simulation_smoke') {
-        //     this.smoke = null;
-
-        // }
-    }
 
     public isRunningInVR() {
         return (this.app.config as any).OpenVR == true;
     }
-
-
 
 
 
@@ -207,27 +136,20 @@ export class StudyScene {
             this.nav.update();
             this.headPose = this.nav.pose;
         }
-        if (this.currentScene != null) {
-            this.currentScene.frame && this.currentScene.frame();
+        //update Panorama if available
+        if (this.currentPanorama != null) {
+            this.currentPanorama.frame && this.currentPanorama.frame();
         }
 
-        for (let v_key in this.current_media) {
-            var visu: any = this.current_media[v_key]
+        //update current Visualisation Objects
+        for (let key in this.currentVisu) {
+            var visu: any = this.currentVisu[key]
             visu.object.setTime && visu.object.setTime(this.time);
             visu.object.setYear && visu.object.setYear(this.currentYear);
             visu.object.frame && visu.object.frame();
         }
-
-
-
     }
 
-    public onClick() {
-    }
-
-    public setData(data: any) {
-        this.data = data;
-    }
 
     public render() {
         GL.clearColor(0, 0, 0, 1);
@@ -236,12 +158,14 @@ export class StudyScene {
         GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
         GL.enable(GL.DEPTH_TEST);
 
-        if (this.currentScene != null) {
-            this.currentScene.render();
+        //render Panorama
+        if (this.currentPanorama != null) {
+            this.currentPanorama.render();
         }
 
-        for (let v_key in this.current_media) {
-            var visu: any = this.current_media[v_key]
+        //render Visualisations
+        for (let key in this.currentVisu) {
+            var visu: any = this.currentVisu[key]
             visu.object.render && visu.object.render();
         }
 
@@ -271,12 +195,7 @@ export class Simulator {
         });
 
         app.server.on("scene/set", function (scene_id: string) {
-            console.log("scene/set", scene_id)
-            // Receive a message from the web interface, tell the renderers to switch scene.
-            // app.networking.broadcast("scene/set", scene_id);
-            // app.networking.broadcast("scene/start", this.GetCurrentTime() + 0.1);
         });
-
 
         app.server.on("media/show", (media: JSON) => {
             console.log("media/show", media);
@@ -295,4 +214,4 @@ export class Simulator {
 
 
 export let simulator = Simulator;
-export let renderer = StudyScene;
+export let renderer = MainScene;

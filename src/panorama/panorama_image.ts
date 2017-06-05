@@ -52,7 +52,7 @@ function FPanoramaImage(omni: any, filename: any) {
     GL.bindTexture(GL.TEXTURE_2D, 0);
 
     // Make the cube. We render the earth on a cube surface.
-    var sphere = require("./panorama.js").MakeSphereMesh(5, 20);
+    var sphere = require("./panorama.js").MakeSphereMesh(6.5, 20);
 
     this.render = function () {
         // Use the main program.
