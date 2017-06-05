@@ -18,8 +18,8 @@ import { PlanetSteam } from "./objects/steam";
 
 import { StandartView } from "./objects/standart";
 
-import { Coastlines } from "./panorama/coastlines";
-import { PanoramaImage } from "./panorama/panorama_image";
+import { Coastlines } from "./media/coastlines";
+import { PanoramaImage } from "./media/panorama_image";
 import { PlanarVideoPlayer } from "./media/planar_video_player";
 import { PanoramaVideoPlayer } from "./media/panorama_video_player";
 

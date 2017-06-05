@@ -6,7 +6,7 @@ import * as repl from "repl";
 import { GL3 as GL } from "allofw"; //http://localhost:10800/
 import { IRendererRuntime, WindowNavigation, Vector3, Quaternion, Pose, ISimulatorRuntime } from "allofw-utils";
 import { Logger } from "./logger";
-import { PanoramaImage } from "./panorama/panorama_image";
+import { PanoramaImage } from "./media/panorama_image";
 import { MyNavigator } from "./navigator";
 
 // The schema of the "config.yaml" file
@@ -42,6 +42,8 @@ export class MainScene {
 
     //Global Vars
     private time: number;
+    private time_diff: number;
+    private time_start: number;
     private currentYear: number;
 
     private navigator: MyNavigator;
@@ -92,15 +94,26 @@ export class MainScene {
         });
 
         //updateCall
-        this.app.networking.on("time", (t: number) => {
-            this.time = t;
+        // this.app.networking.on("time", (t: number) => {
+        //     this.time = t;
+        // });
+
+        this.time_diff = 0;
+        this.time_start = 0;
+        app.networking.on("time", (time: number) => {
+            this.time_diff = time - new Date().getTime() / 1000;
         });
+
+
         this.app.networking.on("year", (y: number) => {
             this.currentYear = y;
         });
 
     }
 
+    public GetCurrentTime = function () {
+        return new Date().getTime() / 1000 + this.time_diff;
+    };
 
 
     public isRunningInVR() {
@@ -120,16 +133,17 @@ export class MainScene {
             this.nav.update();
             this.headPose = this.nav.pose;
         }
+
         //update Panorama if available
-        if (this.currentPanorama != null) {
+        if (this.currentPanorama) {
             this.currentPanorama.frame && this.currentPanorama.frame();
-            this.currentPanorama.setTime && this.currentPanorama.setTime(this.time);
+            this.currentPanorama.setTime && this.currentPanorama.setTime(this.GetCurrentTime());
         }
 
         //update current Visualisation Objects
         for (let key in this.currentVisu) {
             var visu: any = this.currentVisu[key]
-            visu.object.setTime && visu.object.setTime(this.time);
+            visu.object.setTime && visu.object.setTime(this.GetCurrentTime());
             visu.object.setYear && visu.object.setYear(this.currentYear);
             // visu.object.frame && visu.object.frame();
             //  visu.object.start && visu.object.frame();
@@ -173,9 +187,7 @@ export class Simulator {
     constructor(app: ISimulatorRuntime) {
         this.app = app;
         this.isRunning = false;
-        setInterval(() => {
-            this.app.networking.broadcast("time", (new Date().getTime() / 1000));
-        }, 5);
+
 
         app.server.on("year", (year: number) => {
             this.app.networking.broadcast("year", year);
@@ -194,6 +206,13 @@ export class Simulator {
             this.app.networking.broadcast("media/hide", media);
         });
 
+        var time_start = new Date().getTime() / 1000;
+        var GetCurrentTime = function () {
+            return new Date().getTime() / 1000 - time_start;
+        };
+        setInterval(() => {
+            this.app.networking.broadcast("time", GetCurrentTime());
+        }, 20);
 
     }
 }

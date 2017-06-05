@@ -143,7 +143,7 @@ function FPanoramaVideoPlayer(omni: any, filename: any, fps: any) {
 
     var currentTime = new Date().getTime() / 1000;
     this.setTime = function (t: any) {
-        time = t - currentTime;
+        time = t;
     };
 
     this.start = function (timestamp: any) {
