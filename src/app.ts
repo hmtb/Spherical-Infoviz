@@ -18,6 +18,9 @@ import { PlanetSteam } from "./objects/steam";
 
 import { StandartView } from "./objects/standart";
 
+import { Coastlines } from "./sphereTextures/coastlines";
+
+
 // The schema of the "config.yaml" file
 export interface IConfig {
     // Specify the scene to use
@@ -60,6 +63,7 @@ export class StudyScene {
 
 
     private smoke: any;
+    private coastlines: any;
     private steam: PlanetSteam;
     private standart: StandartView;
 
@@ -90,7 +94,7 @@ export class StudyScene {
             this.nav = new WindowNavigation(app.window, app.omni);
 
         }
-
+        this.coastlines = Coastlines(this.app.omni);
         this.currentVisualisation = [];
         this.time = 0;
         this.app.networking.on("time", (t: number) => {
@@ -127,6 +131,9 @@ export class StudyScene {
 
         if (media.type == 'simulation_smoke') {
             this.smoke = PlantsSmoke(this.app.omni);
+        }
+        if (media.type == 'sphere_coastlines') {
+            this.coastlines = Coastlines(this.app.omni);
         }
     }
     public hideVisualisation(media: any) {
@@ -186,8 +193,8 @@ export class StudyScene {
 
 
 
-
-        this.world.frame();
+        ///    this.coastlines.frame();
+        //   this.world.frame();
     }
 
     public onClick() {
@@ -203,7 +210,9 @@ export class StudyScene {
         GL.enable(GL.BLEND);
         GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
         GL.enable(GL.DEPTH_TEST);
-        this.world.render();
+
+        this.coastlines.render();
+        //  this.world.render();
 
         //render only if there is a current visualisation selected
         // if (this.currentVisualisation != null) {
@@ -267,38 +276,7 @@ export class Simulator {
         });
 
 
-
-        // app.server.on("plasim/stream/start", (fielname: string) => {
-        //     console.log("plasim/stream/start", fielname);
-        // });
-        // app.server.on("plasim/stream/stop", (fielname: string) => {
-        //     console.log("plasim/stream/stop");
-
-        // });
-
     }
-
-    // public GetCurrentTime = function () {
-    //     return new Date().getTime() / 1000 - this.tstart;
-    // };
-
-
-    // public TransitionControl(duration: any, callback: any, onend: any) {
-    //     var transition_time = duration;
-    //     var time = this.GetCurrentTime();
-    //     var timerStart: any = setInterval(function () {
-    //         var time: any = this.GetCurrentTime() - timerStart;
-    //         var t = Math.min(1.0, time / transition_time);
-    //         t = Math.sqrt(t);
-    //         if (callback) callback(t);
-    //         if (time > transition_time) {
-    //             clearInterval(timerStart);
-    //             if (onend) onend();
-    //         }
-    //     }, 5);
-    // };
-
-
 }
 
 

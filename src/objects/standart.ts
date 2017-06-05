@@ -48,30 +48,6 @@ export class StandartView extends SceneObject {
         this.timer = 0;
         this.time_start = new Date().getTime() / 1000;
 
-        // var texts = shape3d.image
-        //     //    .attr("vec3", "center", "5.0 * normalize(pos)")
-        //     .attr("vec3", "center", "6.0 * normalize(pos)")
-        //     .attr("vec3", "up", "vec3(0, 1, 0)")
-        //     .attr("vec3", "normal", "-normalize(pos)")
-        //     .attr("float", "scale", "0.0005 * len")
-        //     .text((d: any) => (d.val))
-        //     // Variables are bound to data.
-        //     .variable("vec3", "pos", (d: any) => [
-        //         Math.sin(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180),
-        //         Math.sin(d.lat * Math.PI / 180),
-        //         Math.cos(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180)])
-        //     .variable("float", "len", (d: any) => (maxlen * Math.pow(Math.round(d.val) / (maxval / 10), 0.5)))
-        //     .compile(this.omni)
-        //     .data(currentTextData);
-        // this.texts = texts;
-
-        // var imgs = shape3d.images("svg:image")
-        //     .attr("xlink:href", "preprocessed/standart.png")
-        //     .attr("x", "60")
-        //     .attr("y", "60")
-        //     .attr("width", "20")
-        //     .attr("height", "20");
-
         let img = allofw.graphics.loadImageData(require("fs").readFileSync("preprocessed/standart.png"));
 
         var imgs = shape3d.images()
@@ -85,7 +61,6 @@ export class StandartView extends SceneObject {
             })
             .compile(this.omni)
             .data([0]);
-
 
         this.texts = imgs;
     }
