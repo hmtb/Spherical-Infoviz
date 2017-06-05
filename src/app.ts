@@ -18,8 +18,9 @@ import { PlanetSteam } from "./objects/steam";
 
 import { StandartView } from "./objects/standart";
 
-import { Coastlines } from "./sphereTextures/coastlines";
-
+import { Coastlines } from "./panorama/coastlines";
+import { PanoramaImage } from "./panorama/panorama_image";
+import { PlanarVideoPlayer } from "./media/planar_video_player";
 
 // The schema of the "config.yaml" file
 export interface IConfig {
@@ -62,13 +63,18 @@ export class StudyScene {
     private imageModelTSwitch: number;
 
 
+    private panoramaVideoPlayer: any;
+    private planarVideoPlayer: any;
+
     private smoke: any;
     private coastlines: any;
     private steam: PlanetSteam;
     private standart: StandartView;
 
 
-    private currentVisualisation: SceneObject[];
+    private currentVisualisation: any;
+    private currentScene: any;
+
 
     private time: number;
     private currentYear: number;
@@ -79,12 +85,12 @@ export class StudyScene {
     constructor(app: IRendererRuntime) {
         this.app = app;
 
+        //init default Values
         this.config = yaml.load(fs.readFileSync("config.yaml", "utf-8")) as IConfig;
-        this.world = new OBJMeshObject(app.omni, "./3DModels/earth/earth.obj", { flipX: true });
-        this.world.pose.position = new Vector3(0, 0, 0);
-        this.world.pose.scale = 0.02;
         this.currentYear = 1980;
+        this.time = 0;
 
+        //set navigation Mode
         if (this.isRunningInVR()) {
             this.app.window.setSwapInterval(0);
             this.nav = new WindowNavigation(app.window, app.omni);
@@ -94,9 +100,15 @@ export class StudyScene {
             this.nav = new WindowNavigation(app.window, app.omni);
 
         }
-        this.coastlines = Coastlines(this.app.omni);
-        this.currentVisualisation = [];
-        this.time = 0;
+
+        //load default world
+        this.world = new OBJMeshObject(app.omni, "./3DModels/earth/earth.obj", { flipX: true });
+        this.world.pose.position = new Vector3(0, 0, 0);
+        this.world.pose.scale = 0.02;
+        // this.currentScene = this.world;
+
+        this.currentScene = PanoramaImage(this.app.omni, "preprocessed/earth.jpg")
+
         this.app.networking.on("time", (t: number) => {
             this.time = t;
         });
@@ -104,16 +116,16 @@ export class StudyScene {
             this.currentYear = y;
         });
         this.app.networking.on("media/show", (media: JSON) => {
-            // console.log('renderer received', media);
             this.loadVisualisation(media);
         });
         this.app.networking.on("media/hide", (media: JSON) => {
-            // console.log('renderer received', media);
             this.hideVisualisation(media);
         });
+
         //stop All Visualisation
         this.app.networking.on("stop", () => {
             this.currentVisualisation = [];
+            this.currentScene = [];
             this.data = null;
         });
     }
@@ -123,22 +135,30 @@ export class StudyScene {
     public loadVisualisation(media: any) {
         if (media.type == 'simulation_steam') {
             this.data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry.csv", "utf-8"));
-            this.steam = new PlanetSteam(this.app.window, this.app.omni, this.data);
+            this.currentVisualisation = new PlanetSteam(this.app.window, this.app.omni, this.data);
         }
         if (media.type == 'simulation_standart') {
-            this.standart = new StandartView(this.app.window, this.app.omni);
+            this.currentVisualisation = new StandartView(this.app.window, this.app.omni);
         }
 
         if (media.type == 'simulation_smoke') {
-            this.smoke = PlantsSmoke(this.app.omni);
+            this.currentVisualisation = PlantsSmoke(this.app.omni);
         }
         if (media.type == 'sphere_coastlines') {
-            this.coastlines = Coastlines(this.app.omni);
+            this.currentScene = Coastlines(this.app.omni);
+        }
+        if (media.type == 'panoramic-video') {
+            //   this.panoramaVideoPlayer = PanoramaVideoPlayer(this.app.omni, media.filename, media.fps, stereo_mode)
+        }
+        if (media.type == 'video') {
+            //    
         }
     }
+
+
     public hideVisualisation(media: any) {
         if (media.type == 'simulation_steam') {
-            this.steam = null;
+            this.currentVisualisation = null;
         }
         if (media.type == 'simulation_standart') {
             this.standart = null;
@@ -146,7 +166,7 @@ export class StudyScene {
 
         if (media.type == 'simulation_smoke') {
             this.smoke = null;
-            // this.currentVisualisation.push(this.smoke);
+
         }
     }
 
@@ -169,32 +189,17 @@ export class StudyScene {
             this.nav.update();
             this.headPose = this.nav.pose;
         }
-        // if (this.currentVisualisation != null) {
-        //     for (let visu of this.currentVisualisation) {
-        //         visu.setTime(this.time);
-        //         visu.setYear(this.currentYear);
-        //         visu.frame();
-        //     }
-        // }
+        if (this.currentScene != null) {
 
-        if (this.steam != null) {
-            this.steam.setTime(this.time);
-            this.steam.setYear(this.currentYear);
-            this.steam.frame();
-        }
-        if (this.smoke != null) {
-            this.smoke.setTime(this.time);
-            this.smoke.frame();
-        }
-        if (this.standart != null) {
-            this.standart.frame();
+            this.currentScene.frame && this.currentScene.frame();
         }
 
+        if (this.currentVisualisation != null) {
+            this.currentVisualisation.setTime && this.currentVisualisation.setTime(this.time);
+            this.currentVisualisation.setYear && this.currentVisualisation.setYear(this.currentYear);
+            this.currentVisualisation.frame && this.currentVisualisation.frame();
+        }
 
-
-
-        ///    this.coastlines.frame();
-        //   this.world.frame();
     }
 
     public onClick() {
@@ -211,27 +216,12 @@ export class StudyScene {
         GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
         GL.enable(GL.DEPTH_TEST);
 
-        this.coastlines.render();
-        //  this.world.render();
-
-        //render only if there is a current visualisation selected
-        // if (this.currentVisualisation != null) {
-        //     for (let visu of this.currentVisualisation) {
-        //         visu.render();
-        //     }
-        // }
-
-
-        if (this.steam != null) {
-            this.steam.render();
+        if (this.currentScene != null) {
+            this.currentScene.render();
         }
-        if (this.smoke != null) {
-            this.smoke.render();
+        if (this.currentVisualisation != null) {
+            this.currentVisualisation.render();
         }
-        if (this.standart != null) {
-            this.standart.render();
-        }
-
 
         GL.disable(GL.BLEND);
         GL.activeTexture(GL.TEXTURE0);
@@ -266,7 +256,7 @@ export class Simulator {
 
 
         app.server.on("media/show", (media: JSON) => {
-            // console.log("media/show", media);
+            console.log("media/show", media);
             this.app.networking.broadcast("media/show", media);
         });
 

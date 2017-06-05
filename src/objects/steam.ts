@@ -176,7 +176,7 @@ export class PlanetSteam extends SceneObject {
         // console.log(this.dataBuffer);
         this.cubes = cubes;
 
-
+        this.updateText(1990);
 
     }
 

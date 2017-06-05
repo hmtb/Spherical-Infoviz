@@ -60,6 +60,7 @@ var FCoastlinesRenderer = function (omni: any) {
         f(program.id());
         GL.useProgram(0);
     };
+    this.frame = function () { }
     this.render = function () {
         // Use the shader above.
         GL.useProgram(program.id());
