@@ -85,6 +85,19 @@
             };
         })();
 
+        var rm = {
+            BACKGROUND: 'background',
+            INTERMEDIATE: 'intermediate',
+            FOREGROUND: 'foreground'
+        };
+
+        var type = {
+            PANORAMIC_VIDEO: 'panorama-video',
+            PLANAR_VIDEO: 'planar-video',
+            PANORAMIC_IMAGE: 'panorama-image'
+        };
+
+
         var ViewModel = function (first, last) {
             var self = this;
             this.scenes = [
@@ -92,7 +105,8 @@
                     id: "welcome", name: "Welcome",
                     media: [
                         {
-                            type: "visu",
+                            type: type.PLANAR_VIDEO,
+                            rendermode: rm.BACKGROUND,
                             id: "reducing-carbon-pollution-in-our-power-plants",
                             name: "Obama on Carbon",
                             description: "President Obama on Reducing Carbon Pollution in Our Power Plants",
@@ -101,7 +115,9 @@
                             location: { lon: 180, lat: 10 }
                         },
                         {
-                            type: "video",
+                            type: type.PLANAR_VIDEO,
+                            rendermode: rm.FOREGROUND,
+                            id: "intro-1-small",
                             name: "Assuming a global perspective",
                             description: "A camera flight from the allosphere to a view of the earth from space",
                             filename: "videos/intro-1-small.mov",
@@ -109,7 +125,9 @@
                             location: { lon: 180, lat: 10 }
                         },
                         {
-                            type: "panoramic-image",
+                            type: type.PANORAMIC_IMAGE,
+                            rendermode: rm.BACKGROUND,
+                            id: "beautiful-earth",
                             name: "Beautiful Earth Backdrop",
                             description: "A beautiful image of the earth's surface",
                             filename: "preprocessed/earth.jpg"
@@ -120,36 +138,46 @@
                     id: "panovideos", name: "NASA Simulations",
                     media: [
                         {
+
                             id: "a-year-in-the-life-of-earths-co2",
-                            type: "panorama",
+                            type: type.PANORAMIC_VIDEO,
+                            rendermode: rm.BACKGROUND,
                             name: "A Year in the Life of Earth's CO2",
                             description: "A Year in the Life of Earth's CO2",
                             filename: "videos/a-year-in-the-life-of-earths-co2.mp4",
                             "fps": 60
                         },
                         {
-                            type: "panoramic-video",
+                            id: "geos5_aerosols_svs030017_2048x1024",
+                            type: type.PANORAMIC_VIDEO,
+                            rendermode: rm.BACKGROUND,
                             name: "NASA GEOS-5 Aerosols Distribution",
                             description: "Dust (red), sea salt (blue), organic/black carbon (green), and sulfates (white) displayed by their extinction aerosol optical thickness.",
                             filename: "videos/geos5_aerosols_svs030017_2048x1024.mp4",
                             "fps": 30
                         },
                         {
-                            type: "panoramic-video",
+                            id: "geos5_outgoing_radiation_svs030017_2048x1024",
+                            type: type.PANORAMIC_VIDEO,
+                            rendermode: rm.BACKGROUND,
                             name: "NASA GEOS-5 Surface Temperature",
                             description: "Surface temperature (colors 270-310 Kelvin) and outgoing longwave radiation at the top of the atmosphere (white) representative of clouds in the model.",
                             filename: "videos/geos5_outgoing_radiation_svs030017_2048x1024.mp4",
                             "fps": 30
                         },
                         {
-                            type: "panoramic-video",
+                            id: "geos5_precipitable_water_svs030017_2048x1024",
+                            type: type.PANORAMIC_VIDEO,
+                            rendermode: rm.BACKGROUND,
                             name: "NASA GEOS-5 Precipitable Water",
                             description: "Total precipitable water (white) and rainfall (colors 0-15 millimeters/hour; red=highest).",
                             filename: "videos/geos5_precipitable_water_svs030017_2048x1024.mp4",
                             "fps": 30
                         },
                         {
-                            type: "panoramic-video",
+                            id: "geos5_surface_winds_svs030017_2048x1024",
+                            type: type.PANORAMIC_VIDEO,
+                            rendermode: rm.BACKGROUND,
                             name: "NASA GEOS-5 Surface Winds",
                             description: "Surface winds (white 0-40 meters/second) and upper-level (250 hPa) winds (colors 0-175 meters/second; red=faster).",
                             filename: "videos/geos5_surface_winds_svs030017_2048x1024.mp4",

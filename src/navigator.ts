@@ -29,59 +29,69 @@ var allofwutils = require("allofw-utils");
 export class MyNavigator {
     public currentVisu: any;
     app: IRendererRuntime;
-
+    type: any
 
     constructor(app: IRendererRuntime, currentVisu: any) {
         this.app = app;
         this.currentVisu = currentVisu;
-
+        this.type = {
+            PANORAMIC_VIDEO: 'panorama-video',
+            PLANAR_VIDEO: 'planar-video',
+            PANORAMIC_IMAGE: 'panorama-image'
+        };
     }
 
-    public loadPanorama(media: any) {
-        if (media.id == 'dark_world') {
-            var world = new OBJMeshObject(this.app.omni, "./3DModels/earth/earth.obj", { flipX: true });
-            world.pose.position = new Vector3(0, 0, 0);
-            world.pose.scale = 0.02;
-            return world;
-        }
-        if (media.id == 'sphere_coastlines') {
-            return Coastlines(this.app.omni);
-        }
-        if (media.id == "a-year-in-the-life-of-earths-co2") {
-            let player = PanoramaVideoPlayer(this.app.omni, media.filename, media.fps);
-            player.start(new Date().getTime() / 1000);
-            return player;
-        }
-    }
+
+
+    // public loadPanorama(media: any) {
+    //     if (media.id == 'dark_world') {
+    //         var world = new OBJMeshObject(this.app.omni, "./3DModels/earth/earth.obj", { flipX: true });
+    //         world.pose.position = new Vector3(0, 0, 0);
+    //         world.pose.scale = 0.02;
+    //         return world;
+    //     }
+    //     if (media.id == 'sphere_coastlines') {
+    //         return Coastlines(this.app.omni);
+    //     }
+    //     if (media.id == "a-year-in-the-life-of-earths-co2") {
+    //         let player = PanoramaVideoPlayer(this.app.omni, media.filename, media.fps);
+    //         player.start(new Date().getTime() / 1000);
+    //         return player;
+    //     }
+    // }
+
+
+
+
+
+
 
     public loadVisualisation(media: any) {
+        //if visualisation is already loaded return
         var id = media.id;
         if (this.currentVisu[id]) return;
 
-        if (id == 'simulation_steam') {
-            var data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry.csv", "utf-8"));
-            var media: any = {
-                object: new PlanetSteam(this.app.window, this.app.omni, data)
+        if (media.type == this.type.PANORAMIC_VIDEO) {
+            let player = PanoramaVideoPlayer(this.app.omni, media.filename, media.fps);
+            player.start(new Date().getTime() / 1000);
+            var visu: any = {
+                object: player,
+                renderMode: media.renderMode
             }
-            this.currentVisu[id] = media;
-        }
-        if (id == 'simulation_standart') {
-            var media: any = {
-                object: new StandartView(this.app.window, this.app.omni)
-            }
-            this.currentVisu[id] = media;
-        }
+            this.currentVisu[id] = visu;
 
-        if (id == 'simulation_smoke') {
-            var media: any = {
-                object: PlantsSmoke(this.app.omni)
-            }
-            this.currentVisu[id] = media;
         }
-        if (id == 'reducing-carbon-pollution-in-our-power-plants') {
-            console.log("hier")
-            var media2: any = {
-                object: PlanarVideoPlayer(this.app.omni, media.filename, media.fps)
+        if (media.type == this.type.PANORAMIC_IMAGE) {
+            var visu: any = {
+                object: PanoramaImage(this.app.omni, media.filename),
+                renderMode: media.renderMode
+            }
+            this.currentVisu[id] = visu;
+        }
+        if (media.type == this.type.PLANAR_VIDEO) {
+            var visu: any = {
+                object: PlanarVideoPlayer(this.app.omni, media.filename, media.fps),
+                renderMode: media.renderMode
             }
             var center = new allofwutils.Vector3(
                 Math.sin(media.location.lon * Math.PI / -180) * Math.cos(media.location.lat * Math.PI / 180),
@@ -90,10 +100,41 @@ export class MyNavigator {
             ).normalize().scale(3.0);
             var ex = center.cross(new allofwutils.Vector3(0, 1, 0)).normalize();
             var ey = ex.cross(center).normalize();
-            media2.object.setLocation(center, ex, ey, 2);
-            media2.object.start(new Date().getTime() / 1000);
-            this.currentVisu[id] = media2;
+            visu.object.setLocation(center, ex, ey, 2);
+            visu.object.start(new Date().getTime() / 1000);
+            this.currentVisu[id] = visu;
         }
+
+
+
+
+
+
+
+        // if (id == 'simulation_steam') {
+        //     var data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry.csv", "utf-8"));
+        //     var media: any = {
+        //         object: new PlanetSteam(this.app.window, this.app.omni, data)
+        //     }
+        //     this.currentVisu[id] = media;
+        // }
+        // if (id == 'simulation_standart') {
+        //     var media: any = {
+        //         object: new StandartView(this.app.window, this.app.omni)
+        //     }
+        //     this.currentVisu[id] = media;
+        // }
+
+        // if (id == 'simulation_smoke') {
+        //     var media: any = {
+        //         object: PlantsSmoke(this.app.omni)
+        //     }
+        //     this.currentVisu[id] = media;
+        // }
+        // if (id == 'reducing-carbon-pollution-in-our-power-plants') {
+        //     console.log("hier")
+
+        // }
 
     }
 

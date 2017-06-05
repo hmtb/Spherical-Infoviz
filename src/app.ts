@@ -57,9 +57,8 @@ export class MainScene {
         this.currentYear = 1980;
         this.time = 0;
         this.currentVisu = {};
-        this.currentPanorama = PanoramaImage(this.app.omni, "preprocessed/earth.jpg")
+        //     this.currentPanorama = PanoramaImage(this.app.omni, "preprocessed/earth.jpg")
         this.navigator = new MyNavigator(this.app, this.currentVisu)
-
 
 
         //set  Mode
@@ -72,21 +71,28 @@ export class MainScene {
             this.nav = new WindowNavigation(app.window, app.omni);
 
         }
+        var rm = {
+            BACKGROUND: 'background',
+            INTERMEDIATE: 'intermediate',
+            FOREGROUND: 'foreground'
+        };
+
+        var type = {
+            PANORAMIC_VIDEO: 'panorama-video',
+            PLANAR_VIDEO: 'planar-video',
+            PANORAMIC_IMAGE: 'panorama-image'
+        };
 
         //Navigaton
         this.app.networking.on("media/show", (media: any) => {
-            if (media.type == 'visu')
-                this.navigator.loadVisualisation(media);
-            if (media.type == 'panorama') {
-                this.currentPanorama = this.navigator.loadPanorama(media);
-            }
+            this.navigator.loadVisualisation(media);
+
         });
+
         this.app.networking.on("media/hide", (media: any) => {
-            if (media.type == 'visu')
-                this.navigator.hideVisualisation(media);
-            if (media.type == 'panorama')
-                this.currentPanorama = null;
+            this.navigator.hideVisualisation(media);
         });
+
         //stop All Visualisation
         this.app.networking.on("stop", () => {
             this.currentVisu = [];
@@ -121,7 +127,6 @@ export class MainScene {
     }
 
 
-
     public frame() {
         if (this.isRunningInVR()) {
             let p = this.app.omni.getHeadPose();
@@ -134,6 +139,25 @@ export class MainScene {
             this.headPose = this.nav.pose;
         }
 
+        //REnderPipline
+
+        //Background
+        for (let key in this.currentVisu) {
+            var visu: any = this.currentVisu[key]
+            visu.object.setTime && visu.object.setTime(this.GetCurrentTime());
+            visu.object.setYear && visu.object.setYear(this.currentYear);
+            // visu.object.frame && visu.object.frame();
+            //  visu.object.start && visu.object.frame();
+            //add objects function if nesecesry
+        }
+
+        //internmediate
+
+
+        //Forground
+
+
+
         //update Panorama if available
         if (this.currentPanorama) {
             this.currentPanorama.frame && this.currentPanorama.frame();
@@ -145,8 +169,7 @@ export class MainScene {
             var visu: any = this.currentVisu[key]
             visu.object.setTime && visu.object.setTime(this.GetCurrentTime());
             visu.object.setYear && visu.object.setYear(this.currentYear);
-            // visu.object.frame && visu.object.frame();
-            //  visu.object.start && visu.object.frame();
+            visu.object.frame && visu.object.frame();
             //add objects function if nesecesry
         }
     }
