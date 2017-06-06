@@ -147,30 +147,15 @@ export class MainScene {
             visu.object.setTime && visu.object.setTime(this.GetCurrentTime());
             visu.object.setYear && visu.object.setYear(this.currentYear);
             visu.object.frame && visu.object.frame();
-            //  visu.object.start && visu.object.frame();
             //add objects function if nesecesry
         }
 
         //internmediate
-
-
         //Forground
-
-
-
         //update Panorama if available
-        if (this.currentPanorama) {
-            this.currentPanorama.frame && this.currentPanorama.frame();
-            this.currentPanorama.setTime && this.currentPanorama.setTime(this.GetCurrentTime());
-        }
-
-        //update current Visualisation Objects
-        // for (let key in this.currentVisu) {
-        //     var visu: any = this.currentVisu[key]
-        //     visu.object.setTime && visu.object.setTime(this.GetCurrentTime());
-        //     visu.object.setYear && visu.object.setYear(this.currentYear);
-        //     visu.object.frame && visu.object.frame();
-        //     //add objects function if nesecesry
+        // if (this.currentPanorama) {
+        //     this.currentPanorama.frame && this.currentPanorama.frame();
+        //     this.currentPanorama.setTime && this.currentPanorama.setTime(this.GetCurrentTime());
         // }
     }
 
@@ -182,10 +167,10 @@ export class MainScene {
         GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
         GL.enable(GL.DEPTH_TEST);
 
-        //render Panorama
-        if (this.currentPanorama != null) {
-            this.currentPanorama.render();
-        }
+        // //render Panorama
+        // if (this.currentPanorama != null) {
+        //     this.currentPanorama.render();
+        // }
 
         //render Visualisations
         for (let key in this.currentVisu) {
@@ -220,7 +205,7 @@ export class Simulator {
         });
 
         app.server.on("media/show", (media: JSON) => {
-            console.log("media/show", media);
+            //console.log("media/show", media);
             this.app.networking.broadcast("media/show", media);
         });
 

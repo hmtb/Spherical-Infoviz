@@ -67,13 +67,13 @@ export class MyNavigator {
         //if visualisation is already loaded return
         var id = media.id;
         if (this.currentVisu[id]) return;
-
+        console.log("hier", media);
         if (media.type == this.type.PANORAMIC_VIDEO) {
             let player = PanoramaVideoPlayer(this.app.omni, media.filename, media.fps);
-            player.start(time + 1);
+            player.start(time + 0.1);
             var visu: any = {
                 object: player,
-                renderMode: media.renderMode
+                renderMode: media.rendermode
             }
             this.currentVisu[id] = visu;
 
@@ -81,14 +81,14 @@ export class MyNavigator {
         if (media.type == this.type.PANORAMIC_IMAGE) {
             var visu: any = {
                 object: PanoramaImage(this.app.omni, media.filename),
-                renderMode: media.renderMode
+                renderMode: media.rendermode
             }
             this.currentVisu[id] = visu;
         }
         if (media.type == this.type.PLANAR_VIDEO) {
             var visu: any = {
                 object: PlanarVideoPlayer(this.app.omni, media.filename, media.fps),
-                renderMode: media.renderMode
+                renderMode: media.rendermode
             }
             var center = new allofwutils.Vector3(
                 Math.sin(media.location.lon * Math.PI / -180) * Math.cos(media.location.lat * Math.PI / 180),
@@ -101,9 +101,6 @@ export class MyNavigator {
             visu.object.start(time);
             this.currentVisu[id] = visu;
         }
-
-
-
 
 
 

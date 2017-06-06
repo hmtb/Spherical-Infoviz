@@ -104,6 +104,8 @@ function FPanoramaVideoPlayer(omni: any, filename: any, fps: any) {
 
     var current_frame_timestamp = 0;
 
+    var did_upload_texture = false;
+
     var do_next_frame = function (desired_timestamp: any) {
         var updated = false;
         while (current_frame_timestamp < desired_timestamp) {
@@ -113,6 +115,7 @@ function FPanoramaVideoPlayer(omni: any, filename: any, fps: any) {
             }
         }
         if (updated) {
+            did_upload_texture = true;
             GL.bindTexture(GL.TEXTURE_2D, texture_panorama_left);
             if (stereo_mode == "mono") {
                 GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, video.width(), video.height(), 0, GL.RGBA, GL.UNSIGNED_BYTE, video.pixels());
@@ -170,6 +173,7 @@ function FPanoramaVideoPlayer(omni: any, filename: any, fps: any) {
     this.render = function () {
         if (!is_started) return;
         do_next_frame(time - start_time);
+        if (!did_upload_texture) return;
 
         // Use the main program.
         GL.useProgram(program);

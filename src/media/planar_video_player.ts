@@ -124,6 +124,7 @@ function FPlanarVideoPlayer(omni: any, source: any, fps: any) {
     GL.bindTexture(GL.TEXTURE_2D, 0);
 
     var current_frame_timestamp = 0;
+    var did_upload_texture = false;
 
     var do_next_frame = function (desired_timestamp: any) {
         var updated = false;
@@ -134,6 +135,7 @@ function FPlanarVideoPlayer(omni: any, source: any, fps: any) {
             }
         }
         if (updated) {
+            did_upload_texture = true;
             GL.bindTexture(GL.TEXTURE_2D, video_texture);
             GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, video.width(), video.height(), 0, GL.RGBA, GL.UNSIGNED_BYTE, video.pixels());
             GL.generateMipmap(GL.TEXTURE_2D);
@@ -147,6 +149,7 @@ function FPlanarVideoPlayer(omni: any, source: any, fps: any) {
 
     this.setTime = function (t: any) {
         time = t;
+        console.log('settime', t)
     };
 
     this.start = function (timestamp: any) {
@@ -162,6 +165,8 @@ function FPlanarVideoPlayer(omni: any, source: any, fps: any) {
 
     this.render = function () {
         if (!is_started) return;
+        // if (!did_upload_texture) return;
+        //  console.log('render', time - start_time)
         do_next_frame(time - start_time);
         GL.activeTexture(GL.TEXTURE0);
         GL.bindTexture(GL.TEXTURE_2D, video_texture);
