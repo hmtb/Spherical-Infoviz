@@ -199,7 +199,7 @@ var FPlantsSmoke = function (omni: any) {
     var current_time = 0;
     var time_start = new Date().getTime() / 1000;
     this.setTime = function (t: any) {
-        current_time = t - time_start;
+        current_time = t;
     };
 
     this.setYear = function () { }

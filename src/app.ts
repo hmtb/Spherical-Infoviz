@@ -139,24 +139,17 @@ export class MainScene {
             this.headPose = this.nav.pose;
         }
 
-        //REnderPipline
 
-        //Background
         for (let key in this.currentVisu) {
-            var visu: any = this.currentVisu[key]
+            var visu: any = this.currentVisu[key];
             visu.object.setTime && visu.object.setTime(this.GetCurrentTime());
             visu.object.setYear && visu.object.setYear(this.currentYear);
             visu.object.frame && visu.object.frame();
             //add objects function if nesecesry
         }
 
-        //internmediate
-        //Forground
-        //update Panorama if available
-        // if (this.currentPanorama) {
-        //     this.currentPanorama.frame && this.currentPanorama.frame();
-        //     this.currentPanorama.setTime && this.currentPanorama.setTime(this.GetCurrentTime());
-        // }
+
+
     }
 
 
@@ -171,13 +164,26 @@ export class MainScene {
         // if (this.currentPanorama != null) {
         //     this.currentPanorama.render();
         // }
-
         //render Visualisations
         for (let key in this.currentVisu) {
             var visu: any = this.currentVisu[key]
-            visu.object.render && visu.object.render();
-        }
+            if (visu.renderMode = 'background') {
+                visu.object.render && visu.object.render();
+            }
 
+        }
+        for (let key in this.currentVisu) {
+            var visu: any = this.currentVisu[key]
+            if (visu.renderMode != 'intermediate') {
+                visu.object.render && visu.object.render();
+            }
+        }
+        for (let key in this.currentVisu) {
+            var visu: any = this.currentVisu[key]
+            if (visu.renderMode != 'foreground') {
+                visu.object.render && visu.object.render();
+            }
+        }
 
         GL.disable(GL.BLEND);
         GL.activeTexture(GL.TEXTURE0);

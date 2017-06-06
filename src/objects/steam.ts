@@ -181,7 +181,7 @@ export class PlanetSteam extends SceneObject {
     }
 
     public setTime(t: number) {
-        this.time = t - this.time_start;
+        this.time = t;
     }
 
     public setYear(y: number) {

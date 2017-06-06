@@ -93,8 +93,10 @@
 
         var type = {
             PANORAMIC_VIDEO: 'panorama-video',
+            PANORAMIC_IMAGE: 'panorama-image',
             PLANAR_VIDEO: 'planar-video',
-            PANORAMIC_IMAGE: 'panorama-image'
+            PLANAR_IMAGE: 'planar-image',
+            DATA_VISUALISATION: 'data-visu'
         };
 
 
@@ -207,14 +209,19 @@
                             location: { lon: -40, lat: 40 }
                         },
                         {
-                            type: "image",
+
+                            type: type.PLANAR_IMAGE,
+                            rendermode: rm.INTERMEDIATE,
+                            id: "McCarty_Glacier",
                             name: "McCarty Glacier",
                             description: "A photo of McCarty Glacier, Alaska, in 1909 and 2004",
                             filename: "preprocessed/McCarty_Glacier.jpg",
                             location: { lon: -150, lat: 59 }
                         },
                         {
-                            type: "image",
+                            type: type.PLANAR_IMAGE,
+                            rendermode: rm.INTERMEDIATE,
+                            id: "HBOG3Pzr_Pxgen_r_1100xA",
                             name: "Rhone Glacier",
                             description: "A photo of Rhone Glacier, Swiss Alps, in 1860, 1970 and 2050 (projected)",
                             filename: "preprocessed/HBOG3Pzr_Pxgen_r_1100xA.jpg",
@@ -226,14 +233,16 @@
                     id: "power-plants", name: "Power Plants CO2",
                     media: [
                         {
+                            type: type.DATA_VISUALISATION,
+                            rendermode: rm.INTERMEDIATE,
                             id: "simulation_smoke",
-                            type: "visu",
                             name: "Powerplants producing C02",
                             description: "Information visualization about powerplants c02 production",
                         },
                         {
-                            type: "video",
-                            name: "Rising Sea Levels",
+                            type: type.PLANAR_VIDEO,
+                            rendermode: rm.INTERMEDIATE,
+                            name: "inconvenienttruth-wtc",
                             description: "Information visualization about rising sea levels from An Inconvenient Truth",
                             filename: "videos/inconvenienttruth-wtc.mp4",
                             filename_audio: "videos/inconvenienttruth-wtc.wav",
@@ -241,7 +250,9 @@
                             location: { lon: -40, lat: 40 }
                         },
                         {
-                            type: "video",
+                            type: type.PLANAR_VIDEO,
+                            rendermode: rm.INTERMEDIATE,
+                            id: "inconvenienttruth-co2",
                             name: "Rising Sea Levels CO2",
                             description: "Information visualization about rising sea levels from An Inconvenient Truth",
                             filename: "videos/inconvenienttruth-co2.mp4",
@@ -250,7 +261,9 @@
                             location: { lon: -40, lat: 40 }
                         },
                         {
-                            type: "video",
+                            type: type.PLANAR_VIDEO,
+                            rendermode: rm.INTERMEDIATE,
+                            id: "reducing-carbon-pollution-in-our-power-plants",
                             name: "Obama Video",
                             description: "Obama: Reducing Carbon Pollution in Our Power Plants",
                             filename: "videos/reducing-carbon-pollution-in-our-power-plants.mp4",
@@ -265,27 +278,32 @@
                     media: [
                         {
                             id: "simulation_steam",
-                            type: "visu",
+                            type: type.DATA_VISUALISATION,
+                            rendermode: rm.INTERMEDIATE,
                             name: "C02 Data last 30 years",
                             description: "Showes the C02 Data from the last 30 years",
                         },
                         {
                             id: "simulation_standart",
-                            type: "visu",
+                            type: type.DATA_VISUALISATION,
+                            rendermode: rm.INTERMEDIATE,
                             name: "Standart",
                             description: "standart Chart",
                         },
                         {
                             id: "sphere_coastlines",
-                            type: "panorama",
+                            type: type.DATA_VISUALISATION,
+                            rendermode: rm.BACKGROUND,
                             name: "Coastlines",
                             description: "Coastlines",
                         },
                         {
                             id: "dark_world",
-                            type: "panorama",
+                            type: type.PANORAMIC_IMAGE,
+                            rendermode: rm.BACKGROUND,
                             name: "Dark_world",
-                            description: "Coastlines",
+                            description: "dark World",
+                            filename: "preprocessed/dark_world.jpg"
                         }
                     ]
                 },

@@ -18,6 +18,7 @@ function MakePlaneMesh(divisions: any) {
             ]);
         }
     }
+
     var GL = require("allofw").GL3;
     var buffer = new Float32Array(triangles.length * 3 * 2);
     var ptr = 0;
@@ -109,71 +110,29 @@ function FTexturedPlaneRenderer(omni: any) {
     };
 }
 
-function FPlanarVideoPlayer(omni: any, source: any, fps: any) {
-    var plane: any = new (FTexturedPlaneRenderer as any)(omni);
-
-    var video = new allofw.graphics.VideoSurface2D(source);
-
-    var video_texture = new GL.Texture();
-    GL.bindTexture(GL.TEXTURE_2D, video_texture);
+function FPlanarImage(omni: any, source: any) {
+    var plane = new (FTexturedPlaneRenderer as any)(omni);
+    var image = allofw.graphics.loadImageData(require("fs").readFileSync(source));
+    var image_texture = new GL.Texture();
+    GL.bindTexture(GL.TEXTURE_2D, image_texture);
     GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, GL.LINEAR);
     GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, GL.LINEAR_MIPMAP_LINEAR);
     GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
     GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE);
+    GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, image.width(), image.height(), 0, GL.RGBA, GL.UNSIGNED_BYTE, image.pixels());
+    GL.generateMipmap(GL.TEXTURE_2D);
     GL.bindTexture(GL.TEXTURE_2D, 0);
 
-    var current_frame_timestamp = 0;
-    var did_upload_texture = false;
-
-    var do_next_frame = function (desired_timestamp: any) {
-        var updated = false;
-        while (current_frame_timestamp < desired_timestamp) {
-            current_frame_timestamp += 1.0 / fps;
-            if (video.nextFrame()) {
-                updated = true;
-            }
-        }
-        if (updated) {
-            did_upload_texture = true;
-            GL.bindTexture(GL.TEXTURE_2D, video_texture);
-            GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, video.width(), video.height(), 0, GL.RGBA, GL.UNSIGNED_BYTE, video.pixels());
-            GL.generateMipmap(GL.TEXTURE_2D);
-            GL.bindTexture(GL.TEXTURE_2D, 0);
-        }
-    };
-
-    var time = 0;
-    var start_time = 0;
-    var is_started = false;
-
-    this.setTime = function (t: any) {
-        time = t;
-    };
-
-    this.start = function (timestamp: any) {
-        is_started = true;
-        start_time = timestamp;
-        video.seek(0);
-        current_frame_timestamp = 0;
-    };
-
-    this.stop = function () {
-        is_started = false;
-    };
 
     this.render = function () {
-        if (!is_started) return;
-        // if (!did_upload_texture) return;
-        //  console.log('render', time - start_time)
-        do_next_frame(time - start_time);
         GL.activeTexture(GL.TEXTURE0);
-        GL.bindTexture(GL.TEXTURE_2D, video_texture);
+        GL.bindTexture(GL.TEXTURE_2D, image_texture);
         plane.render();
         GL.bindTexture(GL.TEXTURE_2D, 0);
     };
 
     this.setLocation = function (center: any, ex: any, ey: any, x_size: any) {
-        plane.setLocation(center, ex, ey, x_size, x_size / video.width() * video.height());
+        plane.setLocation(center, ex, ey, x_size, x_size / image.width() * image.height());
     };
 
     this.setLocation(
@@ -184,6 +143,6 @@ function FPlanarVideoPlayer(omni: any, source: any, fps: any) {
     );
 }
 
-export let PlanarVideoPlayer = function (omni: any, source: any, fps: any) {
-    return new (FPlanarVideoPlayer as any)(omni, source, fps)
+export let PlanarImage = function (omni: any, source: any) {
+    return new (FPlanarImage as any)(omni, source);
 }
