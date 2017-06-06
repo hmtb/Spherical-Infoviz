@@ -189,13 +189,17 @@
                     id: "mediasnippets", name: "Media snippets",
                     media: [
                         {
-                            type: "panoramic-image",
+                            type: type.PANORAMIC_IMAGE,
+                            rendermode: rm.BACKGROUND,
+                            id: "beautiful-earth",
                             name: "Beautiful Earth Backdrop",
                             description: "A beautiful image of the earth's surface",
                             filename: "preprocessed/earth.jpg"
                         },
                         {
-                            type: "video",
+                            type: type.PLANAR_VIDEO,
+                            rendermode: rm.BACKGROUND,
+                            id: "beautiful-earth",
                             name: "Rising Sea Levels",
                             description: "Information visualization about rising sea levels from An Inconvenient Truth",
                             filename: "videos/inconvenienttruthwtc-mov.mp4",

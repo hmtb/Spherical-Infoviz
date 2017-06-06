@@ -140,15 +140,13 @@ function FPanoramaVideoPlayer(omni: any, filename: any, fps: any) {
     var quaternion = [0, 0, 0, 1];
     var mirror = true;
 
-
-    var currentTime = new Date().getTime() / 1000;
     this.setTime = function (t: any) {
         time = t;
     };
 
     this.start = function (timestamp: any) {
         is_started = true;
-        start_time = timestamp - currentTime;
+        start_time = timestamp;
         video.seek(0);
         current_frame_timestamp = 0;
     };

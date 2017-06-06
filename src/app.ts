@@ -85,7 +85,7 @@ export class MainScene {
 
         //Navigaton
         this.app.networking.on("media/show", (media: any) => {
-            this.navigator.loadVisualisation(media);
+            this.navigator.loadVisualisation(media, this.GetCurrentTime());
 
         });
 
@@ -146,7 +146,7 @@ export class MainScene {
             var visu: any = this.currentVisu[key]
             visu.object.setTime && visu.object.setTime(this.GetCurrentTime());
             visu.object.setYear && visu.object.setYear(this.currentYear);
-            // visu.object.frame && visu.object.frame();
+            visu.object.frame && visu.object.frame();
             //  visu.object.start && visu.object.frame();
             //add objects function if nesecesry
         }
@@ -165,13 +165,13 @@ export class MainScene {
         }
 
         //update current Visualisation Objects
-        for (let key in this.currentVisu) {
-            var visu: any = this.currentVisu[key]
-            visu.object.setTime && visu.object.setTime(this.GetCurrentTime());
-            visu.object.setYear && visu.object.setYear(this.currentYear);
-            visu.object.frame && visu.object.frame();
-            //add objects function if nesecesry
-        }
+        // for (let key in this.currentVisu) {
+        //     var visu: any = this.currentVisu[key]
+        //     visu.object.setTime && visu.object.setTime(this.GetCurrentTime());
+        //     visu.object.setYear && visu.object.setYear(this.currentYear);
+        //     visu.object.frame && visu.object.frame();
+        //     //add objects function if nesecesry
+        // }
     }
 
 

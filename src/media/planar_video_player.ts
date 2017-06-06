@@ -145,14 +145,13 @@ function FPlanarVideoPlayer(omni: any, source: any, fps: any) {
     var start_time = 0;
     var is_started = false;
 
-    var currentTime = new Date().getTime() / 1000;
     this.setTime = function (t: any) {
         time = t;
     };
 
     this.start = function (timestamp: any) {
         is_started = true;
-        start_time = timestamp - currentTime;
+        start_time = timestamp;
         video.seek(0);
         current_frame_timestamp = 0;
     };
