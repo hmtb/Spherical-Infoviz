@@ -153,14 +153,14 @@ export class MyNavigator {
 
 
 
-
-
-            // if (id == 'reducing-carbon-pollution-in-our-power-plants') {
-            //     console.log("hier")
-
-            // }
-
         }
+
+        // if (id == 'reducing-carbon-pollution-in-our-power-plants') {
+        //     console.log("hier")
+
+        // }
+
+    }
 
     public hideVisualisation(media: any) {
         var id = media.id;
