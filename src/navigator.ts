@@ -44,27 +44,6 @@ export class MyNavigator {
     }
 
 
-
-    // public loadPanorama(media: any) {
-    //     if (media.id == 'dark_world') {
-    //         var world = new OBJMeshObject(this.app.omni, "./3DModels/earth/earth.obj", { flipX: true });
-    //         world.pose.position = new Vector3(0, 0, 0);
-    //         world.pose.scale = 0.02;
-    //         return world;
-    //     }
-    //     if (media.id == 'sphere_coastlines') {
-    //         return Coastlines(this.app.omni);
-    //     }
-    //     if (media.id == "a-year-in-the-life-of-earths-co2") {
-    //         let player = PanoramaVideoPlayer(this.app.omni, media.filename, media.fps);
-    //         player.start(new Date().getTime() / 1000);
-    //         return player;
-    //     }
-    // }
-
-
-
-
     public loadVisualisation(media: any, time: number, startTime: number) {
         //if visualisation is already loaded return
         var id = media.id;
@@ -74,10 +53,9 @@ export class MyNavigator {
         if (media.mode == 'single') {
             for (let key in this.currentVisu) {
                 var visu: any = this.currentVisu[key]
-                if (visu.mode = 'single') {
+                if (visu.mode == 'single') {
                     delete this.currentVisu[key];
                 }
-
             }
         }
 
@@ -89,7 +67,7 @@ export class MyNavigator {
             var visu: any = {
                 object: player,
                 renderMode: media.rendermode,
-                mode: 'single'
+                mode: media.mode
             }
             this.currentVisu[id] = visu;
 
@@ -98,7 +76,7 @@ export class MyNavigator {
             var visu: any = {
                 object: PanoramaImage(this.app.omni, media.filename),
                 renderMode: media.rendermode,
-                mode: 'single'
+                mode: media.mode
             }
             this.currentVisu[id] = visu;
         }

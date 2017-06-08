@@ -121,7 +121,6 @@ export class MainScene {
         }
 
 
-
     }
 
 
@@ -139,20 +138,19 @@ export class MainScene {
         //render Visualisations
         for (let key in this.currentVisu) {
             var visu: any = this.currentVisu[key]
-            if (visu.renderMode = 'background') {
-                visu.object.render && visu.object.render();
-            }
-
-        }
-        for (let key in this.currentVisu) {
-            var visu: any = this.currentVisu[key]
-            if (visu.renderMode != 'intermediate') {
+            if (visu.renderMode == 'background') {
                 visu.object.render && visu.object.render();
             }
         }
         for (let key in this.currentVisu) {
             var visu: any = this.currentVisu[key]
-            if (visu.renderMode != 'foreground') {
+            if (visu.renderMode == 'intermediate') {
+                visu.object.render && visu.object.render();
+            }
+        }
+        for (let key in this.currentVisu) {
+            var visu: any = this.currentVisu[key]
+            if (visu.renderMode == 'foreground') {
                 visu.object.render && visu.object.render();
             }
         }
@@ -208,9 +206,9 @@ export class Simulator {
 
         app.server.on("media/show", (media: any) => {
             //console.log("media/show", media);
-            this.app.networking.broadcast("media/show", media, GetCurrentTime() + 1);
+            this.app.networking.broadcast("media/show", media, GetCurrentTime() + 5);
             if (media.audio) {
-                AudioStart(media.audio.filename, GetCurrentTime() + 1, media.audio.x, media.audio.y, media.audio.z);
+                AudioStart(media.audio.filename, GetCurrentTime() + 5, media.audio.x, media.audio.y, media.audio.z);
             }
         });
 
@@ -228,6 +226,7 @@ export class Simulator {
         };
         setInterval(() => {
             this.app.networking.broadcast("time", GetCurrentTime());
+            SendAudioMessage(0, "", GetCurrentTime(), 0, 0, 0, 0);
         }, 20);
 
     }

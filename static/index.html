@@ -112,14 +112,20 @@
                     media: [
                         {
                             type: type.PLANAR_VIDEO,
-                            rendermode: rm.BACKGROUND,
+                            rendermode: rm.FOREGROUND,
                             mode: mode.MULTI,
                             id: "reducing-carbon-pollution-in-our-power-plants",
                             name: "Obama on Carbon",
                             description: "President Obama on Reducing Carbon Pollution in Our Power Plants",
                             filename: "videos/reducing-carbon-pollution-in-our-power-plants.mp4",
-                            "fps": 30,
-                            location: { lon: 180, lat: 10 }
+                            "fps": 29.97,
+                            location: { lon: 180, lat: 10 },
+                            audio: {
+                                filename: "../../videos/reducing-carbon-pollution-in-our-power-plants.wav",
+                                x: 0,
+                                y: 0,
+                                z: 0
+                            }
                         },
                         {
                             type: type.PLANAR_VIDEO,
@@ -218,9 +224,15 @@
                             id: "inconvenienttruthwtc-mov",
                             name: "Rising Sea Levels",
                             description: "Information visualization about rising sea levels from An Inconvenient Truth",
-                            filename: "videos/inconvenienttruthwtc-mov.mp4",
-                            "fps": 30,
-                            location: { lon: -40, lat: 40 }
+                            filename: "videos/inconvenienttruthwtc-mov-2.mp4",
+                            "fps": 25,
+                            location: { lon: -40, lat: 40 },
+                            audio: {
+                                filename: "../../videos/inconvenienttruthwtc-mov.wav",
+                                x: 0,
+                                y: 0,
+                                z: 0
+                            }
                         },
                         {
 

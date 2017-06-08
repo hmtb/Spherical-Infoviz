@@ -3,7 +3,7 @@
 	url = https://github.com/AlloSphere-Research-Group/AlloSystem.git
 [submodule "sound/Gamma"]
 	path = sound/Gamma
-	url = https://github.com/AlloSphere-Research-Group/AlloSystem.git
+	url = https://github.com/AlloSphere-Research-Group/Gamma.git
 [submodule "sound/cuttlebone"]
 	path = sound/cuttlebone
 	url = https://github.com/rbtsx/cuttlebone.git

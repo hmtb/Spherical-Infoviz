@@ -51,3 +51,9 @@ mkdir build
 cd build
 cmake ..
 make
+
+
+Audio
+====
+
+ffmpeg -i video.mp4 audio.wav

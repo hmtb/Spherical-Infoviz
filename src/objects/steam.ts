@@ -12,6 +12,7 @@ import * as StardustAllofw from "stardust-allofw";
 
 
 export class PlanetSteam extends SceneObject {
+    year: any;
 
     private _program: GL.Program;
     private _vertexArray: GL.VertexArray;
@@ -242,15 +243,39 @@ export class PlanetSteam extends SceneObject {
                 Math.sin(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180),
                 Math.sin(d.lat * Math.PI / 180),
                 Math.cos(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180)])
-            .variable("float", "len", (d: any) => (2))
+            .variable("float", "len", (d: any) => (2.5))
             .compile(this.omni)
             .data(currentTextData);
         this.texts = texts;
+
+        var currentYear = [];
+        currentYear.push({
+            lon: 0,
+            lat: 0,
+            year: year,
+        })
+        var lblyear = shape3d.texts()
+            //    .attr("vec3", "center", "5.0 * normalize(pos)")
+            .attr("vec3", "center", "3*normalize(vec3(0, 0, -1))")
+            .attr("vec3", "up", "vec3(0, 1, 0)")
+            .attr("vec3", "normal", "-normalize(vec3(0, 0, -1))")
+            .attr("float", "scale", "0.0005 * len")
+            .text((d: any) => ('Human made carbon dioxide emissions in year: ' + d.year))
+            // Variables are bound to data.
+            .variable("vec3", "pos", (d: any) => [
+                Math.sin(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180),
+                Math.sin(d.lat * Math.PI / 180),
+                Math.cos(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180)])
+            .variable("float", "len", (d: any) => (2))
+            .compile(this.omni)
+            .data(currentYear);
+        this.year = lblyear;
     }
     //(maxlen * Math.pow(Math.round(d.val) / (maxval / 10), 0.5)))
     public render(): void {
         GL.depthMask(GL.FALSE);
         this.texts.render(this.omni);
+        this.year.render(this.omni);
         this.cubes.render();
 
         GL.depthMask(GL.TRUE);
