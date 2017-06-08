@@ -1,6 +1,7 @@
 # Setting Up
+Works on Windows 10 / Mac OS X 
+
 Prepare:
-- Works on Windows 10 / Mac OS X 
 - Install nodejs 6.x LTS
 
 Install dependencies:
@@ -33,6 +34,7 @@ Run:
 
 Controller:
 go to 
+
     http://127.0.0.1:8080/
 
 To control the visualisations
