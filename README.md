@@ -16,9 +16,9 @@ Create Config:
 
     allofw.yaml
 
-For window mode rename allofw.yaml.window  
-For vive mode rename allofw.yaml.vive  
-For Allosphere mode rename allofw.yaml.allospere  
+For window mode rename allofw.yaml.window  <br />
+For vive mode rename allofw.yaml.vive  <br />
+For Allosphere mode rename allofw.yaml.allospere  <br />
 
 add large Files:
     
