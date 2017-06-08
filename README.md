@@ -16,8 +16,9 @@ Run:
     npm run start
 
 ADD LARGE FILES:
-download:
-https://ucsb.box.com/s/hozgflvol5rvve9ho2iilrkxvmpoy3pk
-create folder /videos/files
+    
+    download:
+    https://ucsb.box.com/s/hozgflvol5rvve9ho2iilrkxvmpoy3pk
+    create folder /videos/files
 
 
