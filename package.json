@@ -16,6 +16,7 @@
     "allofw-utils": "0.0.8",
     "stardust-allofw": "0.0.2",
     "stardust-core": "0.0.2",
+    "allofw-shape3d": "0.0.1",
     "av": "^0.4.9",
     "js-yaml": "^3.8.1",
     "node-hid": "^0.5.4",

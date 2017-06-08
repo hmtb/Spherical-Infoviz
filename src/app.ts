@@ -53,7 +53,7 @@ export class MainScene {
         this.app = app;
 
         //init default Values
-        this.config = yaml.load(fs.readFileSync("config.yaml", "utf-8")) as IConfig;
+        //   this.config = yaml.load(fs.readFileSync("config.yaml", "utf-8")) as IConfig;
         this.currentYear = 1980;
         this.time = 0;
         this.currentVisu = {};

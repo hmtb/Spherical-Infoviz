@@ -19,7 +19,7 @@ condition: "indicate-border"
 # condition: "hololens"
 
 
-scene: "gotocafe"
+scene: "world"
 
 phases:
   - name: "Training"

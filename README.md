@@ -7,9 +7,18 @@ Install dependencies:
 
     npm install
 
+
 Build:
 
     npm run build
+
+Create Config:
+
+    allofw.yaml
+
+For window mode rename allof.yaml.window
+For vive mode rename allof.yaml.vive
+For Allosphere mode rename allof.yaml.allospere
 
 Run:
 
