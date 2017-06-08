@@ -1,0 +1,12 @@
+[submodule "sound/AlloSystem"]
+	path = sound/AlloSystem
+	url = https://github.com/AlloSphere-Research-Group/AlloSystem.git
+[submodule "sound/Gamma"]
+	path = sound/Gamma
+	url = https://github.com/AlloSphere-Research-Group/AlloSystem.git
+[submodule "sound/cuttlebone"]
+	path = sound/cuttlebone
+	url = https://github.com/rbtsx/cuttlebone.git
+[submodule "sound/GLV"]
+	path = sound/GLV
+	url = https://github.com/AlloSphere-Research-Group/GLV.git

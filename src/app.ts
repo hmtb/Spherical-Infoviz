@@ -9,19 +9,6 @@ import { Logger } from "./logger";
 import { PanoramaImage } from "./media/panorama_image";
 import { MyNavigator } from "./navigator";
 
-// The schema of the "config.yaml" file
-export interface IConfig {
-    // Specify the scene to use
-    scene: string;
-    // Specify participant ID
-    participantID: string;
-
-    // Specify condition
-    condition: string;
-    // Specify phases
-    randomizePhases: string[];
-}
-
 //variables for the study
 let currentID = 1;
 let targetHeight = 1.65;
@@ -32,7 +19,6 @@ export class MainScene {
     private nav: WindowNavigation;
 
     private headPose: Pose;
-    private config: IConfig;
     private logger: Logger;
     private soundSocket: zmq.Socket;
 
@@ -53,7 +39,6 @@ export class MainScene {
         this.app = app;
 
         //init default Values
-        //   this.config = yaml.load(fs.readFileSync("config.yaml", "utf-8")) as IConfig;
         this.currentYear = 1980;
         this.time = 0;
         this.currentVisu = {};
@@ -71,9 +56,10 @@ export class MainScene {
             this.nav = new WindowNavigation(app.window, app.omni);
 
         }
+
         //Navigaton
-        this.app.networking.on("media/show", (media: any) => {
-            this.navigator.loadVisualisation(media, this.GetCurrentTime());
+        this.app.networking.on("media/show", (media: any, startTime: number) => {
+            this.navigator.loadVisualisation(media, this.GetCurrentTime(), startTime);
         });
 
         this.app.networking.on("media/hide", (media: any) => {
@@ -188,6 +174,30 @@ export class Simulator {
         this.app = app;
         this.isRunning = false;
 
+        // audio
+        var audio_connection = require("zmq").socket("pub");
+        audio_connection.connect((app.config as any).audio.endpoint);
+        function SendAudioMessage(type: number, filename: string, current_time: number, play_time: number, x: number, y: number, z: number) {
+            var buffer = new Buffer(8 + 256 + 40);
+            buffer.fill(0);
+            var pos = 0;
+            buffer.writeInt32LE(type, pos); pos += 8;
+            buffer.write(filename, pos); pos += 256;
+            buffer.writeDoubleLE(current_time, pos); pos += 8;
+            buffer.writeDoubleLE(play_time, pos); pos += 8;
+            buffer.writeDoubleLE(x, pos); pos += 8;
+            buffer.writeDoubleLE(y, pos); pos += 8;
+            buffer.writeDoubleLE(z, pos); pos += 8;
+            audio_connection.send(buffer);
+        }
+
+        function AudioStart(filename: string, time: number, x: number, y: number, z: number) {
+            SendAudioMessage(1, filename, GetCurrentTime(), time, x, y, z);
+        }
+        function AudioStop(filename: string) {
+            SendAudioMessage(2, filename, GetCurrentTime(), 0, 0, 0, 0);
+        }
+
 
         app.server.on("year", (year: number) => {
             this.app.networking.broadcast("year", year);
@@ -196,14 +206,20 @@ export class Simulator {
         app.server.on("scene/set", function (scene_id: string) {
         });
 
-        app.server.on("media/show", (media: JSON) => {
+        app.server.on("media/show", (media: any) => {
             //console.log("media/show", media);
-            this.app.networking.broadcast("media/show", media);
+            this.app.networking.broadcast("media/show", media, GetCurrentTime() + 1);
+            if (media.audio) {
+                AudioStart(media.audio.filename, GetCurrentTime() + 1, media.audio.x, media.audio.y, media.audio.z);
+            }
         });
 
-        app.server.on("media/hide", (media: JSON) => {
+        app.server.on("media/hide", (media: any) => {
             //  console.log("media/hide", media);
             this.app.networking.broadcast("media/hide", media);
+            if (media.audio) {
+                AudioStop(media.audio.filename);
+            }
         });
 
         var time_start = new Date().getTime() / 1000;

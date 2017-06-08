@@ -12,9 +12,9 @@ Create Config:
 
     allofw.yaml
 
-For window mode rename allofw.yaml.window  <br />
+For window(Desktop) mode rename allofw.yaml.window  <br />
 For vive mode rename allofw.yaml.vive  <br />
-For Allosphere mode rename allofw.yaml.allospere  <br />
+For Allosphere mode rename allofw.yaml.allosphere  <br />
 
 add large Files:
     
@@ -41,3 +41,13 @@ To control the visualisations
 
 
 
+Audio
+====
+
+brew install libsndfile fftw
+
+cd sound
+mkdir build
+cd build
+cmake ..
+make

@@ -65,7 +65,7 @@ export class MyNavigator {
 
 
 
-    public loadVisualisation(media: any, time: number) {
+    public loadVisualisation(media: any, time: number, startTime: number) {
         //if visualisation is already loaded return
         var id = media.id;
         if (this.currentVisu[id]) return;
@@ -85,7 +85,7 @@ export class MyNavigator {
 
         if (media.type == this.type.PANORAMIC_VIDEO) {
             let player = PanoramaVideoPlayer(this.app.omni, media.filename, media.fps);
-            player.start(time + 0.1);
+            player.start(startTime);
             var visu: any = {
                 object: player,
                 renderMode: media.rendermode,
@@ -115,7 +115,7 @@ export class MyNavigator {
             var ex = center.cross(new allofwutils.Vector3(0, 1, 0)).normalize();
             var ey = ex.cross(center).normalize();
             visu.object.setLocation(center, ex, ey, 2);
-            visu.object.start(time);
+            visu.object.start(startTime);
             this.currentVisu[id] = visu;
         }
         if (media.type == this.type.PLANAR_IMAGE) {
