@@ -202,7 +202,6 @@ var FPlantsSmoke = function (omni: any) {
         current_time = t;
     };
 
-    this.setYear = function () { }
     this.frame = function () { }
     this.render = function () {
 

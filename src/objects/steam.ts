@@ -46,13 +46,14 @@ export class PlanetSteam extends SceneObject {
         this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
         this.timer = 0;
         this.time_start = new Date().getTime() / 1000;
+        this.currentYear = 2009;
         this.cubeSpec = Stardust.mark.compile(`
             //import the object you wanna use see https://github.com/stardustjs/stardust-core/blob/master/src/core/library/primitives3d.ts
             import { Triangle, Cube } from P3D;
 
             //create mark and extend the constructor with the values you need
 
-            mark Mark(lon: float, lat: float, random: float, t: float,speed: float,year:float,currentYear:float) {
+            mark Mark(lon: float, lat: float, random: float,randomx: float,randomy: float, t: float,speed: float,year:float,currentYear:float, position: float) {
               
             
 
@@ -61,38 +62,49 @@ export class PlanetSteam extends SceneObject {
 
                 //static variables
                 let duration = 100;
-                let size = 6;
-
+                let minsize = 3+randomx;
+                let tduration= t/3;
+                let size = 6 - (position + tduration)%(6-minsize);
+                let spread = ((position + tduration)%(6-minsize))*0.2;
+                let spread2 = ((position + tduration)%(6-minsize));
+                let progress = (t*speed)%duration;
+                
                 
                 // all start at one point a bit randomised
                 let cx = size *  sin(lon * PI/-180) * cos(lat * PI/180 );
                 let cy = size *  sin(lat  * PI/180);
                 let cz = size *  cos(lon * PI/-180) * cos(lat * PI/180 );
+
                 //depending on t and speed the particle mooves on in the sphere
-                let progress = (t*speed)%duration;
 
-                    //  cx = (size-progress/4) *  sin(lon * PI/-180) * cos(lat * PI/180 );
-                    // cy = (size-progress/4) *  sin(lat  * PI/180);
-                    // cz = (size-progress/4) *  cos(lon * PI/-180) * cos(lat * PI/180 );
+                let center = Vector3(cx, cy, cz);
+                let normal1 = normalize(center);
+                let up1 = Vector3(0, 1, 0);
+                let scale1 = random;
+                let eX1 = normalize(cross(normal1, up1)) * (randomx*spread+(0.2*spread2*spread2));
+                let eY1 = normalize(cross(normal1, eX1)) * randomy*spread;
+                center = center + eX1 + eY1;
+                //Spread based on scale
 
-                 if(progress < 2){
-                    cx = (size-progress/4) *  sin(lon * PI/-180) * cos(lat * PI/180 );
-                    cy = (size-progress/4) *  sin(lat  * PI/180);
-                    cz = (size-progress/4) *  cos(lon * PI/-180) * cos(lat * PI/180 );
-                 } else if(progress < 20 ){
-                    cx = (size-progress/4)* sin(lon* PI/-180 + (progress-2)/20 ) * cos(lat * PI/180);
-                    cy = (size-progress/4)* sin(lat  * PI/180);
-                    cz = (size-progress/4) * cos(lon * PI/180 + (progress-2)/20 ) * cos(lat * PI/180); 
-                 } else {
-                    cx = (3)  * sin( lon* PI/-180 + (progress-2)/20 ) * cos(lat * PI/180 );
-                    cy = (3)  * sin(lat   * PI/180);
-                    cz = (3)  * cos(lon   * PI/180 + (progress-2)/20 ) * cos(lat * PI/180); 
-                 }
+
+
+
+                //  if(progress < 2){
+                //     cx = (size-progress/4) *  sin(lon * PI/-180) * cos(lat * PI/180 );
+                //     cy = (size-progress/4) *  sin(lat  * PI/180);
+                //     cz = (size-progress/4) *  cos(lon * PI/-180) * cos(lat * PI/180 );
+                //  } else if(progress < 20 ){
+                //     cx = (size-progress/4)* sin(lon* PI/-180 + (progress-2)/20 ) * cos(lat * PI/180);
+                //     cy = (size-progress/4)* sin(lat  * PI/180);
+                //     cz = (size-progress/4) * cos(lon * PI/180 + (progress-2)/20 ) * cos(lat * PI/180); 
+                //  } else {
+                //     cx = (3)  * sin( lon* PI/-180 + (progress-2)/20 ) * cos(lat * PI/180 );
+                //     cy = (3)  * sin(lat   * PI/180);
+                //     cz = (3)  * cos(lon   * PI/180 + (progress-2)/20 ) * cos(lat * PI/180); 
+                //  }
 
                
 
-                 
-                 let center = Vector3(cx, cy, cz);
                  let normal = normalize(center);
                  let up = Vector3(0, 1, 0);
                  let scale = 0.01 + 0.05 * random;
@@ -147,41 +159,53 @@ export class PlanetSteam extends SceneObject {
                         lon: ilon,
                         lat: ilat,
                         random: Math.random(),
+                        randomx: Math.random() - 0.5,
+                        randomy: Math.random() - 0.5,
                         speed: Math.random() * 10,
+                        position: Math.random() * 3,
                         year: i
                     })
                 }
                 let ilon: number = item.lon - ((Math.random() - 0.5));
                 let ilat: number = item.lat - ((Math.random() - 0.5));
+                let name: string = item.ISO;
                 this.dataText.push({
                     lon: ilon,
                     lat: ilat,
                     random: Math.random(),
                     speed: Math.random() * 10,
                     year: i,
-                    val: value
-
+                    val: value,
+                    name: name
                 })
             }
         }
         let cubes = Stardust.mark.create(this.cubeSpec, this.platform);
+
+
         cubes.attr("lon", d => d.lon);
         cubes.attr("lat", d => d.lat);
         cubes.attr("random", d => d.random);
+        cubes.attr("randomx", d => d.randomx);
+        cubes.attr("randomy", d => d.randomy);
         cubes.attr("t", 0);
         cubes.attr("speed", d => d.speed);
+        cubes.attr("position", d => d.position);
         cubes.attr("year", d => d.year);
-        cubes.attr("currentYear", 1990)
+        cubes.attr("currentYear", 2009)
         cubes.data(this.dataBuffer);
         // console.log(this.dataBuffer);
         this.cubes = cubes;
 
-        this.updateText(1990);
+        this.updateText(2009);
 
     }
 
     public setTime(t: number) {
         this.time = t;
+        var currentYear = Math.round(t / 2) % 30 + 1980;
+
+        this.setYear(currentYear);
     }
 
     public setYear(y: number) {
@@ -205,7 +229,6 @@ export class PlanetSteam extends SceneObject {
                 }
             }
         }
-        console.log(maxval);
 
         var texts = shape3d.texts()
             //    .attr("vec3", "center", "5.0 * normalize(pos)")
@@ -213,22 +236,40 @@ export class PlanetSteam extends SceneObject {
             .attr("vec3", "up", "vec3(0, 1, 0)")
             .attr("vec3", "normal", "-normalize(pos)")
             .attr("float", "scale", "0.0005 * len")
-            .text((d: any) => (d.val))
+            .text((d: any) => (d.name + ' ' + d.val))
             // Variables are bound to data.
             .variable("vec3", "pos", (d: any) => [
                 Math.sin(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180),
                 Math.sin(d.lat * Math.PI / 180),
                 Math.cos(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180)])
-            .variable("float", "len", (d: any) => (maxlen * Math.pow(Math.round(d.val) / (maxval / 10), 0.5)))
+            .variable("float", "len", (d: any) => (2))
+            .compile(this.omni)
+            .data(currentTextData);
+        this.texts = texts;
+
+        var textsYear = shape3d.texts()
+            //    .attr("vec3", "center", "5.0 * normalize(pos)")
+            .attr("vec3", "center", "6.0 * normalize(pos)")
+            .attr("vec3", "up", "vec3(0, 1, 0)")
+            .attr("vec3", "normal", "-normalize(pos)")
+            .attr("float", "scale", "0.0005 * len")
+            .text((d: any) => (d.name + ' ' + d.val))
+            // Variables are bound to data.
+            .variable("vec3", "pos", (d: any) => [
+                Math.sin(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180),
+                Math.sin(d.lat * Math.PI / 180),
+                Math.cos(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180)])
+            .variable("float", "len", (d: any) => (2))
             .compile(this.omni)
             .data(currentTextData);
         this.texts = texts;
     }
-
+    //(maxlen * Math.pow(Math.round(d.val) / (maxval / 10), 0.5)))
     public render(): void {
         GL.depthMask(GL.FALSE);
-        this.cubes.render();
         this.texts.render(this.omni);
+        this.cubes.render();
+
         GL.depthMask(GL.TRUE);
     }
 

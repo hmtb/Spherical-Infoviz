@@ -71,22 +71,9 @@ export class MainScene {
             this.nav = new WindowNavigation(app.window, app.omni);
 
         }
-        var rm = {
-            BACKGROUND: 'background',
-            INTERMEDIATE: 'intermediate',
-            FOREGROUND: 'foreground'
-        };
-
-        var type = {
-            PANORAMIC_VIDEO: 'panorama-video',
-            PLANAR_VIDEO: 'planar-video',
-            PANORAMIC_IMAGE: 'panorama-image'
-        };
-
         //Navigaton
         this.app.networking.on("media/show", (media: any) => {
             this.navigator.loadVisualisation(media, this.GetCurrentTime());
-
         });
 
         this.app.networking.on("media/hide", (media: any) => {
@@ -143,7 +130,6 @@ export class MainScene {
         for (let key in this.currentVisu) {
             var visu: any = this.currentVisu[key];
             visu.object.setTime && visu.object.setTime(this.GetCurrentTime());
-            visu.object.setYear && visu.object.setYear(this.currentYear);
             visu.object.frame && visu.object.frame();
             //add objects function if nesecesry
         }

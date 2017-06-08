@@ -22,7 +22,7 @@ import { Coastlines } from "./media/coastlines";
 import { PanoramaImage } from "./media/panorama_image";
 import { PlanarVideoPlayer } from "./media/planar_video_player";
 import { PanoramaVideoPlayer } from "./media/panorama_video_player";
-import { PlanarImage } from "./media/planar_image"
+import { PlanarImage } from "./media/planar_image";
 var allofwutils = require("allofw-utils");
 
 
@@ -69,13 +69,27 @@ export class MyNavigator {
         //if visualisation is already loaded return
         var id = media.id;
         if (this.currentVisu[id]) return;
-        console.log("hier", media);
+
+        //only one pan image or pan video can exist
+        if (media.mode == 'single') {
+            for (let key in this.currentVisu) {
+                var visu: any = this.currentVisu[key]
+                if (visu.mode = 'single') {
+                    delete this.currentVisu[key];
+                }
+
+            }
+        }
+
+
+
         if (media.type == this.type.PANORAMIC_VIDEO) {
             let player = PanoramaVideoPlayer(this.app.omni, media.filename, media.fps);
             player.start(time + 0.1);
             var visu: any = {
                 object: player,
-                renderMode: media.rendermode
+                renderMode: media.rendermode,
+                mode: 'single'
             }
             this.currentVisu[id] = visu;
 
@@ -83,7 +97,8 @@ export class MyNavigator {
         if (media.type == this.type.PANORAMIC_IMAGE) {
             var visu: any = {
                 object: PanoramaImage(this.app.omni, media.filename),
-                renderMode: media.rendermode
+                renderMode: media.rendermode,
+                mode: 'single'
             }
             this.currentVisu[id] = visu;
         }

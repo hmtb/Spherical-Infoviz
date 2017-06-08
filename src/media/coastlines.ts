@@ -18,7 +18,7 @@ var FCoastlinesRenderer = function (omni: any) {
                 sin(-lnglat.x) * cos(lnglat.y),
                 sin(lnglat.y),
                 cos(-lnglat.x) * cos(lnglat.y)
-            ) * 5.0;
+            ) * 6.0;
             gl_Position = omni_render(omni_transform(do_distortion(position)));
         }
     `.replace("__DISTORTION_CODE__", info.distortion);

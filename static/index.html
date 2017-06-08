@@ -98,6 +98,10 @@
             PLANAR_IMAGE: 'planar-image',
             DATA_VISUALISATION: 'data-visu'
         };
+        var mode = {
+            SINGLE: 'single',
+            MULTI: 'multi',
+        };
 
 
         var ViewModel = function (first, last) {
@@ -109,6 +113,7 @@
                         {
                             type: type.PLANAR_VIDEO,
                             rendermode: rm.BACKGROUND,
+                            mode: mode.MULTI,
                             id: "reducing-carbon-pollution-in-our-power-plants",
                             name: "Obama on Carbon",
                             description: "President Obama on Reducing Carbon Pollution in Our Power Plants",
@@ -119,6 +124,7 @@
                         {
                             type: type.PLANAR_VIDEO,
                             rendermode: rm.FOREGROUND,
+                            mode: mode.MULTI,
                             id: "intro-1-small",
                             name: "Assuming a global perspective",
                             description: "A camera flight from the allosphere to a view of the earth from space",
@@ -129,6 +135,7 @@
                         {
                             type: type.PANORAMIC_IMAGE,
                             rendermode: rm.BACKGROUND,
+                            mode: mode.SINGLE,
                             id: "beautiful-earth",
                             name: "Beautiful Earth Backdrop",
                             description: "A beautiful image of the earth's surface",
@@ -144,6 +151,7 @@
                             id: "a-year-in-the-life-of-earths-co2",
                             type: type.PANORAMIC_VIDEO,
                             rendermode: rm.BACKGROUND,
+                            mode: mode.SINGLE,
                             name: "A Year in the Life of Earth's CO2",
                             description: "A Year in the Life of Earth's CO2",
                             filename: "videos/a-year-in-the-life-of-earths-co2.mp4",
@@ -153,6 +161,7 @@
                             id: "geos5_aerosols_svs030017_2048x1024",
                             type: type.PANORAMIC_VIDEO,
                             rendermode: rm.BACKGROUND,
+                            mode: mode.SINGLE,
                             name: "NASA GEOS-5 Aerosols Distribution",
                             description: "Dust (red), sea salt (blue), organic/black carbon (green), and sulfates (white) displayed by their extinction aerosol optical thickness.",
                             filename: "videos/geos5_aerosols_svs030017_2048x1024.mp4",
@@ -162,6 +171,7 @@
                             id: "geos5_outgoing_radiation_svs030017_2048x1024",
                             type: type.PANORAMIC_VIDEO,
                             rendermode: rm.BACKGROUND,
+                            mode: mode.SINGLE,
                             name: "NASA GEOS-5 Surface Temperature",
                             description: "Surface temperature (colors 270-310 Kelvin) and outgoing longwave radiation at the top of the atmosphere (white) representative of clouds in the model.",
                             filename: "videos/geos5_outgoing_radiation_svs030017_2048x1024.mp4",
@@ -171,6 +181,7 @@
                             id: "geos5_precipitable_water_svs030017_2048x1024",
                             type: type.PANORAMIC_VIDEO,
                             rendermode: rm.BACKGROUND,
+                            mode: mode.SINGLE,
                             name: "NASA GEOS-5 Precipitable Water",
                             description: "Total precipitable water (white) and rainfall (colors 0-15 millimeters/hour; red=highest).",
                             filename: "videos/geos5_precipitable_water_svs030017_2048x1024.mp4",
@@ -180,6 +191,7 @@
                             id: "geos5_surface_winds_svs030017_2048x1024",
                             type: type.PANORAMIC_VIDEO,
                             rendermode: rm.BACKGROUND,
+                            mode: mode.SINGLE,
                             name: "NASA GEOS-5 Surface Winds",
                             description: "Surface winds (white 0-40 meters/second) and upper-level (250 hPa) winds (colors 0-175 meters/second; red=faster).",
                             filename: "videos/geos5_surface_winds_svs030017_2048x1024.mp4",
@@ -193,6 +205,7 @@
                         {
                             type: type.PANORAMIC_IMAGE,
                             rendermode: rm.BACKGROUND,
+                            mode: mode.SINGLE,
                             id: "beautiful-earth",
                             name: "Beautiful Earth Backdrop",
                             description: "A beautiful image of the earth's surface",
@@ -201,6 +214,7 @@
                         {
                             type: type.PLANAR_VIDEO,
                             rendermode: rm.BACKGROUND,
+                            mode: mode.MULTI,
                             id: "inconvenienttruthwtc-mov",
                             name: "Rising Sea Levels",
                             description: "Information visualization about rising sea levels from An Inconvenient Truth",
@@ -212,6 +226,7 @@
 
                             type: type.PLANAR_IMAGE,
                             rendermode: rm.INTERMEDIATE,
+                            mode: mode.MULTI,
                             id: "McCarty_Glacier",
                             name: "McCarty Glacier",
                             description: "A photo of McCarty Glacier, Alaska, in 1909 and 2004",
@@ -221,6 +236,7 @@
                         {
                             type: type.PLANAR_IMAGE,
                             rendermode: rm.INTERMEDIATE,
+                            mode: mode.MULTI,
                             id: "HBOG3Pzr_Pxgen_r_1100xA",
                             name: "Rhone Glacier",
                             description: "A photo of Rhone Glacier, Swiss Alps, in 1860, 1970 and 2050 (projected)",
@@ -235,6 +251,7 @@
                         {
                             type: type.DATA_VISUALISATION,
                             rendermode: rm.INTERMEDIATE,
+                            mode: mode.MULTI,
                             id: "simulation_smoke",
                             name: "Powerplants producing C02",
                             description: "Information visualization about powerplants c02 production",
@@ -242,6 +259,7 @@
                         {
                             type: type.PLANAR_VIDEO,
                             rendermode: rm.INTERMEDIATE,
+                            mode: mode.MULTI,
                             name: "inconvenienttruth-wtc",
                             description: "Information visualization about rising sea levels from An Inconvenient Truth",
                             filename: "videos/inconvenienttruth-wtc.mp4",
@@ -252,6 +270,7 @@
                         {
                             type: type.PLANAR_VIDEO,
                             rendermode: rm.INTERMEDIATE,
+                            mode: mode.MULTI,
                             id: "inconvenienttruth-co2",
                             name: "Rising Sea Levels CO2",
                             description: "Information visualization about rising sea levels from An Inconvenient Truth",
@@ -263,6 +282,7 @@
                         {
                             type: type.PLANAR_VIDEO,
                             rendermode: rm.INTERMEDIATE,
+                            mode: mode.MULTI,
                             id: "reducing-carbon-pollution-in-our-power-plants",
                             name: "Obama Video",
                             description: "Obama: Reducing Carbon Pollution in Our Power Plants",
@@ -280,6 +300,7 @@
                             id: "simulation_steam",
                             type: type.DATA_VISUALISATION,
                             rendermode: rm.INTERMEDIATE,
+                            mode: mode.MULTI,
                             name: "C02 Data last 30 years",
                             description: "Showes the C02 Data from the last 30 years",
                         },
@@ -287,6 +308,7 @@
                             id: "simulation_standart",
                             type: type.DATA_VISUALISATION,
                             rendermode: rm.INTERMEDIATE,
+                            mode: mode.MULTI,
                             name: "Standart",
                             description: "standart Chart",
                         },
@@ -294,6 +316,7 @@
                             id: "sphere_coastlines",
                             type: type.DATA_VISUALISATION,
                             rendermode: rm.BACKGROUND,
+                            mode: mode.MULTI,
                             name: "Coastlines",
                             description: "Coastlines",
                         },
@@ -301,6 +324,7 @@
                             id: "dark_world",
                             type: type.PANORAMIC_IMAGE,
                             rendermode: rm.BACKGROUND,
+                            mode: mode.SINGLE,
                             name: "Dark_world",
                             description: "dark World",
                             filename: "preprocessed/dark_world.jpg"
