@@ -20,14 +20,22 @@ For window mode rename allof.yaml.window
 For vive mode rename allof.yaml.vive
 For Allosphere mode rename allof.yaml.allospere
 
-Run:
-
-    npm run start
-
-ADD LARGE FILES:
+add large Files:
     
     download:
     https://ucsb.box.com/s/hozgflvol5rvve9ho2iilrkxvmpoy3pk
     create folder /videos/files
+
+Run:
+
+    npm run start
+
+
+Controller:
+go to 
+    http://127.0.0.1:8080/
+
+To load different visualisations
+
 
 

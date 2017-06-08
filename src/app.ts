@@ -57,7 +57,7 @@ export class MainScene {
         this.currentYear = 1980;
         this.time = 0;
         this.currentVisu = {};
-        //     this.currentPanorama = PanoramaImage(this.app.omni, "preprocessed/earth.jpg")
+        // this.currentPanorama = PanoramaImage(this.app.omni, "preprocessed/earth.jpg")
         this.navigator = new MyNavigator(this.app, this.currentVisu)
 
 
