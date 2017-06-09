@@ -16,6 +16,8 @@ import { randomRange, slerp, slerpDistance } from "./utils";
 
 import { PlanetSteam } from "./objects/steam";
 
+import { NormalCO } from "./objects/normal_co2";
+
 import { StandartView } from "./objects/standart";
 
 import { Coastlines } from "./media/coastlines";
@@ -132,6 +134,13 @@ export class MyNavigator {
             if (id == 'simulation_standart') {
                 var visu: any = {
                     object: new StandartView(this.app.window, this.app.omni),
+                    renderMode: media.rendermode
+                }
+                this.currentVisu[id] = visu;
+            }
+            if (id == 'simulation_normal') {
+                var visu: any = {
+                    object: new NormalCO(this.app.window, this.app.omni),
                     renderMode: media.rendermode
                 }
                 this.currentVisu[id] = visu;

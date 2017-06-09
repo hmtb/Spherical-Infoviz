@@ -1,0 +1,2 @@
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc ../../lib/liballoGLV.a  CMakeFiles/alloGLV.dir/src/al_ControlGLV.cpp.o CMakeFiles/alloGLV.dir/src/al_ParameterGUI.cpp.o CMakeFiles/alloGLV.dir/src/al_ProtoApp.cpp.o CMakeFiles/alloGLV.dir/src/al_SequencerGUI.cpp.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib ../../lib/liballoGLV.a

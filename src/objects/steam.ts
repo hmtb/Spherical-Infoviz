@@ -231,22 +231,22 @@ export class PlanetSteam extends SceneObject {
             }
         }
 
-        var texts = shape3d.texts()
-            //    .attr("vec3", "center", "5.0 * normalize(pos)")
-            .attr("vec3", "center", "6.0 * normalize(pos)")
-            .attr("vec3", "up", "vec3(0, 1, 0)")
-            .attr("vec3", "normal", "-normalize(pos)")
-            .attr("float", "scale", "0.0005 * len")
-            .text((d: any) => (d.name + ' ' + d.val))
-            // Variables are bound to data.
-            .variable("vec3", "pos", (d: any) => [
-                Math.sin(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180),
-                Math.sin(d.lat * Math.PI / 180),
-                Math.cos(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180)])
-            .variable("float", "len", (d: any) => (2.5))
-            .compile(this.omni)
-            .data(currentTextData);
-        this.texts = texts;
+        // var texts = shape3d.texts()
+        //     //    .attr("vec3", "center", "5.0 * normalize(pos)")
+        //     .attr("vec3", "center", "6.0 * normalize(pos)")
+        //     .attr("vec3", "up", "vec3(0, 1, 0)")
+        //     .attr("vec3", "normal", "-normalize(pos)")
+        //     .attr("float", "scale", "0.0005 * len")
+        //     .text((d: any) => (d.name + ' ' + d.val))
+        //     // Variables are bound to data.
+        //     .variable("vec3", "pos", (d: any) => [
+        //         Math.sin(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180),
+        //         Math.sin(d.lat * Math.PI / 180),
+        //         Math.cos(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180)])
+        //     .variable("float", "len", (d: any) => (2.5))
+        //     .compile(this.omni)
+        //     .data(currentTextData);
+        // this.texts = texts;
 
         var currentYear = [];
         currentYear.push({
@@ -274,7 +274,7 @@ export class PlanetSteam extends SceneObject {
     //(maxlen * Math.pow(Math.round(d.val) / (maxval / 10), 0.5)))
     public render(): void {
         GL.depthMask(GL.FALSE);
-        this.texts.render(this.omni);
+        //   this.texts.render(this.omni);
         this.year.render(this.omni);
         this.cubes.render();
 

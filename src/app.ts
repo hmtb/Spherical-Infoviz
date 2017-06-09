@@ -88,6 +88,11 @@ export class MainScene {
             this.currentYear = y;
         });
 
+
+
+
+
+
     }
 
     public GetCurrentTime = function () {
@@ -229,6 +234,18 @@ export class Simulator {
             SendAudioMessage(0, "", GetCurrentTime(), 0, 0, 0, 0);
         }, 20);
 
+        // var ExternalProgram = require("/utils/launcher.js").ExternalProgram;
+
+
+        // var current_plasim_stream: any = null;
+        // app.server.on("plasim/stream/start", (filename: any) => {
+        //     if (current_plasim_stream) current_plasim_stream.kill();
+        //     current_plasim_stream = new ExternalProgram("plasim", "python", ["server/plasim-streamer.py", (app.config as any).plasim.data_source, filename]);
+        // });
+        // app.server.on("plasim/stream/stop", () => {
+        //     if (current_plasim_stream) current_plasim_stream.kill();
+        //     current_plasim_stream = null;
+        // });
     }
 }
 
