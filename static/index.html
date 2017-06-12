@@ -379,6 +379,54 @@
                             filename: "preprocessed/t42-double-co2-200yr-yearly.npy"
                         }
                     ]
+                }, {
+                    id: "spherical", name: "Sperical Infoviz Studz",
+                    media: [
+                        {
+                            id: "sphere_coastlines",
+                            type: type.DATA_VISUALISATION,
+                            rendermode: rm.BACKGROUND,
+                            mode: mode.MULTI,
+                            name: "Coastlines",
+                            description: "Coastlines",
+                        },
+                        {
+                            id: "dark_world",
+                            type: type.PANORAMIC_IMAGE,
+                            rendermode: rm.BACKGROUND,
+                            mode: mode.SINGLE,
+                            name: "Dark_world",
+                            description: "dark World",
+                            filename: "preprocessed/dark_world.jpg"
+                        }, {
+                            type: type.PANORAMIC_IMAGE,
+                            rendermode: rm.BACKGROUND,
+                            mode: mode.SINGLE,
+                            id: "beautiful-earth",
+                            name: "Beautiful Earth Backdrop",
+                            description: "A beautiful image of the earth's surface",
+                            filename: "preprocessed/earth.jpg"
+                        }
+                    ],
+                    id: "spherical", name: "Sperical Infoviz Studz",
+                    simulations: [
+                        {
+                            id: "simulation_steam",
+                            type: type.DATA_VISUALISATION,
+                            rendermode: rm.INTERMEDIATE,
+                            mode: mode.MULTI,
+                            name: "C02 Data last 30 years",
+                            description: "Showes the C02 Data from the last 30 years",
+                        },
+                        {
+                            id: "simulation_normal",
+                            type: type.DATA_VISUALISATION,
+                            rendermode: rm.FOREGROUND,
+                            mode: mode.MULTI,
+                            name: "simulation_normal",
+                            description: "C02 Image",
+                        }
+                    ]
                 }
             ];
             this.current_scene = ko.observable(this.scenes[0]);
@@ -398,10 +446,17 @@
                 if (simulation.type == "plasim") {
                     server.message("plasim/stream/start", simulation.filename);
                 }
+                if (simulation.type == type.DATA_VISUALISATION) {
+                    server.message("data/stream/start", simulation);
+                }
+
             };
             this.stopSimulation = function (simulation) {
                 if (simulation.type == "plasim") {
                     server.message("plasim/stream/stop");
+                }
+                if (simulation.type == type.DATA_VISUALISATION) {
+                    server.message("data/stream/stop", simulation);
                 }
             };
         };

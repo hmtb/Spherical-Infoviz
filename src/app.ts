@@ -34,7 +34,6 @@ export class MainScene {
 
     private navigator: MyNavigator;
 
-
     constructor(app: IRendererRuntime) {
         this.app = app;
 
@@ -63,6 +62,14 @@ export class MainScene {
         });
 
         this.app.networking.on("media/hide", (media: any) => {
+            this.navigator.hideVisualisation(media);
+        });
+        //Navigaton
+        this.app.networking.on("data/stream/start", (media: any, startTime: number) => {
+            this.navigator.loadVisualisation(media, this.GetCurrentTime(), startTime);
+        });
+
+        this.app.networking.on("data/stream/stop", (media: any) => {
             this.navigator.hideVisualisation(media);
         });
 
@@ -211,9 +218,9 @@ export class Simulator {
 
         app.server.on("media/show", (media: any) => {
             //console.log("media/show", media);
-            this.app.networking.broadcast("media/show", media, GetCurrentTime() + 5);
+            this.app.networking.broadcast("media/show", media, GetCurrentTime() + 2);
             if (media.audio) {
-                AudioStart(media.audio.filename, GetCurrentTime() + 5, media.audio.x, media.audio.y, media.audio.z);
+                AudioStart(media.audio.filename, GetCurrentTime() + 2, media.audio.x, media.audio.y, media.audio.z);
             }
         });
 
@@ -235,7 +242,12 @@ export class Simulator {
         }, 20);
 
         // var ExternalProgram = require("/utils/launcher.js").ExternalProgram;
-
+        app.server.on("data/stream/start", (simulation: any) => {
+            this.app.networking.broadcast("data/stream/start", simulation, GetCurrentTime() + 1);
+        });
+        app.server.on("data/stream/stop", (simulation: any) => {
+            this.app.networking.broadcast("data/stream/stop", simulation);
+        });
 
         // var current_plasim_stream: any = null;
         // app.server.on("plasim/stream/start", (filename: any) => {
