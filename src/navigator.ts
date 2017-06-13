@@ -19,7 +19,7 @@ import { PlanetSteam } from "./objects/steam";
 import { NormalCO } from "./objects/normal_co2";
 
 import { StandartView } from "./objects/standart";
-
+import { PlanetSpikes } from "./objects/spikes";
 import { Coastlines } from "./media/coastlines";
 import { PanoramaImage } from "./media/panorama_image";
 import { PlanarVideoPlayer } from "./media/planar_video_player";
@@ -122,7 +122,7 @@ export class MyNavigator {
                 }
                 this.currentVisu[id] = visu;
             }
-            if (id == 'simulation_steam') {
+            else if (id == 'simulation_steam') {
                 var data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry.csv", "utf-8"));
                 var visu: any = {
                     object: new PlanetSteam(this.app.window, this.app.omni, data),
@@ -131,23 +131,82 @@ export class MyNavigator {
                 }
                 this.currentVisu[id] = visu;
             }
-            if (id == 'simulation_standart') {
+            else if (id == 'simulation_standart') {
                 var visu: any = {
                     object: new StandartView(this.app.window, this.app.omni),
                     renderMode: media.rendermode
                 }
                 this.currentVisu[id] = visu;
             }
-            if (id == 'simulation_normal') {
+            else if (id == 'simulation_normal') {
                 var visu: any = {
                     object: new NormalCO(this.app.window, this.app.omni),
                     renderMode: media.rendermode
                 }
                 this.currentVisu[id] = visu;
             }
-            if (media.id == 'sphere_coastlines') {
+            else if (media.id == 'sphere_coastlines') {
+
                 var visu: any = {
-                    object: Coastlines(this.app.omni),
+                    object: Coastlines(this.app.omni, info),
+                    renderMode: media.rendermode
+                }
+
+                this.currentVisu[id] = visu;
+            } else if (media.id == 'sphere_coastlines_distortion_A') {
+
+
+                var info: any = {
+                    distortion: `
+                                 // Distrotion code.
+                                    uniform vec3 distrotion_direction = vec3(0, 0, 1);
+                                    uniform float distrotion_radius = 0.05;
+                                    uniform float distrotion_strength = 3.0;
+                                    vec3 do_distortion(vec3 p) {
+                                        p = normalize(p);
+                                        float cos_angle = dot(distrotion_direction, p);
+                                        float distortion_kernel = max(0.0, 100.0 * (cos_angle - 0.99));
+                                        //float distortion_kernel = cos_angle > 0.99 ? 1 : 0;
+                                        // float distortion_kernel = exp(-(cos_angle - 1.0) * (cos_angle - 1.0) / distrotion_radius / distrotion_radius);
+                                        float y_shift = 0.0 * distortion_kernel * distrotion_strength / 30.0;
+                                        float new_radius = 5.0 - distortion_kernel * distrotion_strength;
+                                        return p * new_radius + vec3(0, -y_shift, 0);
+                                    }
+                                    `
+                }
+                var visu: any = {
+                    object: Coastlines(this.app.omni, info),
+                    renderMode: media.rendermode
+                }
+
+                this.currentVisu[id] = visu;
+            } else if (media.id == 'sphere_coastlines_distortion_B') {
+
+
+                var info: any = {
+                    distortion: `
+                                // Distrotion code.
+                                uniform vec3 distrotion_direction = vec3(0, 0, 1);
+                                uniform float distrotion_radius = 0.05;
+                                uniform float distrotion_strength = 3.0;
+                                vec3 do_distortion(vec3 p) {
+                                    p = normalize(p);
+                                    float cos_angle = dot(distrotion_direction, p);
+                                    float new_radius = 5.0 - exp(-(cos_angle - 1.0) * (cos_angle - 1.0) / distrotion_radius / distrotion_radius) * distrotion_strength;
+                                    return p * new_radius;
+                                }
+                                `
+                }
+                var visu: any = {
+                    object: Coastlines(this.app.omni, info),
+                    renderMode: media.rendermode
+                }
+
+                this.currentVisu[id] = visu;
+            }
+            else if (media.id == 'simulation_spikes') {
+                var visu: any = {
+                    object: PlanetSpikes(this.app.omni),
                     renderMode: media.rendermode
                 }
                 this.currentVisu[id] = visu;

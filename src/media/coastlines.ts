@@ -5,8 +5,7 @@ var allofwutils = require("allofw-utils");
 var GL = allofw.GL3;
 var S3 = allofwutils.shape3d;
 
-var FCoastlinesRenderer = function (omni: any) {
-    var info: any = {};
+var FCoastlinesRenderer = function (omni: any, info: any) {
     if (!info) info = {};
     if (!info.distortion) info.distortion = `vec3 do_distortion(vec3 p) { return p; }`;
     // Simple shader to draw points and lines.
@@ -18,7 +17,7 @@ var FCoastlinesRenderer = function (omni: any) {
                 sin(-lnglat.x) * cos(lnglat.y),
                 sin(lnglat.y),
                 cos(-lnglat.x) * cos(lnglat.y)
-            ) * 6.0;
+            ) * 5.0;
             gl_Position = omni_render(omni_transform(do_distortion(position)));
         }
     `.replace("__DISTORTION_CODE__", info.distortion);
@@ -55,13 +54,20 @@ var FCoastlinesRenderer = function (omni: any) {
     GL.bindBuffer(GL.ARRAY_BUFFER, vertex_buffer);
     GL.vertexAttribPointer(0, 2, GL.FLOAT, GL.FALSE, 8, 0);
     GL.bindVertexArray(0);
+    var angle = -140 / 180 * Math.PI;
     this.setUniforms = function (f: any) {
         GL.useProgram(program.id());
         f(program.id());
         GL.useProgram(0);
+        GL.uniform3f(GL.getUniformLocation(program, "distrotion_direction"), Math.cos(20), 0, Math.sin(20));
+        GL.uniform1f(GL.getUniformLocation(program, "distrotion_strength"), 2 * Math.cos(new Date().getTime() / 1000) + 2.0);
     };
+
+
+
     this.frame = function () { }
     this.render = function () {
+
         // Use the shader above.
         GL.useProgram(program.id());
 
@@ -85,7 +91,7 @@ var FCoastlinesRenderer = function (omni: any) {
     };
 };
 
-export let Coastlines = function (omni: any) {
-    return new (FCoastlinesRenderer as any)(omni);
+export let Coastlines = function (omni: any, info: any) {
+    return new (FCoastlinesRenderer as any)(omni, info);
 };
 

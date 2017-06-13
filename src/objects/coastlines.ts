@@ -90,6 +90,9 @@ export class Coastlines extends SceneObject {
             f(this.program.id());
             GL.useProgram(0);
         };
+
+
+
     }
 
     public render(): void {
@@ -116,7 +119,6 @@ export class Coastlines extends SceneObject {
     }
 
     public frame(): void {
-
     }
 
 }

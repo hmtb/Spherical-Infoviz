@@ -52,6 +52,9 @@ cd build
 cmake ..
 make
 
+start sound server cd sound/build 
+./SphericalInfoVisSound
+
 
 Audio
 ====
