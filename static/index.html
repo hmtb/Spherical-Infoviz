@@ -96,7 +96,8 @@
             PANORAMIC_IMAGE: 'panorama-image',
             PLANAR_VIDEO: 'planar-video',
             PLANAR_IMAGE: 'planar-image',
-            DATA_VISUALISATION: 'data-visu'
+            DATA_VISUALISATION: 'data-visu',
+            TEXT: 'text'
         };
         var mode = {
             SINGLE: 'single',
@@ -422,6 +423,14 @@
                             name: "Beautiful Earth Backdrop",
                             description: "A beautiful image of the earth's surface",
                             filename: "preprocessed/earth.jpg"
+                        }, {
+                            type: type.TEXT,
+                            rendermode: rm.FOREGROUND,
+                            mode: mode.MULTI,
+                            id: "text-welcome",
+                            name: "Text welcom",
+                            description: "display a welcome text",
+                            text: { lon: 180, lat: 10, text: "Hallo Welt" }
                         }
                     ],
                     id: "spherical", name: "Sperical Infoviz Studz",

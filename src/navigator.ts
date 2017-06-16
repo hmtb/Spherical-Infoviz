@@ -15,6 +15,7 @@ import { PlantsSmoke } from "./objects/smoke";
 import { randomRange, slerp, slerpDistance } from "./utils";
 
 import { PlanetSteam } from "./objects/steam";
+import { Text } from "./objects/text";
 
 import { NormalCO } from "./objects/normal_co2";
 
@@ -41,7 +42,8 @@ export class MyNavigator {
             PLANAR_VIDEO: 'planar-video',
             PANORAMIC_IMAGE: 'panorama-image',
             PLANAR_IMAGE: 'planar-image',
-            DATA_VISUALISATION: 'data-visu'
+            DATA_VISUALISATION: 'data-visu',
+            TEXT: 'text'
         };
     }
 
@@ -62,6 +64,14 @@ export class MyNavigator {
         }
 
 
+        if (media.type == this.type.TEXT) {
+            var visu: any = {
+                object: new Text(this.app.window, this.app.omni, media.text),
+                renderMode: media.rendermode,
+                mode: media.mode
+            }
+            this.currentVisu[id] = visu;
+        }
 
         if (media.type == this.type.PANORAMIC_VIDEO) {
             let player = PanoramaVideoPlayer(this.app.omni, media.filename, media.fps);
