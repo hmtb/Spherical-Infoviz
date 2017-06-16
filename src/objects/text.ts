@@ -37,7 +37,7 @@ export class Text extends SceneObject {
             lon: data.lat,
             lat: data.lon,
             text: data.text,
-            intens: { fill: [255, 0, 0, 1] },
+            intens: { fill: [255, 0, 0, 0.1] },
             len: 20
 
         })
