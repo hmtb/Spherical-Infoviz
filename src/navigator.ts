@@ -16,6 +16,9 @@ import { randomRange, slerp, slerpDistance } from "./utils";
 
 import { PlanetSteamText } from "./objects/steamWithText";
 import { PlanetSteam } from "./objects/steam";
+import { PlanetSteamOld } from "./objects/steamOld"
+
+
 import { Text } from "./objects/text";
 
 import { NormalCO } from "./objects/normal_co2";
@@ -119,13 +122,16 @@ export class MyNavigator {
                 Math.sin(media.location.lon * Math.PI / -180) * Math.cos(media.location.lat * Math.PI / 180),
                 Math.sin(media.location.lat * Math.PI / 180),
                 Math.cos(media.location.lon * Math.PI / -180) * Math.cos(media.location.lat * Math.PI / 180)
-            ).normalize().scale(3.0);
+            ).normalize().scale(media.location.rad);
             var ex = center.cross(new allofwutils.Vector3(0, 1, 0)).normalize();
             var ey = ex.cross(center).normalize();
             visu.object.setLocation(center, ex, ey, 2);
             console.log(visu);
             this.currentVisu[id] = visu;
         }
+
+
+
         if (media.type == this.type.DATA_VISUALISATION) {
             if (id == 'simulation_smoke') {
                 var visu: any = {
@@ -135,7 +141,7 @@ export class MyNavigator {
                 this.currentVisu[id] = visu;
             }
             else if (id == 'simulation_steam') {
-                var data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry.csv", "utf-8"));
+                var data = require("d3").csv.parse(require("fs").readFileSync(media.filename, "utf-8"));
                 var visu: any = {
                     object: new PlanetSteam(this.app.window, this.app.omni, data, startTime),
                     renderMode: media.rendermode
@@ -144,7 +150,7 @@ export class MyNavigator {
                 this.currentVisu[id] = visu;
             }
             else if (id == 'simulation_steam_text') {
-                var data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry.csv", "utf-8"));
+                var data = require("d3").csv.parse(require("fs").readFileSync(media.filename, "utf-8"));
                 var visu: any = {
                     object: new PlanetSteamText(this.app.window, this.app.omni, data, startTime),
                     renderMode: media.rendermode
@@ -152,6 +158,17 @@ export class MyNavigator {
                 }
                 this.currentVisu[id] = visu;
             }
+            else if (id == 'simulation_steam_old') {
+                var data = require("d3").csv.parse(require("fs").readFileSync(media.filename, "utf-8"));
+                var visu: any = {
+                    object: new PlanetSteamOld(this.app.window, this.app.omni, data, startTime, media.label == "on"),
+                    renderMode: media.rendermode
+
+                }
+                this.currentVisu[id] = visu;
+            }
+
+
             else if (id == 'simulation_standart') {
                 var visu: any = {
                     object: new StandartView(this.app.window, this.app.omni),
@@ -226,8 +243,9 @@ export class MyNavigator {
                 this.currentVisu[id] = visu;
             }
             else if (media.id == 'simulation_spikes') {
+                var data = require("d3").csv.parse(require("fs").readFileSync(media.filename, "utf-8"));
                 var visu: any = {
-                    object: PlanetSpikes(this.app.omni),
+                    object: PlanetSpikes(this.app.omni, any),
                     renderMode: media.rendermode
                 }
                 this.currentVisu[id] = visu;

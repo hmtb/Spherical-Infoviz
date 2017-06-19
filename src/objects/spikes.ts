@@ -120,7 +120,7 @@ var S3 = allofwutils.shape3d;
 
 
 
-var FPlantsSpikes = function (omni: any) {
+var FPlantsSpikes = function (omni: any, data: any) {
 
 
     var maxval = 36336000;
@@ -141,8 +141,6 @@ var FPlantsSpikes = function (omni: any) {
     //     } );
     // }
 
-    // read in plant data from a CSV file
-    var data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/AllPowerPlants.csv", "utf-8"));
 
     // Cube objects at given lat/lon with height = val
     // basic proportions are 0.25 * 0.25 * 1
@@ -189,4 +187,4 @@ var FPlantsSpikes = function (omni: any) {
 
 };
 
-export let PlanetSpikes = function (omni: any) { return new (FPlantsSpikes as any)(omni); };
+export let PlanetSpikes = function (omni: any, data: any) { return new (FPlantsSpikes as any)(omni, data); };

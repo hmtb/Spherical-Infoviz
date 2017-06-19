@@ -266,7 +266,7 @@
                             name: "McCarty Glacier",
                             description: "A photo of McCarty Glacier, Alaska, in 1909 and 2004",
                             filename: "preprocessed/McCarty_Glacier.jpg",
-                            location: { lon: -150, lat: 59 }
+                            location: { lon: -150, lat: 59, rad: 3 }
                         },
                         {
                             type: type.PLANAR_IMAGE,
@@ -276,7 +276,7 @@
                             name: "Rhone Glacier",
                             description: "A photo of Rhone Glacier, Swiss Alps, in 1860, 1970 and 2050 (projected)",
                             filename: "preprocessed/HBOG3Pzr_Pxgen_r_1100xA.jpg",
-                            location: { lon: -8, lat: 46 }
+                            location: { lon: -8, lat: 46, rad: 3 }
                         }
                     ]
                 },
@@ -445,6 +445,16 @@
                             name: "Beautiful Earth Backdrop",
                             description: "A beautiful image of the earth's surface",
                             filename: "preprocessed/earth.jpg"
+                        }, {
+
+                            type: type.PLANAR_IMAGE,
+                            rendermode: rm.INTERMEDIATE,
+                            mode: mode.MULTI,
+                            id: "lulang_carb",
+                            name: "Carbon 30 years",
+                            description: "standart chart",
+                            filename: "preprocessed/lulang.png",
+                            location: { lon: -180, lat: 10, rad: 2 }
                         }
                     ],
                     simulations: [
@@ -455,6 +465,7 @@
                             mode: mode.MULTI,
                             name: "C02 Data last 30 years",
                             description: "Showes the C02 Data from the last 30 years",
+                            filename: "preprocessed/emissionByCountry.csv"
                         },
                         {
                             id: "simulation_steam_text",
@@ -463,6 +474,7 @@
                             mode: mode.MULTI,
                             name: "C02 Data last 30 years with text",
                             description: "Showes the C02 Data from the last 30 years",
+                            filename: "preprocessed/emissionByCountry.csv"
                         },
                         {
                             id: "simulation_normal",
@@ -470,7 +482,7 @@
                             rendermode: rm.FOREGROUND,
                             mode: mode.MULTI,
                             name: "simulation_normal",
-                            description: "C02 Image",
+                            description: "C02 Image"
                         }
                         ,
                         {
@@ -480,7 +492,18 @@
                             mode: mode.MULTI,
                             name: "simulation_spikes",
                             description: "C02 Spikes",
-                        }
+                            filename: "preprocessed/AllPowerPlants.csv"
+                        },
+                        {
+                            id: "simulation_steam_old",
+                            type: type.DATA_VISUALISATION,
+                            rendermode: rm.INTERMEDIATE,
+                            mode: mode.MULTI,
+                            name: "C02 Data last 30 years with text",
+                            description: "Showes the C02 Data from the last 30 years",
+                            filename: "preprocessed/emissionByCountry.csv",
+                            label: "on"
+                        },
                     ],
                     stories: [
                         {
