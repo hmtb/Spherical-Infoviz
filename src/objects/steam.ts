@@ -212,7 +212,7 @@ export class PlanetSteam extends SceneObject {
     public setYear(y: number) {
         if (y == this.currentYear) return;
         this.currentYear = y;
-        this.updateText(y);
+        //   this.updateText(y);
     }
 
     private updateText(year: number) {
