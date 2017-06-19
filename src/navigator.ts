@@ -245,7 +245,7 @@ export class MyNavigator {
             else if (media.id == 'simulation_spikes') {
                 var data = require("d3").csv.parse(require("fs").readFileSync(media.filename, "utf-8"));
                 var visu: any = {
-                    object: PlanetSpikes(this.app.omni, any),
+                    object: PlanetSpikes(this.app.omni, data),
                     renderMode: media.rendermode
                 }
                 this.currentVisu[id] = visu;
