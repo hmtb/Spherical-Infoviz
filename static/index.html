@@ -451,10 +451,10 @@
                             rendermode: rm.INTERMEDIATE,
                             mode: mode.MULTI,
                             id: "lulang_carb",
-                            name: "Carbon 30 years",
+                            name: "Carbon 30 years Chart",
                             description: "standart chart",
                             filename: "preprocessed/lulang.png",
-                            location: { lon: -180, lat: 10, rad: 1 }
+                            location: { lon: -180, lat: 10, rad: 1.5 }
                         }
                     ],
                     simulations: [
@@ -502,6 +502,16 @@
                             name: "C02 Data last 30 years with text",
                             description: "Showes the C02 Data from the last 30 years",
                             filename: "preprocessed/emissionByCountry.csv",
+                            label: "on"
+                        },
+                        {
+                            id: "simulation_steam",
+                            type: type.DATA_VISUALISATION,
+                            rendermode: rm.INTERMEDIATE,
+                            mode: mode.MULTI,
+                            name: "C02 Data last 30 from LULANG",
+                            description: "Showes the C02 Data from the last 30 years",
+                            filename: "preprocessed/emissionStudy.csv",
                             label: "on"
                         },
                     ],
