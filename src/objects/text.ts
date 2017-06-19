@@ -30,7 +30,6 @@ export class Text extends SceneObject {
     private currentText: any[];
     private newText: any[];
     private transit = false;
-    private transitFrame: number;
     private switch = false;
 
     constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, data: any, startTime: number) {
@@ -38,14 +37,12 @@ export class Text extends SceneObject {
         this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
         this.time_start = startTime;
         this.currentText = [];
-
         if (data == null) {
             data = {
                 lat: 0,
                 lon: 0,
                 text: ''
             }
-
         }
         this.currentText.push({
             lon: data.lat,
@@ -72,6 +69,10 @@ export class Text extends SceneObject {
             .compile(this.omni)
             .data(this.currentText);
         this.text = lblText;
+        this.transit = true;
+        this.switch = true;
+        this.intens = startTime;
+        console.log(startTime);
     }
 
     public setTime(t: number) {
@@ -90,11 +91,10 @@ export class Text extends SceneObject {
     //     })
 
     // }
-    public setText(text: string, lat: number, lon: number) {
+    public setText(text: string, lat: number, lon: number, startTime: number) {
         this.transit = true
         this.switch = true;
-        this.transitFrame = 0;
-        this.intens = this.time;
+        this.intens = startTime;
         this.newText = [];
         this.newText.push({
             lon: lat,
@@ -125,9 +125,7 @@ export class Text extends SceneObject {
             }
             this.text.data(this.currentText)
         }
-
         if (this.transit) {
-            console.log("transit" + (transition))
             for (var item of this.currentText) {
                 item.intens = { fill: [255, 255, 255, (Math.cos(transition) + 1) / 2] }
             }
@@ -138,16 +136,6 @@ export class Text extends SceneObject {
             }
 
         }
-
-
-
-
-
-
-
-
-
-
 
         if (this.intens <= 2) {
             for (var item of this.currentText) {

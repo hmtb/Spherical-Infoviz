@@ -65,7 +65,12 @@ export class MyNavigator {
 
 
         if (media.type == this.type.TEXT) {
-
+            var visu: any = {
+                object: new Text(this.app.window, this.app.omni, media.text, startTime),
+                renderMode: media.rendermode,
+                mode: media.mode
+            }
+            this.currentVisu[id] = visu;
         }
 
         if (media.type == this.type.PANORAMIC_VIDEO) {

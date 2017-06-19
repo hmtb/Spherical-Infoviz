@@ -70,6 +70,17 @@
                     </p>
                 </div>
             </div>
+
+            <h2>TutorialText</h2>
+            <div class="media-entry" style="border-bottom: 1px solid #333">
+                <div data-bind="foreach: current_scene().text">
+                    <button class="btn" data-bind="click: $root.showText">show</button>
+                    <button class="btn" data-bind="click: $root.hideText">hide</button>
+                    <span data-bind="text: $data.text"></span>
+
+                    </p>
+                </div>
+            </div>
             <h2>Stories</h2>
             <div class="media-entry" style="border-bottom: 1px solid #333">
                 <div data-bind="foreach: current_scene().stories">
@@ -434,35 +445,8 @@
                             name: "Beautiful Earth Backdrop",
                             description: "A beautiful image of the earth's surface",
                             filename: "preprocessed/earth.jpg"
-                        }, {
-                            type: type.TutorialText,
-                            rendermode: rm.FOREGROUND,
-                            mode: mode.MULTI,
-                            id: "text-welcome",
-                            name: "Text welcom",
-                            description: "display a welcome text",
-                            text: { lon: 180, lat: 10, text: "Hello  World" }
-                        }
-                        , {
-                            type: type.TutorialText,
-                            rendermode: rm.FOREGROUND,
-                            mode: mode.MULTI,
-                            id: "text-2",
-                            name: "Text welcom",
-                            description: "display a welcome text",
-                            text: { lon: 180, lat: 10, text: "This is how the Earth realy looks like" }
-                        }
-                        , {
-                            type: type.TutorialText,
-                            rendermode: rm.FOREGROUND,
-                            mode: mode.MULTI,
-                            id: "text-2",
-                            name: "Text welcom",
-                            description: "display a welcome text",
-                            text: { lon: 180, lat: 10, text: "can you see how big africa is" }
                         }
                     ],
-                    id: "spherical", name: "Sperical Infoviz Studz",
                     simulations: [
                         {
                             id: "simulation_steam",
@@ -490,7 +474,6 @@
                             description: "C02 Spikes",
                         }
                     ],
-                    id: "spherical", name: "Sperical Infoviz Studz",
                     stories: [
                         {
                             id: "Studie 1",
@@ -508,6 +491,29 @@
                                 }
                             }
                         }
+                    ],
+                    text: [
+                        {
+                            name: "welcome",
+                            description: "Showes the C02 Data from the last 30 years",
+                            lon: 180,
+                            lat: 10,
+                            text: "Hallo Welt"
+                        }
+                        , {
+                            name: "this is",
+                            description: "Showes the C02 Data from the last 30 years",
+                            lon: 180,
+                            lat: 10,
+                            text: "This is how the Earth realy looks like"
+                        }
+                        , {
+                            name: "Text welcom",
+                            description: "display a welcome text",
+                            lon: 180,
+                            lat: 10,
+                            text: "can you see how big africa is"
+                        }
                     ]
                 }
             ];
@@ -518,19 +524,19 @@
             });
 
             this.showMedia = function (media) {
-
-                if (media.type == type.TutorialText) {
-                    server.message("tutorText", media);
-                    return;
-                } else {
-                    server.message("media/show", media);
-                }
-
-
+                server.message("media/show", media);
             };
             this.hideMedia = function (media) {
                 server.message("media/hide", media);
             };
+
+            this.showText = function (text) {
+                server.message("text/show", text);
+            }
+            this.hideText = function (text) {
+                server.message("text/hide", text);
+            }
+
 
             this.launchSimulation = function (simulation) {
                 if (simulation.type == "plasim") {

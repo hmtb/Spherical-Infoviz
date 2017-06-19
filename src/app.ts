@@ -16,9 +16,7 @@ let targetHeight = 1.65;
 
 export class MainScene {
     private app: IRendererRuntime;
-
     private nav: WindowNavigation;
-
     private headPose: Pose;
     private logger: Logger;
     private soundSocket: zmq.Socket;
@@ -57,8 +55,11 @@ export class MainScene {
             this.nav = new WindowNavigation(app.window, app.omni);
 
         }
-        this.app.networking.on("tutorText", (media: any, startTime: number) => {
-            this.tutorText.setText(media.text.text, media.text.lat, media.text.lon)
+        this.app.networking.on("text/show", (text: any, startTime: number) => {
+            this.tutorText.setText(text.text, text.lat, text.lon, startTime)
+        });
+        this.app.networking.on("text/hide", (text: any, startTime: number) => {
+            this.tutorText.setText("", 0, 0, startTime)
         });
         //Navigaton
         this.app.networking.on("media/show", (media: any, startTime: number) => {
@@ -228,10 +229,7 @@ export class Simulator {
                 AudioStart(media.audio.filename, GetCurrentTime() + 1, media.audio.x, media.audio.y, media.audio.z);
             }
         });
-        app.server.on("tutorText", (media: any) => {
-            //console.log("media/show", media);
-            this.app.networking.broadcast("tutorText", media, GetCurrentTime());
-        });
+
 
         app.server.on("media/hide", (media: any) => {
             //  console.log("media/hide", media);
@@ -240,6 +238,18 @@ export class Simulator {
                 AudioStop(media.audio.filename);
             }
         });
+
+        app.server.on("text/show", (text: any) => {
+            //console.log("media/show", media);
+            this.app.networking.broadcast("text/show", text, GetCurrentTime());
+        });
+        app.server.on("text/hide", (text: any) => {
+            //console.log("media/show", media);
+            this.app.networking.broadcast("text/hide", text, GetCurrentTime());
+        });
+
+
+
 
         var time_start = new Date().getTime() / 1000;
         var GetCurrentTime = function () {
