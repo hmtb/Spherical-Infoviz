@@ -8,7 +8,7 @@ var shape3d = require("allofw-shape3d");
 
 import * as Stardust from "stardust-core";
 import * as StardustAllofw from "stardust-allofw";
-
+import { Text } from "./text";
 
 
 export class PlanetSteam extends SceneObject {
@@ -42,11 +42,11 @@ export class PlanetSteam extends SceneObject {
     private platform: StardustAllofw.AllofwPlatform3D;
     private time_start: number;
 
-    constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, data: any) {
+    constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, data: any, startTime: number) {
         super(omni)
         this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
         this.timer = 0;
-        this.time_start = new Date().getTime() / 1000;
+        this.time_start = startTime;
         this.currentYear = 2009;
         this.cubeSpec = Stardust.mark.compile(`
             //import the object you wanna use see https://github.com/stardustjs/stardust-core/blob/master/src/core/library/primitives3d.ts
@@ -56,9 +56,6 @@ export class PlanetSteam extends SceneObject {
 
             mark Mark(lon: float, lat: float, random: float,randomx: float,randomy: float, t: float,speed: float,year:float,currentYear:float, position: float) {
               
-            
-
-
                 if(year == currentYear){
 
                 //static variables
@@ -85,25 +82,7 @@ export class PlanetSteam extends SceneObject {
                 let eX1 = normalize(cross(normal1, up1)) * (randomx*spread+(0.2*spread2*spread2));
                 let eY1 = normalize(cross(normal1, eX1)) * randomy*spread;
                 center = center + eX1 + eY1;
-                //Spread based on scale
-
-
-
-
-                //  if(progress < 2){
-                //     cx = (size-progress/4) *  sin(lon * PI/-180) * cos(lat * PI/180 );
-                //     cy = (size-progress/4) *  sin(lat  * PI/180);
-                //     cz = (size-progress/4) *  cos(lon * PI/-180) * cos(lat * PI/180 );
-                //  } else if(progress < 20 ){
-                //     cx = (size-progress/4)* sin(lon* PI/-180 + (progress-2)/20 ) * cos(lat * PI/180);
-                //     cy = (size-progress/4)* sin(lat  * PI/180);
-                //     cz = (size-progress/4) * cos(lon * PI/180 + (progress-2)/20 ) * cos(lat * PI/180); 
-                //  } else {
-                //     cx = (3)  * sin( lon* PI/-180 + (progress-2)/20 ) * cos(lat * PI/180 );
-                //     cy = (3)  * sin(lat   * PI/180);
-                //     cz = (3)  * cos(lon   * PI/180 + (progress-2)/20 ) * cos(lat * PI/180); 
-                //  }
-
+            
                
 
                  let normal = normalize(center);
@@ -198,93 +177,50 @@ export class PlanetSteam extends SceneObject {
         // console.log(this.dataBuffer);
         this.cubes = cubes;
 
-        this.updateText(2009);
 
+
+        this.year = new Text(window, omni, null, this.time_start);
     }
 
     public setTime(t: number) {
-        this.time = t;
-        var currentYear = Math.round(t / 2) % 30 + 1980;
-
+        this.year.setTime(t);
+        this.time = t - this.time_start;
+        var currentYear = Math.round(this.time / 5) % 30 + 1980;
+        if (currentYear == this.currentYear) return;
         this.setYear(currentYear);
     }
 
     public setYear(y: number) {
         if (y == this.currentYear) return;
         this.currentYear = y;
-        //   this.updateText(y);
+        this.updateText(y);
     }
 
     private updateText(year: number) {
-
-        var maxlen = 4.0;
-        var maxval = 1000.00; //13448000.13 //7710.5
-
-
-        let currentTextData = [];
-        for (let item of this.dataText) {
-            if (item.year == year && item.val != undefined) {
-                currentTextData.push(item);
-                if (item.val > maxval) {
-                    maxval = Math.round(item.val);
-                }
-            }
+        var text = {
+            name: "Text welcom",
+            description: "display a welcome text",
+            lon: 180,
+            lat: 10,
+            text: "human made carbon dioxide emissions " + year
         }
-
-        // var texts = shape3d.texts()
-        //     //    .attr("vec3", "center", "5.0 * normalize(pos)")
-        //     .attr("vec3", "center", "6.0 * normalize(pos)")
-        //     .attr("vec3", "up", "vec3(0, 1, 0)")
-        //     .attr("vec3", "normal", "-normalize(pos)")
-        //     .attr("float", "scale", "0.0005 * len")
-        //     .text((d: any) => (d.name + ' ' + d.val))
-        //     // Variables are bound to data.
-        //     .variable("vec3", "pos", (d: any) => [
-        //         Math.sin(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180),
-        //         Math.sin(d.lat * Math.PI / 180),
-        //         Math.cos(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180)])
-        //     .variable("float", "len", (d: any) => (2.5))
-        //     .compile(this.omni)
-        //     .data(currentTextData);
-        // this.texts = texts;
-
-        var currentYear = [];
-        currentYear.push({
-            lon: 0,
-            lat: 0,
-            year: year,
-        })
-        var lblyear = shape3d.texts()
-            //    .attr("vec3", "center", "5.0 * normalize(pos)")
-            .attr("vec3", "center", "3*normalize(vec3(0, 0, -1))")
-            .attr("vec3", "up", "vec3(0, 1, 0)")
-            .attr("vec3", "normal", "-normalize(vec3(0, 0, -1))")
-            .attr("float", "scale", "0.0005 * len")
-            .text((d: any) => ('Human made carbon dioxide emissions in year: ' + d.year))
-            // Variables are bound to data.
-            .variable("vec3", "pos", (d: any) => [
-                Math.sin(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180),
-                Math.sin(d.lat * Math.PI / 180),
-                Math.cos(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180)])
-            .variable("float", "len", (d: any) => (2))
-            .compile(this.omni)
-            .data(currentYear);
-        this.year = lblyear;
+        this.year.setTextInstant(text.text, text.lat, text.lon, this.time)
     }
-    //(maxlen * Math.pow(Math.round(d.val) / (maxval / 10), 0.5)))
+
+
     public render(): void {
         GL.depthMask(GL.FALSE);
         //   this.texts.render(this.omni);
-        //   this.year.render(this.omni);
+
         this.cubes.render();
 
         GL.depthMask(GL.TRUE);
+        this.year.render();
     }
 
     public frame(): void {
-
+        this.year.frame();
         this.cubes.attr("t", this.time);
-
         this.cubes.attr("currentYear", this.currentYear);
 
     }

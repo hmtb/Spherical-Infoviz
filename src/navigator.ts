@@ -135,7 +135,7 @@ export class MyNavigator {
             else if (id == 'simulation_steam') {
                 var data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry.csv", "utf-8"));
                 var visu: any = {
-                    object: new PlanetSteam(this.app.window, this.app.omni, data),
+                    object: new PlanetSteam(this.app.window, this.app.omni, data, startTime),
                     renderMode: media.rendermode
 
                 }

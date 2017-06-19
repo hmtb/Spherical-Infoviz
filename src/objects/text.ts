@@ -12,6 +12,7 @@ import * as StardustAllofw from "stardust-allofw";
 
 
 export class Text extends SceneObject {
+    instant = false;
     year: any;
 
 
@@ -37,18 +38,23 @@ export class Text extends SceneObject {
         this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
         this.time_start = startTime;
         this.currentText = [];
+        this.transit = true;
+        this.switch = true;
         if (data == null) {
             data = {
                 lat: 0,
                 lon: 0,
                 text: ''
             }
+            this.transit = false;
+            this.switch = false;
         }
-        this.currentText.push({
+        this.newText = [];
+        this.newText.push({
             lon: data.lat,
             lat: data.lon,
             text: data.text,
-            intens: { fill: [255, 255, 255, 0] },
+            intens: { fill: [255, 255, 255, 1] },
             len: 10
 
         })
@@ -69,8 +75,6 @@ export class Text extends SceneObject {
             .compile(this.omni)
             .data(this.currentText);
         this.text = lblText;
-        this.transit = true;
-        this.switch = true;
         this.intens = startTime;
         console.log(startTime);
     }
@@ -101,10 +105,22 @@ export class Text extends SceneObject {
             lat: lon,
             text: text,
             intens: { fill: [255, 255, 255, 0] },
-            len: 20
+            len: 10
         })
 
     }
+    public setTextInstant(text: string, lat: number, lon: number, startTime: number) {
+        this.currentText = []
+        this.currentText.push({
+            lon: lat,
+            lat: lon,
+            text: text,
+            intens: { fill: [255, 255, 255, 1] },
+            len: 10
+        })
+        this.instant = true;
+    }
+
 
 
 
@@ -134,7 +150,6 @@ export class Text extends SceneObject {
                 this.currentText = this.newText;
                 this.switch = false;
             }
-
         }
 
         if (this.intens <= 2) {
@@ -142,6 +157,10 @@ export class Text extends SceneObject {
                 item.intens = { fill: [255, 255, 255, this.intens / 2] }
             }
 
+        }
+        if (this.instant) {
+            this.text.data(this.currentText)
+            this.instant = false;
         }
     }
 }
