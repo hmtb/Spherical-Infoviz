@@ -60,3 +60,7 @@ Audio
 ====
 
 ffmpeg -i video.mp4 audio.wav
+
+
+/Users/martin/Documents/Spherical-InfoViz/SphericalInfoviz/node_modules/allofw-shape3d/dist/index.js
+change for 

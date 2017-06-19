@@ -408,7 +408,7 @@
                         {
                             id: "sphere_coastlines",
                             type: type.DATA_VISUALISATION,
-                            rendermode: rm.BACKGROUND,
+                            rendermode: rm.INTERMEDIATE,
                             mode: mode.MULTI,
                             name: "Coastlines",
                             description: "Coastlines",
@@ -457,6 +457,14 @@
                             description: "Showes the C02 Data from the last 30 years",
                         },
                         {
+                            id: "simulation_steam_text",
+                            type: type.DATA_VISUALISATION,
+                            rendermode: rm.INTERMEDIATE,
+                            mode: mode.MULTI,
+                            name: "C02 Data last 30 years with text",
+                            description: "Showes the C02 Data from the last 30 years",
+                        },
+                        {
                             id: "simulation_normal",
                             type: type.DATA_VISUALISATION,
                             rendermode: rm.FOREGROUND,
@@ -487,7 +495,7 @@
                                 name: "Text welcom",
                                 description: "display a welcome text",
                                 text: {
-                                    lon: 180, lat: 10, text: "Hallo Welt"
+                                    lon: 180, lat: 10, text: "Hello World"
                                 }
                             }
                         }
@@ -498,21 +506,21 @@
                             description: "Showes the C02 Data from the last 30 years",
                             lon: 180,
                             lat: 10,
-                            text: "Hallo Welt"
+                            text: "Hello World"
                         }
                         , {
                             name: "this is",
                             description: "Showes the C02 Data from the last 30 years",
                             lon: 180,
                             lat: 10,
-                            text: "This is how the Earth realy looks like"
+                            text: "This is how the earth realy looks like"
                         }
                         , {
                             name: "Text welcom",
                             description: "display a welcome text",
                             lon: 180,
                             lat: 10,
-                            text: "can you see how big africa is"
+                            text: "can you see how big africa is?"
                         }
                     ]
                 }

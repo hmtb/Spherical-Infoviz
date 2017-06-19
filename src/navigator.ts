@@ -14,6 +14,7 @@ import { PlantsSmoke } from "./objects/smoke";
 // Import utility functions
 import { randomRange, slerp, slerpDistance } from "./utils";
 
+import { PlanetSteamText } from "./objects/steamWithText";
 import { PlanetSteam } from "./objects/steam";
 import { Text } from "./objects/text";
 
@@ -52,6 +53,7 @@ export class MyNavigator {
         //if visualisation is already loaded return
         var id = media.id;
         if (this.currentVisu[id]) return;
+
 
         //only one pan image or pan video can exist
         if (media.mode == 'single') {
@@ -136,6 +138,15 @@ export class MyNavigator {
                 var data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry.csv", "utf-8"));
                 var visu: any = {
                     object: new PlanetSteam(this.app.window, this.app.omni, data, startTime),
+                    renderMode: media.rendermode
+
+                }
+                this.currentVisu[id] = visu;
+            }
+            else if (id == 'simulation_steam_text') {
+                var data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/emissionByCountry.csv", "utf-8"));
+                var visu: any = {
+                    object: new PlanetSteamText(this.app.window, this.app.omni, data, startTime),
                     renderMode: media.rendermode
 
                 }

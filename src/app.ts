@@ -41,7 +41,7 @@ export class MainScene {
         this.currentYear = 1980;
         this.time = 0;
         this.currentVisu = {};
-        // this.currentPanorama = PanoramaImage(this.app.omni, "preprocessed/earth.jpg")
+        this.currentPanorama = PanoramaImage(this.app.omni, "preprocessed/earth.jpg")
         this.navigator = new MyNavigator(this.app, this.currentVisu)
         this.tutorText = new Text(this.app.window, this.app.omni, null, this.GetCurrentTime());
 
@@ -80,7 +80,6 @@ export class MainScene {
 
         //stop All Visualisation
         this.app.networking.on("stop", () => {
-            this.currentVisu = [];
             this.currentPanorama = [];
         });
 
@@ -149,11 +148,8 @@ export class MainScene {
         GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
         GL.enable(GL.DEPTH_TEST);
 
-        // //render Panorama
-        // if (this.currentPanorama != null) {
-        //     this.currentPanorama.render();
-        // }
-        //render Visualisations
+        this.currentPanorama.render && this.currentPanorama.render();
+
         for (let key in this.currentVisu) {
             var visu: any = this.currentVisu[key]
             if (visu.renderMode == 'background') {
@@ -221,6 +217,12 @@ export class Simulator {
 
         app.server.on("scene/set", function (scene_id: string) {
         });
+
+
+        app.server.on("stop", () => {
+            this.app.networking.broadcast("stop");
+        });
+
 
         app.server.on("media/show", (media: any) => {
             //console.log("media/show", media);

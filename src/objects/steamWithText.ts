@@ -11,9 +11,8 @@ import * as StardustAllofw from "stardust-allofw";
 import { Text } from "./text";
 
 
-export class PlanetSteam extends SceneObject {
+export class PlanetSteamText extends SceneObject {
     year: any;
-    private text: any;
     private _program: GL.Program;
     private _vertexArray: GL.VertexArray;
     private _buffer: GL.Buffer;
@@ -146,19 +145,17 @@ export class PlanetSteam extends SceneObject {
                         year: i
                     })
                 }
-                let ilon: number = item.lon - ((Math.random() - 0.5));
-                let ilat: number = item.lat - ((Math.random() - 0.5));
-                let name: string = item.ISO;
-                this.dataText.push({
-                    lon: ilon,
-                    lat: ilat,
-                    random: Math.random(),
-                    speed: Math.random() * 10,
-                    year: i,
-                    val: value,
-                    name: name
-                })
+
+
             }
+            let ilon: number = item.lon;
+            let ilat: number = item.lat;
+            let name: string = item.ISO;
+            this.dataText.push({
+                lon: ilon,
+                lat: ilat,
+                name: name
+            })
         }
         let cubes = Stardust.mark.create(this.cubeSpec, this.platform);
 
@@ -178,6 +175,21 @@ export class PlanetSteam extends SceneObject {
         this.cubes = cubes;
 
 
+        var texts = shape3d.texts()
+            .attr("vec3", "center", "4.9 * normalize(pos)  + vec3(0.0, -0.2, 0.0) ")
+            .attr("vec3", "up", "vec3(0, 1, 0)")
+            .attr("vec3", "normal", "-normalize(pos)")
+            .attr("float", "scale", "0.0005 * len")
+            .text((d: any) => (d.name))
+            // Variables are bound to data.
+            .variable("vec3", "pos", (d: any) => [
+                Math.sin(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180),
+                Math.sin(d.lat * Math.PI / 180),
+                Math.cos(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180)])
+            .variable("float", "len", (d: any) => 5)
+            .compile(this.omni)
+            .data(this.dataText);
+        this.texts = texts;
         this.year = new Text(window, omni, null, this.time_start);
     }
 
@@ -209,6 +221,8 @@ export class PlanetSteam extends SceneObject {
 
     public render(): void {
         GL.depthMask(GL.FALSE);
+        this.texts.render(this.omni);
+
         this.cubes.render();
 
         GL.depthMask(GL.TRUE);
