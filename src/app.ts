@@ -133,6 +133,7 @@ export class MainScene {
             var visu: any = this.currentVisu[key];
             visu.object.setTime && visu.object.setTime(this.GetCurrentTime());
             visu.object.frame && visu.object.frame();
+            visu.object.setYear && visu.object.setYear(this.currentYear);
             //add objects function if nesecesry
         }
 
@@ -212,6 +213,7 @@ export class Simulator {
 
 
         app.server.on("year", (year: number) => {
+            console.log(year)
             this.app.networking.broadcast("year", year);
         });
 

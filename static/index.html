@@ -57,36 +57,50 @@
                     <div style="clear: both"></div>
                 </div>
             </div>
-
+            <script>
+                function changeYear() {
+                    var myVar = document.getElementById('yearPicker').value;
+                    server.message("year", myVar);
+                    console.log(myVar);
+                }
+            </script>
 
 
             <h2>Simulations</h2>
-            <div class="media-entry" style="border-bottom: 1px solid #333">
-                <div data-bind="foreach: current_scene().simulations">
+            <div class="media-entry" style="border-bottom: 1px solid #333 ">
+                <div onclick="changeYear()">
+                    <select id="yearPicker">
+                    <option value="1989 ">1989</option>
+                    <option value="1995 ">1995</option>
+                    <option value="2000 ">2000</option>
+                    <option value="2009 ">2009</option>
+                    </select>
+                </div>
+                <div data-bind="foreach: current_scene().simulations ">
                     <p>
-                        <button class="btn" data-bind="click: $root.launchSimulation">Launch</button>
-                        <button class="btn" data-bind="click: $root.stopSimulation">Stop</button>
-                        <span data-bind="text: $data.name"></span>
+                        <button class="btn " data-bind="click: $root.launchSimulation ">Launch</button>
+                        <button class="btn " data-bind="click: $root.stopSimulation ">Stop</button>
+                        <span data-bind="text: $data.name "></span>
                     </p>
                 </div>
             </div>
 
             <h2>TutorialText</h2>
-            <div class="media-entry" style="border-bottom: 1px solid #333">
-                <div data-bind="foreach: current_scene().text">
-                    <button class="btn" data-bind="click: $root.showText">show</button>
-                    <button class="btn" data-bind="click: $root.hideText">hide</button>
-                    <span data-bind="text: $data.text"></span>
+            <div class="media-entry " style="border-bottom: 1px solid #333 ">
+                <div data-bind="foreach: current_scene().text ">
+                    <button class="btn " data-bind="click: $root.showText ">show</button>
+                    <button class="btn " data-bind="click: $root.hideText ">hide</button>
+                    <span data-bind="text: $data.text "></span>
 
                     </p>
                 </div>
             </div>
             <h2>Stories</h2>
-            <div class="media-entry" style="border-bottom: 1px solid #333">
-                <div data-bind="foreach: current_scene().stories">
-                    <p><button class="btn" data-bind="click: $root.nextPreviousChapter">Zurueck</button>
-                        <span data-bind="text: $data.name"></span>
-                        <button class="btn" data-bind="click: $root.nextChapter">Next</button>
+            <div class="media-entry " style="border-bottom: 1px solid #333 ">
+                <div data-bind="foreach: current_scene().stories ">
+                    <p><button class="btn " data-bind="click: $root.nextPreviousChapter ">Zurueck</button>
+                        <span data-bind="text: $data.name "></span>
+                        <button class="btn " data-bind="click: $root.nextChapter ">Next</button>
 
                     </p>
                 </div>
@@ -94,7 +108,7 @@
         </div>
     </div>
 
-    <script type="text/javascript">
+    <script type="text/javascript ">
         var server = (function () {
             var socket = io();
             return {
@@ -131,20 +145,20 @@
             var self = this;
             this.scenes = [
                 {
-                    id: "welcome", name: "Welcome",
+                    id: "welcome ", name: "Welcome ",
                     media: [
                         {
                             type: type.PLANAR_VIDEO,
                             rendermode: rm.FOREGROUND,
                             mode: mode.MULTI,
-                            id: "reducing-carbon-pollution-in-our-power-plants",
-                            name: "Obama on Carbon",
-                            description: "President Obama on Reducing Carbon Pollution in Our Power Plants",
-                            filename: "videos/reducing-carbon-pollution-in-our-power-plants.mp4",
-                            "fps": 29.97,
+                            id: "reducing-carbon-pollution-in-our-power-plants ",
+                            name: "Obama on Carbon ",
+                            description: "President Obama on Reducing Carbon Pollution in Our Power Plants ",
+                            filename: "videos/reducing-carbon-pollution-in-our-power-plants.mp4 ",
+                            "fps ": 29.97,
                             location: { lon: 180, lat: 10 },
                             audio: {
-                                filename: "../../videos/reducing-carbon-pollution-in-our-power-plants.wav",
+                                filename: "../../videos/reducing-carbon-pollution-in-our-power-plants.wav ",
                                 x: 0,
                                 y: 0,
                                 z: 0
@@ -154,20 +168,20 @@
                             type: type.PLANAR_VIDEO,
                             rendermode: rm.FOREGROUND,
                             mode: mode.MULTI,
-                            id: "intro-1-small",
-                            name: "Assuming a global perspective",
-                            description: "A camera flight from the allosphere to a view of the earth from space",
-                            filename: "videos/intro-1-small.mov",
-                            "duration": 200, "fps": 30,
+                            id: "intro-1-small ",
+                            name: "Assuming a global perspective ",
+                            description: "A camera flight from the allosphere to a view of the earth from space ",
+                            filename: "videos/intro-1-small.mov ",
+                            "duration ": 200, "fps ": 30,
                             location: { lon: 180, lat: 10 }
                         },
                         {
                             type: type.PANORAMIC_IMAGE,
                             rendermode: rm.BACKGROUND,
                             mode: mode.SINGLE,
-                            id: "beautiful-earth",
-                            name: "Beautiful Earth Backdrop",
-                            description: "A beautiful image of the earth's surface",
+                            id: "beautiful-earth ",
+                            name: "Beautiful Earth Backdrop ",
+                            description: "A beautiful image of the earth 's surface",
                             filename: "preprocessed/earth.jpg"
                         }
                     ]
@@ -181,8 +195,8 @@
                             type: type.PANORAMIC_VIDEO,
                             rendermode: rm.BACKGROUND,
                             mode: mode.SINGLE,
-                            name: "A Year in the Life of Earth's CO2",
-                            description: "A Year in the Life of Earth's CO2",
+                            name: "A Year in the Life of Earth's CO2 ",
+                            description: "A Year in the Life of Earth 's CO2",
                             filename: "videos/a-year-in-the-life-of-earths-co2.mp4",
                             "fps": 60
                         },
@@ -237,21 +251,21 @@
                             mode: mode.SINGLE,
                             id: "beautiful-earth",
                             name: "Beautiful Earth Backdrop",
-                            description: "A beautiful image of the earth's surface",
-                            filename: "preprocessed/earth.jpg"
+                            description: "A beautiful image of the earth's surface ",
+                            filename: "preprocessed/earth.jpg "
                         },
                         {
                             type: type.PLANAR_VIDEO,
                             rendermode: rm.BACKGROUND,
                             mode: mode.MULTI,
-                            id: "inconvenienttruthwtc-mov",
-                            name: "Rising Sea Levels",
-                            description: "Information visualization about rising sea levels from An Inconvenient Truth",
-                            filename: "videos/inconvenienttruthwtc-mov-2.mp4",
-                            "fps": 25,
+                            id: "inconvenienttruthwtc-mov ",
+                            name: "Rising Sea Levels ",
+                            description: "Information visualization about rising sea levels from An Inconvenient Truth ",
+                            filename: "videos/inconvenienttruthwtc-mov-2.mp4 ",
+                            "fps ": 25,
                             location: { lon: -40, lat: 40 },
                             audio: {
-                                filename: "../../videos/inconvenienttruthwtc-mov.wav",
+                                filename: "../../videos/inconvenienttruthwtc-mov.wav ",
                                 x: 0,
                                 y: 0,
                                 z: 0
@@ -262,188 +276,188 @@
                             type: type.PLANAR_IMAGE,
                             rendermode: rm.INTERMEDIATE,
                             mode: mode.MULTI,
-                            id: "McCarty_Glacier",
-                            name: "McCarty Glacier",
-                            description: "A photo of McCarty Glacier, Alaska, in 1909 and 2004",
-                            filename: "preprocessed/McCarty_Glacier.jpg",
+                            id: "McCarty_Glacier ",
+                            name: "McCarty Glacier ",
+                            description: "A photo of McCarty Glacier, Alaska, in 1909 and 2004 ",
+                            filename: "preprocessed/McCarty_Glacier.jpg ",
                             location: { lon: -150, lat: 59, rad: 3 }
                         },
                         {
                             type: type.PLANAR_IMAGE,
                             rendermode: rm.INTERMEDIATE,
                             mode: mode.MULTI,
-                            id: "HBOG3Pzr_Pxgen_r_1100xA",
-                            name: "Rhone Glacier",
-                            description: "A photo of Rhone Glacier, Swiss Alps, in 1860, 1970 and 2050 (projected)",
-                            filename: "preprocessed/HBOG3Pzr_Pxgen_r_1100xA.jpg",
+                            id: "HBOG3Pzr_Pxgen_r_1100xA ",
+                            name: "Rhone Glacier ",
+                            description: "A photo of Rhone Glacier, Swiss Alps, in 1860, 1970 and 2050 (projected) ",
+                            filename: "preprocessed/HBOG3Pzr_Pxgen_r_1100xA.jpg ",
                             location: { lon: -8, lat: 46, rad: 3 }
                         }
                     ]
                 },
                 {
-                    id: "power-plants", name: "Power Plants CO2",
+                    id: "power-plants ", name: "Power Plants CO2 ",
                     media: [
                         {
                             type: type.DATA_VISUALISATION,
                             rendermode: rm.INTERMEDIATE,
                             mode: mode.MULTI,
-                            id: "simulation_smoke",
-                            name: "Powerplants producing C02",
-                            description: "Information visualization about powerplants c02 production",
+                            id: "simulation_smoke ",
+                            name: "Powerplants producing C02 ",
+                            description: "Information visualization about powerplants c02 production ",
                         },
                         {
                             type: type.PLANAR_VIDEO,
                             rendermode: rm.INTERMEDIATE,
                             mode: mode.MULTI,
-                            name: "inconvenienttruth-wtc",
-                            description: "Information visualization about rising sea levels from An Inconvenient Truth",
-                            filename: "videos/inconvenienttruth-wtc.mp4",
-                            filename_audio: "videos/inconvenienttruth-wtc.wav",
-                            "fps": 59.93,
+                            name: "inconvenienttruth-wtc ",
+                            description: "Information visualization about rising sea levels from An Inconvenient Truth ",
+                            filename: "videos/inconvenienttruth-wtc.mp4 ",
+                            filename_audio: "videos/inconvenienttruth-wtc.wav ",
+                            "fps ": 59.93,
                             location: { lon: -40, lat: 40 }
                         },
                         {
                             type: type.PLANAR_VIDEO,
                             rendermode: rm.INTERMEDIATE,
                             mode: mode.MULTI,
-                            id: "inconvenienttruth-co2",
-                            name: "Rising Sea Levels CO2",
-                            description: "Information visualization about rising sea levels from An Inconvenient Truth",
-                            filename: "videos/inconvenienttruth-co2.mp4",
-                            filename_audio: "videos/inconvenienttruth-co2.wav",
-                            "fps": 59.93,
+                            id: "inconvenienttruth-co2 ",
+                            name: "Rising Sea Levels CO2 ",
+                            description: "Information visualization about rising sea levels from An Inconvenient Truth ",
+                            filename: "videos/inconvenienttruth-co2.mp4 ",
+                            filename_audio: "videos/inconvenienttruth-co2.wav ",
+                            "fps ": 59.93,
                             location: { lon: -40, lat: 40 }
                         },
                         {
                             type: type.PLANAR_VIDEO,
                             rendermode: rm.INTERMEDIATE,
                             mode: mode.MULTI,
-                            id: "reducing-carbon-pollution-in-our-power-plants",
-                            name: "Obama Video",
-                            description: "Obama: Reducing Carbon Pollution in Our Power Plants",
-                            filename: "videos/reducing-carbon-pollution-in-our-power-plants.mp4",
-                            filename_audio: "videos/reducing-carbon-pollution-in-our-power-plants.wav",
-                            "fps": 29.97,
+                            id: "reducing-carbon-pollution-in-our-power-plants ",
+                            name: "Obama Video ",
+                            description: "Obama: Reducing Carbon Pollution in Our Power Plants ",
+                            filename: "videos/reducing-carbon-pollution-in-our-power-plants.mp4 ",
+                            filename_audio: "videos/reducing-carbon-pollution-in-our-power-plants.wav ",
+                            "fps ": 29.97,
                             location: { lon: 180, lat: 0 }
                         }
                     ]
                 },
                 {
-                    id: "co2-data", name: "Climate Change Study",
+                    id: "co2-data ", name: "Climate Change Study ",
                     media: [
                         {
-                            id: "simulation_steam",
+                            id: "simulation_steam ",
                             type: type.DATA_VISUALISATION,
                             rendermode: rm.INTERMEDIATE,
                             mode: mode.MULTI,
-                            name: "C02 Data last 30 years",
-                            description: "Showes the C02 Data from the last 30 years",
+                            name: "C02 Data last 30 years ",
+                            description: "Showes the C02 Data from the last 30 years ",
                         },
                         {
-                            id: "simulation_standart",
+                            id: "simulation_standart ",
                             type: type.DATA_VISUALISATION,
                             rendermode: rm.INTERMEDIATE,
                             mode: mode.MULTI,
-                            name: "Standart",
-                            description: "standart Chart",
+                            name: "Standart ",
+                            description: "standart Chart ",
                         },
                         {
-                            id: "sphere_coastlines",
+                            id: "sphere_coastlines ",
                             type: type.DATA_VISUALISATION,
                             rendermode: rm.BACKGROUND,
                             mode: mode.MULTI,
-                            name: "Coastlines",
-                            description: "Coastlines",
+                            name: "Coastlines ",
+                            description: "Coastlines ",
                         },
                         {
-                            id: "dark_world",
+                            id: "dark_world ",
                             type: type.PANORAMIC_IMAGE,
                             rendermode: rm.BACKGROUND,
                             mode: mode.SINGLE,
-                            name: "Dark_world",
-                            description: "dark World",
-                            filename: "preprocessed/dark_world.jpg"
+                            name: "Dark_world ",
+                            description: "dark World ",
+                            filename: "preprocessed/dark_world.jpg "
                         },
                         {
-                            id: "nasa_co2",
+                            id: "nasa_co2 ",
                             type: type.PANORAMIC_IMAGE,
                             rendermode: rm.BACKGROUND,
                             mode: mode.SINGLE,
-                            name: "nasa_co2",
-                            description: "C02 Image",
-                            filename: "preprocessed/nasa-co2.jpg"
+                            name: "nasa_co2 ",
+                            description: "C02 Image ",
+                            filename: "preprocessed/nasa-co2.jpg "
                         },
                         {
-                            id: "simulation_normal",
+                            id: "simulation_normal ",
                             type: type.DATA_VISUALISATION,
                             rendermode: rm.FOREGROUND,
                             mode: mode.MULTI,
-                            name: "simulation_normal",
-                            description: "C02 Image",
+                            name: "simulation_normal ",
+                            description: "C02 Image ",
                         }
                     ]
                 },
                 {
-                    id: "plasim", name: "Plasim Simulation",
+                    id: "plasim ", name: "Plasim Simulation ",
                     simulations: [
                         {
-                            name: "Default Parameters",
-                            type: "plasim",
-                            filename: "preprocessed/plaism-default-128x64-tas-denser.nc"
+                            name: "Default Parameters ",
+                            type: "plasim ",
+                            filename: "preprocessed/plaism-default-128x64-tas-denser.nc "
                         },
                         {
-                            name: "Default, 200year",
-                            type: "plasim",
-                            filename: "preprocessed/t42-default-200yr-yearly.npy"
+                            name: "Default, 200year ",
+                            type: "plasim ",
+                            filename: "preprocessed/t42-default-200yr-yearly.npy "
                         },
                         {
-                            name: "Double CO2, 200year",
-                            type: "plasim",
-                            filename: "preprocessed/t42-double-co2-200yr-yearly.npy"
+                            name: "Double CO2, 200year ",
+                            type: "plasim ",
+                            filename: "preprocessed/t42-double-co2-200yr-yearly.npy "
                         }
                     ]
                 }, {
-                    id: "spherical", name: "Sperical Infoviz Studz",
+                    id: "spherical ", name: "Sperical Infoviz Studz ",
                     media: [
                         {
-                            id: "sphere_coastlines",
+                            id: "sphere_coastlines ",
                             type: type.DATA_VISUALISATION,
                             rendermode: rm.INTERMEDIATE,
                             mode: mode.MULTI,
-                            name: "Coastlines",
-                            description: "Coastlines",
+                            name: "Coastlines ",
+                            description: "Coastlines ",
                         },
                         // {
-                        //     id: "sphere_coastlines_distortion_A",
+                        //     id: "sphere_coastlines_distortion_A ",
                         //     type: type.DATA_VISUALISATION,
                         //     rendermode: rm.BACKGROUND,
                         //     mode: mode.MULTI,
-                        //     name: "Coastlines",
-                        //     description: "Coastlines",
+                        //     name: "Coastlines ",
+                        //     description: "Coastlines ",
                         // },
                         // {
-                        //     id: "sphere_coastlines_distortion_B",
+                        //     id: "sphere_coastlines_distortion_B ",
                         //     type: type.DATA_VISUALISATION,
                         //     rendermode: rm.BACKGROUND,
                         //     mode: mode.MULTI,
-                        //     name: "Coastlines",
-                        //     description: "Coastlines",
+                        //     name: "Coastlines ",
+                        //     description: "Coastlines ",
                         // },
                         {
-                            id: "dark_world",
+                            id: "dark_world ",
                             type: type.PANORAMIC_IMAGE,
                             rendermode: rm.BACKGROUND,
                             mode: mode.SINGLE,
-                            name: "Dark_world",
-                            description: "dark World",
-                            filename: "preprocessed/dark_world.jpg"
+                            name: "Dark_world ",
+                            description: "dark World ",
+                            filename: "preprocessed/dark_world.jpg "
                         }, {
                             type: type.PANORAMIC_IMAGE,
                             rendermode: rm.BACKGROUND,
                             mode: mode.SINGLE,
-                            id: "beautiful-earth",
-                            name: "Beautiful Earth Backdrop",
-                            description: "A beautiful image of the earth's surface",
+                            id: "beautiful-earth ",
+                            name: "Beautiful Earth Backdrop ",
+                            description: "A beautiful image of the earth 's surface",
                             filename: "preprocessed/earth.jpg"
                         }, {
 
@@ -564,6 +578,7 @@
                 server.message("scene/set", value.id);
             });
 
+          
             this.showMedia = function (media) {
                 server.message("media/show", media);
             };
