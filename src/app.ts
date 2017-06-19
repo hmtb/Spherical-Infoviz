@@ -8,6 +8,7 @@ import { IRendererRuntime, WindowNavigation, Vector3, Quaternion, Pose, ISimulat
 import { Logger } from "./logger";
 import { PanoramaImage } from "./media/panorama_image";
 import { MyNavigator } from "./navigator";
+import { Text } from "./objects/text";
 
 //variables for the study
 let currentID = 1;
@@ -33,6 +34,7 @@ export class MainScene {
     private currentYear: number;
 
     private navigator: MyNavigator;
+    private tutorText: Text;
 
     constructor(app: IRendererRuntime) {
         this.app = app;
@@ -43,7 +45,7 @@ export class MainScene {
         this.currentVisu = {};
         // this.currentPanorama = PanoramaImage(this.app.omni, "preprocessed/earth.jpg")
         this.navigator = new MyNavigator(this.app, this.currentVisu)
-
+        this.tutorText = new Text(this.app.window, this.app.omni, null, this.GetCurrentTime());
 
         //set  Mode
         if (this.isRunningInVR()) {
@@ -55,7 +57,9 @@ export class MainScene {
             this.nav = new WindowNavigation(app.window, app.omni);
 
         }
-
+        this.app.networking.on("tutorText", (media: any, startTime: number) => {
+            this.tutorText.setText(media.text.text, media.text.lat, media.text.lon)
+        });
         //Navigaton
         this.app.networking.on("media/show", (media: any, startTime: number) => {
             this.navigator.loadVisualisation(media, this.GetCurrentTime(), startTime);
@@ -132,7 +136,8 @@ export class MainScene {
             //add objects function if nesecesry
         }
 
-
+        this.tutorText.setTime(this.GetCurrentTime());
+        this.tutorText.frame();
     }
 
 
@@ -166,7 +171,7 @@ export class MainScene {
                 visu.object.render && visu.object.render();
             }
         }
-
+        this.tutorText.render();
         GL.disable(GL.BLEND);
         GL.activeTexture(GL.TEXTURE0);
         GL.disable(GL.DEPTH_TEST);
@@ -218,10 +223,14 @@ export class Simulator {
 
         app.server.on("media/show", (media: any) => {
             //console.log("media/show", media);
-            this.app.networking.broadcast("media/show", media, GetCurrentTime() + 2);
+            this.app.networking.broadcast("media/show", media, GetCurrentTime() + 1);
             if (media.audio) {
-                AudioStart(media.audio.filename, GetCurrentTime() + 2, media.audio.x, media.audio.y, media.audio.z);
+                AudioStart(media.audio.filename, GetCurrentTime() + 1, media.audio.x, media.audio.y, media.audio.z);
             }
+        });
+        app.server.on("tutorText", (media: any) => {
+            //console.log("media/show", media);
+            this.app.networking.broadcast("tutorText", media, GetCurrentTime());
         });
 
         app.server.on("media/hide", (media: any) => {

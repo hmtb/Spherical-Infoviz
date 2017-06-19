@@ -25,20 +25,34 @@ export class Text extends SceneObject {
     private time_start: number;
     private platform: StardustAllofw.AllofwPlatform3D;
     private intens: number;
+    first = true;
+    frameCount = 0;
+    private currentText: any[];
+    private newText: any[];
+    private transit = false;
+    private transitFrame: number;
+    private switch = false;
 
-    constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, data: any) {
+    constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, data: any, startTime: number) {
         super(omni)
         this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
-        this.time_start = new Date().getTime() / 1000;
+        this.time_start = startTime;
+        this.currentText = [];
 
-        console.log("hier");
-        var currentText = [];
-        currentText.push({
+        if (data == null) {
+            data = {
+                lat: 0,
+                lon: 0,
+                text: ''
+            }
+
+        }
+        this.currentText.push({
             lon: data.lat,
             lat: data.lon,
             text: data.text,
-            intens: { fill: [255, 0, 0, 0.1] },
-            len: 20
+            intens: { fill: [255, 255, 255, 0] },
+            len: 10
 
         })
         var lblText = shape3d.texts()
@@ -56,17 +70,40 @@ export class Text extends SceneObject {
             .variable("float", "len", (d: any) => (d.len))
             .variable("float", "intens", (d: any) => (d.intens))
             .compile(this.omni)
-            .data(currentText);
-
+            .data(this.currentText);
         this.text = lblText;
     }
 
     public setTime(t: number) {
         this.time = t;
-        this.intens = t / 10;
     }
 
-    private updateText(text: string, lat: number, lon: number) {
+    // public updateText(text: string, lat: number, lon: number) {
+    //     this.transit = true
+    //     this.transitFrame = 0;
+    //     this.newText.push({
+    //         lon: lat,
+    //         lat: lon,
+    //         text: text,
+    //         intens: { fill: [255, 255, 255, 0] },
+    //         len: 20
+    //     })
+
+    // }
+    public setText(text: string, lat: number, lon: number) {
+        this.transit = true
+        this.switch = true;
+        this.transitFrame = 0;
+        this.intens = this.time;
+        this.newText = [];
+        this.newText.push({
+            lon: lat,
+            lat: lon,
+            text: text,
+            intens: { fill: [255, 255, 255, 0] },
+            len: 20
+        })
+
     }
 
 
@@ -80,8 +117,44 @@ export class Text extends SceneObject {
     }
 
     public frame(): void {
-        this.text.variable("len", this.time);
-        console.log(this.time)
+        var transition = (this.time - this.intens) * 2;
+        if (this.transit && (transition) > Math.PI * 2) {
+            this.transit = false;
+            for (var item of this.currentText) {
+                item.intens = { fill: [255, 255, 255, 1] }
+            }
+            this.text.data(this.currentText)
+        }
+
+        if (this.transit) {
+            console.log("transit" + (transition))
+            for (var item of this.currentText) {
+                item.intens = { fill: [255, 255, 255, (Math.cos(transition) + 1) / 2] }
+            }
+            this.text.data(this.currentText)
+            if (this.switch && (transition) > Math.PI) {
+                this.currentText = this.newText;
+                this.switch = false;
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+        if (this.intens <= 2) {
+            for (var item of this.currentText) {
+                item.intens = { fill: [255, 255, 255, this.intens / 2] }
+            }
+
+        }
     }
 }
 

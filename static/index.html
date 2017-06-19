@@ -70,6 +70,16 @@
                     </p>
                 </div>
             </div>
+            <h2>Stories</h2>
+            <div class="media-entry" style="border-bottom: 1px solid #333">
+                <div data-bind="foreach: current_scene().stories">
+                    <p><button class="btn" data-bind="click: $root.nextPreviousChapter">Zurueck</button>
+                        <span data-bind="text: $data.name"></span>
+                        <button class="btn" data-bind="click: $root.nextChapter">Next</button>
+
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -97,7 +107,8 @@
             PLANAR_VIDEO: 'planar-video',
             PLANAR_IMAGE: 'planar-image',
             DATA_VISUALISATION: 'data-visu',
-            TEXT: 'text'
+            TEXT: 'text',
+            TutorialText: 'TutorialText'
         };
         var mode = {
             SINGLE: 'single',
@@ -391,22 +402,22 @@
                             name: "Coastlines",
                             description: "Coastlines",
                         },
-                        {
-                            id: "sphere_coastlines_distortion_A",
-                            type: type.DATA_VISUALISATION,
-                            rendermode: rm.BACKGROUND,
-                            mode: mode.MULTI,
-                            name: "Coastlines",
-                            description: "Coastlines",
-                        },
-                        {
-                            id: "sphere_coastlines_distortion_B",
-                            type: type.DATA_VISUALISATION,
-                            rendermode: rm.BACKGROUND,
-                            mode: mode.MULTI,
-                            name: "Coastlines",
-                            description: "Coastlines",
-                        },
+                        // {
+                        //     id: "sphere_coastlines_distortion_A",
+                        //     type: type.DATA_VISUALISATION,
+                        //     rendermode: rm.BACKGROUND,
+                        //     mode: mode.MULTI,
+                        //     name: "Coastlines",
+                        //     description: "Coastlines",
+                        // },
+                        // {
+                        //     id: "sphere_coastlines_distortion_B",
+                        //     type: type.DATA_VISUALISATION,
+                        //     rendermode: rm.BACKGROUND,
+                        //     mode: mode.MULTI,
+                        //     name: "Coastlines",
+                        //     description: "Coastlines",
+                        // },
                         {
                             id: "dark_world",
                             type: type.PANORAMIC_IMAGE,
@@ -424,13 +435,31 @@
                             description: "A beautiful image of the earth's surface",
                             filename: "preprocessed/earth.jpg"
                         }, {
-                            type: type.TEXT,
+                            type: type.TutorialText,
                             rendermode: rm.FOREGROUND,
                             mode: mode.MULTI,
                             id: "text-welcome",
                             name: "Text welcom",
                             description: "display a welcome text",
-                            text: { lon: 180, lat: 10, text: "Hallo Welt" }
+                            text: { lon: 180, lat: 10, text: "Hello  World" }
+                        }
+                        , {
+                            type: type.TutorialText,
+                            rendermode: rm.FOREGROUND,
+                            mode: mode.MULTI,
+                            id: "text-2",
+                            name: "Text welcom",
+                            description: "display a welcome text",
+                            text: { lon: 180, lat: 10, text: "This is how the Earth realy looks like" }
+                        }
+                        , {
+                            type: type.TutorialText,
+                            rendermode: rm.FOREGROUND,
+                            mode: mode.MULTI,
+                            id: "text-2",
+                            name: "Text welcom",
+                            description: "display a welcome text",
+                            text: { lon: 180, lat: 10, text: "can you see how big africa is" }
                         }
                     ],
                     id: "spherical", name: "Sperical Infoviz Studz",
@@ -460,6 +489,25 @@
                             name: "simulation_spikes",
                             description: "C02 Spikes",
                         }
+                    ],
+                    id: "spherical", name: "Sperical Infoviz Studz",
+                    stories: [
+                        {
+                            id: "Studie 1",
+                            name: "Compare different CO2",
+                            description: "Showes the C02 Data from the last 30 years",
+                            chapter: {
+                                type: type.TEXT,
+                                rendermode: rm.FOREGROUND,
+                                mode: mode.MULTI,
+                                id: "text-welcome",
+                                name: "Text welcom",
+                                description: "display a welcome text",
+                                text: {
+                                    lon: 180, lat: 10, text: "Hallo Welt"
+                                }
+                            }
+                        }
                     ]
                 }
             ];
@@ -470,7 +518,15 @@
             });
 
             this.showMedia = function (media) {
-                server.message("media/show", media);
+
+                if (media.type == type.TutorialText) {
+                    server.message("tutorText", media);
+                    return;
+                } else {
+                    server.message("media/show", media);
+                }
+
+
             };
             this.hideMedia = function (media) {
                 server.message("media/hide", media);
