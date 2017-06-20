@@ -1,5 +1,5 @@
 dist/
 config.yaml
 node_modules
-videos
+preprocessed/videos
 allofw.yaml

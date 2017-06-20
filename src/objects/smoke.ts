@@ -97,7 +97,7 @@ var allofwutils = require("allofw-utils");
 var GL = allofw.GL3;
 var S3 = allofwutils.shape3d;
 
-var FPlantsSmoke = function (omni: any) {
+var FPlantsSmoke = function (omni: any, data: any) {
 
     // actual visualization code starts here
     // experimental code for creating 3D objects from data
@@ -123,7 +123,7 @@ var FPlantsSmoke = function (omni: any) {
     // }
 
     // read in plant data from a CSV file
-    var data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/plants_data_50.csv", "utf-8"));
+
 
     var RNG_Uniform = function (a: any, b: any) {
         return Math.random() * (b - a) + a;
@@ -215,4 +215,4 @@ var FPlantsSmoke = function (omni: any) {
 
 };
 
-export let PlantsSmoke = function (omni: any) { return new (FPlantsSmoke as any)(omni); };
+export let PlantsSmoke = function (omni: any, data: any) { return new (FPlantsSmoke as any)(omni, data); };

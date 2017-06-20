@@ -35,12 +35,14 @@ var allofwutils = require("allofw-utils");
 
 export class MyNavigator {
     public currentVisu: any;
+    public currentPanorama: any;
     app: IRendererRuntime;
     type: any
 
-    constructor(app: IRendererRuntime, currentVisu: any) {
+    constructor(app: IRendererRuntime, currentVisu: any, currentPanorama: any) {
         this.app = app;
         this.currentVisu = currentVisu;
+        this.currentPanorama = currentPanorama;
         this.type = {
             PANORAMIC_VIDEO: 'panorama-video',
             PLANAR_VIDEO: 'planar-video',
@@ -54,44 +56,13 @@ export class MyNavigator {
 
     public loadVisualisation(media: any, time: number, startTime: number) {
         //if visualisation is already loaded return
+        console.log(media)
         var id = media.id;
         if (this.currentVisu[id]) return;
-
-
-        //only one pan image or pan video can exist
-        if (media.mode == 'single') {
-            for (let key in this.currentVisu) {
-                var visu: any = this.currentVisu[key]
-                if (visu.mode == 'single') {
-                    delete this.currentVisu[key];
-                }
-            }
-        }
-
 
         if (media.type == this.type.TEXT) {
             var visu: any = {
                 object: new Text(this.app.window, this.app.omni, media.text, startTime),
-                renderMode: media.rendermode,
-                mode: media.mode
-            }
-            this.currentVisu[id] = visu;
-        }
-
-        if (media.type == this.type.PANORAMIC_VIDEO) {
-            let player = PanoramaVideoPlayer(this.app.omni, media.filename, media.fps);
-            player.start(startTime);
-            var visu: any = {
-                object: player,
-                renderMode: media.rendermode,
-                mode: media.mode
-            }
-            this.currentVisu[id] = visu;
-
-        }
-        if (media.type == this.type.PANORAMIC_IMAGE) {
-            var visu: any = {
-                object: PanoramaImage(this.app.omni, media.filename),
                 renderMode: media.rendermode,
                 mode: media.mode
             }
@@ -134,8 +105,9 @@ export class MyNavigator {
 
         if (media.type == this.type.DATA_VISUALISATION) {
             if (id == 'simulation_smoke') {
+                var data = require("d3").csv.parse(require("fs").readFileSync(media.filename, "utf-8"));
                 var visu: any = {
-                    object: PlantsSmoke(this.app.omni),
+                    object: PlantsSmoke(this.app.omni, data),
                     renderMode: media.rendermode
                 }
                 this.currentVisu[id] = visu;
@@ -250,16 +222,7 @@ export class MyNavigator {
                 }
                 this.currentVisu[id] = visu;
             }
-
-
-
         }
-
-        // if (id == 'reducing-carbon-pollution-in-our-power-plants') {
-        //     console.log("hier")
-
-        // }
-
     }
 
     public hideVisualisation(media: any) {

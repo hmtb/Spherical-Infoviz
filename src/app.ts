@@ -7,6 +7,8 @@ import { GL3 as GL } from "allofw"; //http://localhost:10800/
 import { IRendererRuntime, WindowNavigation, Vector3, Quaternion, Pose, ISimulatorRuntime } from "allofw-utils";
 import { Logger } from "./logger";
 import { PanoramaImage } from "./media/panorama_image";
+import { PanoramaVideoPlayer } from "./media/panorama_video_player";
+
 import { MyNavigator } from "./navigator";
 import { Text } from "./objects/text";
 
@@ -15,6 +17,8 @@ let currentID = 1;
 let targetHeight = 1.65;
 
 export class MainScene {
+    type: any;
+
     private app: IRendererRuntime;
     private nav: WindowNavigation;
     private headPose: Pose;
@@ -41,10 +45,17 @@ export class MainScene {
         this.currentYear = 1980;
         this.time = 0;
         this.currentVisu = {};
-        this.currentPanorama = PanoramaImage(this.app.omni, "preprocessed/earth.jpg")
-        this.navigator = new MyNavigator(this.app, this.currentVisu)
+        this.currentPanorama = PanoramaImage(this.app.omni, "preprocessed/img/earth.jpg")
+        this.navigator = new MyNavigator(this.app, this.currentVisu, this.currentPanorama)
         this.tutorText = new Text(this.app.window, this.app.omni, null, this.GetCurrentTime());
-
+        this.type = {
+            PANORAMIC_VIDEO: 'panorama-video',
+            PLANAR_VIDEO: 'planar-video',
+            PANORAMIC_IMAGE: 'panorama-image',
+            PLANAR_IMAGE: 'planar-image',
+            DATA_VISUALISATION: 'data-visu',
+            TEXT: 'text'
+        };
         //set  Mode
         if (this.isRunningInVR()) {
             this.app.window.setSwapInterval(0);
@@ -56,11 +67,13 @@ export class MainScene {
 
         }
         this.app.networking.on("text/show", (text: any, startTime: number) => {
+
             this.tutorText.setText(text.text, text.lat, text.lon, startTime)
         });
         this.app.networking.on("text/hide", (text: any, startTime: number) => {
             this.tutorText.setText("", 0, 0, startTime)
         });
+
         //Navigaton
         this.app.networking.on("media/show", (media: any, startTime: number) => {
             this.navigator.loadVisualisation(media, this.GetCurrentTime(), startTime);
@@ -70,23 +83,42 @@ export class MainScene {
             this.navigator.hideVisualisation(media);
         });
         //Navigaton
-        this.app.networking.on("data/stream/start", (media: any, startTime: number) => {
+        this.app.networking.on("data/show", (media: any, startTime: number) => {
             this.navigator.loadVisualisation(media, this.GetCurrentTime(), startTime);
         });
 
-        this.app.networking.on("data/stream/stop", (media: any) => {
+        this.app.networking.on("data/hide", (media: any) => {
             this.navigator.hideVisualisation(media);
         });
 
+
+        this.app.networking.on("panorama/show", (media: any, startTime: number) => {
+            //Panorama 
+            if (media.type == this.type.PANORAMIC_VIDEO) {
+                let player = PanoramaVideoPlayer(this.app.omni, media.filename, media.fps);
+                player.start(startTime);
+                var visu: any = {
+                    object: player,
+                    renderMode: media.rendermode,
+                    mode: media.mode
+                }
+                this.currentPanorama = player;
+            }
+            if (media.type == this.type.PANORAMIC_IMAGE) {
+                this.currentPanorama = PanoramaImage(this.app.omni, media.filename);
+            }
+        });
+
+        this.app.networking.on("panorama/hide", (media: any) => {
+            this.currentPanorama = {};
+        });
         //stop All Visualisation
         this.app.networking.on("stop", () => {
             this.currentPanorama = [];
+            for (let key in this.currentVisu) {
+                delete this.currentVisu[key];
+            }
         });
-
-        //updateCall
-        // this.app.networking.on("time", (t: number) => {
-        //     this.time = t;
-        // });
 
         this.time_diff = 0;
         this.time_start = 0;
@@ -98,11 +130,6 @@ export class MainScene {
         this.app.networking.on("year", (y: number) => {
             this.currentYear = y;
         });
-
-
-
-
-
 
     }
 
@@ -243,6 +270,21 @@ export class Simulator {
             }
         });
 
+        app.server.on("panorama/show", (media: any) => {
+            this.app.networking.broadcast("panorama/show", media, GetCurrentTime() + 1);
+            if (media.audio) {
+                AudioStart(media.audio.filename, GetCurrentTime() + 1, media.audio.x, media.audio.y, media.audio.z);
+            }
+        });
+
+
+        app.server.on("panorama/hide", (media: any) => {
+            this.app.networking.broadcast("panorama/hide", media);
+            if (media.audio) {
+                AudioStop(media.audio.filename);
+            }
+        });
+
         app.server.on("text/show", (text: any) => {
             //console.log("media/show", media);
             this.app.networking.broadcast("text/show", text, GetCurrentTime());
@@ -252,7 +294,12 @@ export class Simulator {
             this.app.networking.broadcast("text/hide", text, GetCurrentTime());
         });
 
-
+        app.server.on("data/show", (simulation: any) => {
+            this.app.networking.broadcast("data/show", simulation, GetCurrentTime() + 1);
+        });
+        app.server.on("data/hide", (simulation: any) => {
+            this.app.networking.broadcast("data/hide", simulation);
+        });
 
 
         var time_start = new Date().getTime() / 1000;
@@ -263,24 +310,6 @@ export class Simulator {
             this.app.networking.broadcast("time", GetCurrentTime());
             SendAudioMessage(0, "", GetCurrentTime(), 0, 0, 0, 0);
         }, 20);
-
-        // var ExternalProgram = require("/utils/launcher.js").ExternalProgram;
-        app.server.on("data/stream/start", (simulation: any) => {
-            this.app.networking.broadcast("data/stream/start", simulation, GetCurrentTime() + 1);
-        });
-        app.server.on("data/stream/stop", (simulation: any) => {
-            this.app.networking.broadcast("data/stream/stop", simulation);
-        });
-
-        // var current_plasim_stream: any = null;
-        // app.server.on("plasim/stream/start", (filename: any) => {
-        //     if (current_plasim_stream) current_plasim_stream.kill();
-        //     current_plasim_stream = new ExternalProgram("plasim", "python", ["server/plasim-streamer.py", (app.config as any).plasim.data_source, filename]);
-        // });
-        // app.server.on("plasim/stream/stop", () => {
-        //     if (current_plasim_stream) current_plasim_stream.kill();
-        //     current_plasim_stream = null;
-        // });
     }
 }
 

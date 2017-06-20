@@ -48,7 +48,7 @@ export class StandartView extends SceneObject {
         this.timer = 0;
         this.time_start = new Date().getTime() / 1000;
 
-        let img = allofw.graphics.loadImageData(require("fs").readFileSync("preprocessed/standart.png"));
+        let img = allofw.graphics.loadImageData(require("fs").readFileSync("preprocessed/img/standart.png"));
 
         var imgs = shape3d.images()
             .image(img, img.width(), img.height())
