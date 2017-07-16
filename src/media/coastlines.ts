@@ -39,12 +39,12 @@ var FCoastlinesRenderer = function (omni: any, info: any) {
     var vertex_array = new GL.VertexArray();
 
     GL.bindBuffer(GL.ARRAY_BUFFER, vertex_buffer);
-    var data = require("fs").readFileSync("preprocessed/coordinates.bin");
+    var data = require("fs").readFileSync("preprocessed/data/coordinates.bin");
     GL.bufferData(GL.ARRAY_BUFFER, data.length, data, GL.STATIC_DRAW);
     var total_points = data.length / 8;
 
     GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, index_buffer);
-    var data = require("fs").readFileSync("preprocessed/coordinates_indices.bin");
+    var data = require("fs").readFileSync("preprocessed/data/coordinates_indices.bin");
     GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, data.length, data, GL.STATIC_DRAW);
     var total_lines = data.length / 4;
 

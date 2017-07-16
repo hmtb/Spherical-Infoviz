@@ -21,7 +21,7 @@ add large Files:
     download:
     https://ucsb.box.com/s/hozgflvol5rvve9ho2iilrkxvmpoy3pk
 
-create folder /videos/*files*
+create folder preprocessed/videos/*files*
 
 Build:
 
