@@ -123,7 +123,7 @@ export class MainScene {
         });
 
         this.app.networking.on("panorama/hide", (media: any) => {
-            this.currentPanorama = {};
+            this.currentPanorama = [];
         });
         //stop All Visualisation
         this.app.networking.on("stop", () => {
