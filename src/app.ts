@@ -9,10 +9,23 @@ import { Logger } from "./logger";
 import { PanoramaImage } from "./media/panorama_image";
 import { MyNavigator } from "./navigator";
 import { Text } from "./objects/text";
-
 //variables for the study
 let currentID = 1;
 let targetHeight = 1.65;
+let radius = 5;
+var coreAudio = require("node-core-audio");
+var Speaker = require('speaker');
+
+         console.log("hier1");
+// Create the Speaker instance
+var speaker = new Speaker({
+  channels: 2,          // 2 channels
+  bitDepth: 16,         // 16-bit samples
+  sampleRate: 44100     // 44,100 Hz sample rate
+
+});
+  console.log("hier3");
+// PCM data from stdin gets piped into the speaker
 
 export class MainScene {
     private app: IRendererRuntime;
@@ -98,12 +111,10 @@ export class MainScene {
         this.app.networking.on("year", (y: number) => {
             this.currentYear = y;
         });
-
-
-
-
-
-
+    }
+    processAudio = function( inputBuffer:any ) {
+        // Just print the value of the first sample on the left channel 
+        console.log( inputBuffer[0][0] );
     }
 
     public GetCurrentTime = function () {
@@ -149,7 +160,7 @@ export class MainScene {
         GL.enable(GL.DEPTH_TEST);
 
         this.currentPanorama.render && this.currentPanorama.render();
-
+process.stdin.pipe(speaker);
         for (let key in this.currentVisu) {
             var visu: any = this.currentVisu[key]
             if (visu.renderMode == 'background') {
