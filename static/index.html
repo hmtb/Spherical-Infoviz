@@ -101,6 +101,16 @@
                     </p>
                 </div>
             </div>
+                <h2>Study</h2>
+            <div class="media-entry" style="border-bottom: 1px solid #333">
+                <div data-bind="foreach: current_scene().studyScene">
+                   <p>  <span data-bind="text: $data.name"></span>
+                    <button class="btn" data-bind="click: $root.showScene">show</button>
+                     <button class="btn" data-bind="click: $root.hideScene">hide</button>
+
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -291,6 +301,12 @@
                             description: "Information visualization about rising sea levels from An Inconvenient Truth",
                             filename: "preprocessed/videos/inconvenienttruth-wtc.mp4",
                             filename_audio: "preprocessed/videos/inconvenienttruth-wtc.wav",
+                            audio: {
+                                filename: "preprocessed/videos/inconvenienttruth-wtc.wav",
+                                x: 0,
+                                y: 0,
+                                z: 0
+                            },
                             "fps": 59.93,
                             location: { lon: -40, lat: 40 }
                         },
@@ -301,7 +317,12 @@
                             name: "Rising Sea Levels CO2",
                             description: "Information visualization about rising sea levels from An Inconvenient Truth",
                             filename: "preprocessed/videos/inconvenienttruth-co2.mp4",
-                            filename_audio: "preprocessed/videos/inconvenienttruth-co2.wav",
+                            audio: {
+                                filename: "preprocessed/videos/inconvenienttruth-co2.wav",
+                                x: 0,
+                                y: 0,
+                                z: 0
+                            },
                             "fps": 59.93,
                             location: { lon: -40, lat: 40 }
                         },
@@ -413,7 +434,7 @@
                         }
                     ]
                 }, {
-                    id: "spherical", name: "Sperical Infoviz Studz",
+                    id: "spherical", name: "Sperical Infoviz Exploration",
                     panorama: [
                         {
                             type: type.PANORAMIC_IMAGE,
@@ -538,6 +559,22 @@
                             text: "can you see how big africa is?"
                         }
                     ]
+                }, {
+                    id: "spherical", name: "Sperical Infoviz Exploration",
+                    studyScene: [
+                        {
+                            type: type.StudyScene,
+                            id: "1",
+                            name: "Basic Exploring",
+                            description: "Basic"
+                        },
+                         {
+                            type: type.StudyScene,
+                            id: "2",
+                            name: "Liefactor",
+                            description: "Liefactor questions"
+                        }
+                    ],
                 }
             ];
             this.current_scene = ko.observable(this.scenes[0]);
@@ -562,6 +599,14 @@
             this.hideText = function (text) {
                 server.message("text/hide", text);
             }
+
+             this.showScene = function (text) {
+                server.message("scene/show", text);
+            }
+            this.hideScene = function (text) {
+                server.message("scene/hide", text);
+            }
+
             this.launchSimulation = function (simulation) {
                 if (simulation.type == "plasim") {
                     server.message("plasim/stream/start", simulation.filename);

@@ -10,7 +10,10 @@ import { PanoramaImage } from "./media/panorama_image";
 import { PanoramaVideoPlayer } from "./media/panorama_video_player";
 
 import { MyNavigator } from "./navigator";
+import { StudyController } from "./studyController";
 import { Text } from "./objects/text";
+import { Scene1 } from "./objects/studyObject/scene1";
+import { Scene2 } from "./objects/studyObject/scene2";
 //variables for the study
 let currentID = 1;
 let targetHeight = 1.65;
@@ -18,7 +21,6 @@ let radius = 5;
 var coreAudio = require("node-core-audio");
 var Speaker = require('speaker');
 
-         console.log("hier1");
 // Create the Speaker instance
 var speaker = new Speaker({
   channels: 2,          // 2 channels
@@ -26,7 +28,6 @@ var speaker = new Speaker({
   sampleRate: 44100     // 44,100 Hz sample rate
 
 });
-  console.log("hier3");
 // PCM data from stdin gets piped into the speaker
 
 export class MainScene {
@@ -49,7 +50,11 @@ export class MainScene {
     private currentYear: number;
 
     private navigator: MyNavigator;
+    private studyController: StudyController;
     private tutorText: Text;
+    public currentScene: number;
+    
+
 
     constructor(app: IRendererRuntime) {
         this.app = app;
@@ -60,7 +65,9 @@ export class MainScene {
         this.currentVisu = {};
         this.currentPanorama = PanoramaImage(this.app.omni, "preprocessed/img/earth.jpg")
         this.navigator = new MyNavigator(this.app, this.currentVisu, this.currentPanorama)
+        this.studyController = new StudyController(this.app, this.currentVisu, this.currentPanorama)
         this.tutorText = new Text(this.app.window, this.app.omni, null, this.GetCurrentTime());
+        this.currentScene = 0;
         this.type = {
             PANORAMIC_VIDEO: 'panorama-video',
             PLANAR_VIDEO: 'planar-video',
@@ -95,6 +102,17 @@ export class MainScene {
         this.app.networking.on("media/hide", (media: any) => {
             this.navigator.hideVisualisation(media);
         });
+
+         //Navigaton
+        this.app.networking.on("scene/show", (sceneInfo: any, startTime: number) => {
+            this.loadScene(sceneInfo, this.GetCurrentTime(), startTime);
+        });
+
+        this.app.networking.on("scene/hide", (sceneInfo: any) => {
+            this.hideScene(sceneInfo);
+        });
+
+
         //Navigaton
         this.app.networking.on("data/show", (media: any, startTime: number) => {
             this.navigator.loadVisualisation(media, this.GetCurrentTime(), startTime);
@@ -103,7 +121,7 @@ export class MainScene {
         this.app.networking.on("data/hide", (media: any) => {
             this.navigator.hideVisualisation(media);
         });
-
+        
 
         this.app.networking.on("panorama/show", (media: any, startTime: number) => {
             //Panorama 
@@ -157,7 +175,47 @@ export class MainScene {
     public isRunningInVR() {
         return (this.app.config as any).OpenVR == true;
     }
+   
 
+       public loadScene(sceneInfo: any, time: number, startTime: number) {
+        //if visualisation is already loaded return
+        console.log("hallo",sceneInfo)
+      //  if(this.currentScene == sceneInfo.Id)
+
+        switch(sceneInfo.id) { 
+            case '1': { 
+                //Scene Basic Exploring
+                this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                 var visu: any = {
+                    object: new Scene1(this.app.window,this.app.omni,this.GetCurrentTime(),10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break; 
+            } 
+            case '2': { 
+                 this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                 var visu: any = {
+                    object: new Scene2(this.app.window,this.app.omni,this.GetCurrentTime(),10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break; 
+            } 
+            default: { 
+                //statements; 
+                break; 
+            } 
+            } 
+
+        
+    }
+
+    public hideScene(media: any) {
+        var id = media.id;
+        if (!this.currentVisu[id]) return;
+        delete this.currentVisu[id];
+    }
 
     public frame() {
         if (this.isRunningInVR()) {
@@ -232,7 +290,7 @@ export class Simulator {
 
         // audio
         var audio_connection = require("zmq").socket("pub");
-        audio_connection.connect((app.config as any).audio.endpoint);
+    audio_connection.connect((app.config as any).audio.endpoint);
         function SendAudioMessage(type: number, filename: string, current_time: number, play_time: number, x: number, y: number, z: number) {
             var buffer = new Buffer(8 + 256 + 40);
             buffer.fill(0);
@@ -249,7 +307,7 @@ export class Simulator {
 
         function AudioStart(filename: string, time: number, x: number, y: number, z: number) {
             SendAudioMessage(1, filename, GetCurrentTime(), time, x, y, z);
-        }
+          }
         function AudioStop(filename: string) {
             SendAudioMessage(2, filename, GetCurrentTime(), 0, 0, 0, 0);
         }
@@ -260,9 +318,8 @@ export class Simulator {
             this.app.networking.broadcast("year", year);
         });
 
-        app.server.on("scene/set", function (scene_id: string) {
-        });
-
+        // app.server.on("scene/set", function (scene_id: string) {
+        // });
 
         app.server.on("stop", () => {
             this.app.networking.broadcast("stop");
@@ -276,6 +333,7 @@ export class Simulator {
                 AudioStart(media.audio.filename, GetCurrentTime() + 1, media.audio.x, media.audio.y, media.audio.z);
             }
         });
+     
 
 
         app.server.on("media/hide", (media: any) => {
@@ -317,6 +375,12 @@ export class Simulator {
             this.app.networking.broadcast("data/hide", simulation);
         });
 
+        app.server.on("scene/show", (sceneInfo: any) => {
+            this.app.networking.broadcast("scene/show", sceneInfo, GetCurrentTime() + 1);
+        });
+        app.server.on("scene/hide", (sceneInfo: any) => {
+            this.app.networking.broadcast("scene/hide", sceneInfo, GetCurrentTime() + 1);
+        });
 
         var time_start = new Date().getTime() / 1000;
         var GetCurrentTime = function () {
