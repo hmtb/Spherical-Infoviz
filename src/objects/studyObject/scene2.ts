@@ -59,15 +59,15 @@ export class Scene2 extends SceneObject {
                 //depending on t and speed the particle mooves on in the sphere
                 //  Cube(Vector3(cx, cy, cz), 0.03, Color(1, 1, 1, 1));
                 
-                let w = 0.1;
-                let l = 3;
+                let w = 0.5;
+                let l = val/2;
                 let center = Vector3(cx, cy, cz);
-                let length = normalize(Vector3(-cx,-cy,-cz))*-l;
+              
                 let normal = normalize(center);
                 let up = Vector3(0, 1, 0);
                 let eX = normalize(cross(normal, up))* w;
                 let eY = normalize(cross(normal, eX))* w;
-
+                let length = (normalize(Vector3(-cx,-cy,-cz))*-l )+ (eY*5);
 
                 let radius = 0.04;
                 let color = Color(1, 1, 1, 1);
@@ -76,8 +76,8 @@ export class Scene2 extends SceneObject {
                 let p001 = center+ eX + eY;
                 let p010 = center+ eX;
                 let p011 = center+ eY;
-                let p100 = center-length;
-                let p101 = center-length+ eX + eY;
+                let p100 = center - length;
+                let p101 = center - length+ eX + eY;
                 let p110 = center -length+ eX ;
                 let p111 = center -length+  eY;
                 let nx = Vector3(1, 0, 0);
@@ -115,6 +115,7 @@ export class Scene2 extends SceneObject {
          let cubes = Stardust.mark.create(this.cubeSpec, this.platform);
          cubes.attr("lon", d => d.lon);
          cubes.attr("lat", d => d.lat );
+          cubes.attr("val", d => d.val );
 -        cubes.data(this.currentText);
          this.cubes = cubes;
 
@@ -140,11 +141,13 @@ export class Scene2 extends SceneObject {
     }
 
     public render(): void {
+        
         GL.depthMask(GL.FALSE);
+         this.cubes.render();
         this.text.render(this.omni);
        
         GL.depthMask(GL.TRUE);
-          this.cubes.render();
+         
     }
 
     public frame(): void {

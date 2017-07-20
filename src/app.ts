@@ -14,13 +14,14 @@ import { StudyController } from "./studyController";
 import { Text } from "./objects/text";
 import { Scene1 } from "./objects/studyObject/scene1";
 import { Scene2 } from "./objects/studyObject/scene2";
+import { PlanarImage } from "./media/planar_image";
 //variables for the study
 let currentID = 1;
 let targetHeight = 1.65;
 let radius = 5;
 var coreAudio = require("node-core-audio");
 var Speaker = require('speaker');
-
+var allofwutils = require("allofw-utils");
 // Create the Speaker instance
 var speaker = new Speaker({
   channels: 2,          // 2 channels
@@ -200,6 +201,20 @@ export class MainScene {
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
+                var pic: any = {
+                        object: PlanarImage(this.app.omni, "studyData/img/planetBincome.png"),
+                        renderMode: 'foreground'
+                }
+                var center = new allofwutils.Vector3(
+                    Math.sin(-180 * Math.PI / -180) * Math.cos(0 * Math.PI / 180),
+                    Math.sin(0 * Math.PI / 180),
+                    Math.cos(-180 * Math.PI / -180) * Math.cos(0 * Math.PI / 180)
+                ).normalize().scale(5);
+                var ex = center.cross(new allofwutils.Vector3(0, 1, 0)).normalize();
+                var ey = ex.cross(center).normalize();
+                pic.object.setLocation(center, ex, ey, 10);
+                console.log(visu);
+            this.currentVisu[sceneInfo.id+pic] = pic ;
                 break; 
             } 
             default: { 
