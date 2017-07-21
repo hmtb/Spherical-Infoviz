@@ -11,7 +11,7 @@ import * as StardustAllofw from "stardust-allofw";
 
 
 
-export class Scene5 extends SceneObject {
+export class Scene5_2 extends SceneObject {
     instant = false;
     year: any;
 
@@ -123,7 +123,7 @@ export class Scene5 extends SceneObject {
 
         this.text = shape3d.texts()
            // .attr("vec3", "center", "(9.8- len) * normalize(pos)")
-            .attr("vec3", "center", "9.8*normalize(pos) -(normalize(pos)*len + normalize(cross(pos,cross(pos,vec3(0, 1, 0)))))")
+            .attr("vec3", "center", "9.8*normalize(pos)")
             .attr("vec3", "up", "vec3(0, 1, 0)")
             .attr("vec3", "normal", "-normalize(pos)")
             .attr("float", "scale", "0.008")
@@ -144,8 +144,9 @@ export class Scene5 extends SceneObject {
     }
 
     public render(): void {
+       
         GL.depthMask(GL.FALSE);
-        this.cubes.render();
+         this.cubes.render();
         this.text.render(this.omni);
        
         GL.depthMask(GL.TRUE);

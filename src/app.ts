@@ -21,6 +21,8 @@ import { Scene4 } from "./objects/studyObject/scene4";
 import { Scene5 } from "./objects/studyObject/scene5";
 import { Scene6 } from "./objects/studyObject/scene6";
 import { Scene7 } from "./objects/studyObject/scene7";
+import { Scene5_2 } from "./objects/studyObject/scene5_2";
+import { Scene8 } from "./objects/studyObject/scene8";
 //variables for the study
 let currentID = 1;
 let targetHeight = 1.65;
@@ -256,6 +258,15 @@ export class MainScene {
                 this.currentVisu[sceneInfo.id] = visu;
                 break; 
             } 
+              case '5_2': { 
+                 this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                 var visu: any = {
+                    object: new Scene5_2(this.app.window,this.app.omni,this.GetCurrentTime(),10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break; 
+            } 
              case '6': { 
                  this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
                  var visu: any = {
@@ -268,6 +279,14 @@ export class MainScene {
             case '7': { 
                  var visu: any = {
                     object: new Scene7(this.app.window,this.app.omni,this.GetCurrentTime(),10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break; 
+            } 
+              case '7': { 
+                 var visu: any = {
+                    object: new Scene8(this.app.window,this.app.omni,this.GetCurrentTime(),10),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
