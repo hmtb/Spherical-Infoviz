@@ -60,9 +60,9 @@ export class PlanetSteam extends SceneObject {
 
                 //static variables
                 let duration = 100;
-                let minsize = 3+randomx;
-                let tduration= t/3;
-                let maxRadius= 5;
+                let minsize = 17+randomx;
+                let tduration= t/17;
+                let maxRadius= 20;
                 let size = maxRadius - (position + tduration)%(maxRadius-minsize);
                 let spread = ((position + tduration)%(maxRadius-minsize))*0.2;
                 let spread2 = ((position + tduration)%(maxRadius-minsize));
