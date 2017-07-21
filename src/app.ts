@@ -15,6 +15,12 @@ import { Text } from "./objects/text";
 import { Scene1 } from "./objects/studyObject/scene1";
 import { Scene2 } from "./objects/studyObject/scene2";
 import { PlanarImage } from "./media/planar_image";
+import { Scene3 } from "./objects/studyObject/scene3";
+import { Scene3_2 } from "./objects/studyObject/scene3_2";
+import { Scene4 } from "./objects/studyObject/scene4";
+import { Scene5 } from "./objects/studyObject/scene5";
+import { Scene6 } from "./objects/studyObject/scene6";
+import { Scene7 } from "./objects/studyObject/scene7";
 //variables for the study
 let currentID = 1;
 let targetHeight = 1.65;
@@ -182,11 +188,9 @@ export class MainScene {
         //if visualisation is already loaded return
         console.log("hallo",sceneInfo)
       //  if(this.currentScene == sceneInfo.Id)
-
+         this.currentPanorama = [];
         switch(sceneInfo.id) { 
             case '1': { 
-                //Scene Basic Exploring
-                this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
                  var visu: any = {
                     object: new Scene1(this.app.window,this.app.omni,this.GetCurrentTime(),10),
                     renderMode: 'foreground'
@@ -213,8 +217,60 @@ export class MainScene {
                 var ex = center.cross(new allofwutils.Vector3(0, 1, 0)).normalize();
                 var ey = ex.cross(center).normalize();
                 pic.object.setLocation(center, ex, ey, 10);
-                console.log(visu);
             this.currentVisu[sceneInfo.id+pic] = pic ;
+                break; 
+            } 
+            case '3.1': { 
+                 this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                 var visu: any = {
+                    object: new Scene3(this.app.window,this.app.omni,this.GetCurrentTime(),10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break; 
+            } 
+              case '3.2': { 
+                 this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                 var visu: any = {
+                    object: new Scene3_2(this.app.window,this.app.omni,this.GetCurrentTime(),10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break; 
+            } 
+            case '4': { 
+                 this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                 var visu: any = {
+                    object: new Scene4(this.app.window,this.app.omni,this.GetCurrentTime(),10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break; 
+            } 
+             case '5': { 
+                 this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                 var visu: any = {
+                    object: new Scene5(this.app.window,this.app.omni,this.GetCurrentTime(),10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break; 
+            } 
+             case '6': { 
+                 this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                 var visu: any = {
+                    object: new Scene6(this.app.window,this.app.omni,this.GetCurrentTime(),10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+             } 
+            case '7': { 
+                 var visu: any = {
+                    object: new Scene7(this.app.window,this.app.omni,this.GetCurrentTime(),10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
                 break; 
             } 
             default: { 

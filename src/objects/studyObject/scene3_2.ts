@@ -8,12 +8,10 @@ var shape3d = require("allofw-shape3d");
 
 import * as Stardust from "stardust-core";
 import * as StardustAllofw from "stardust-allofw";
-import { PanoramaImage } from "../../media/panorama_image";
 
 
 
-export class Scene1 extends SceneObject {
-    currentPanorama: any;
+export class Scene3_2 extends SceneObject {
     instant = false;
     year: any;
 
@@ -42,8 +40,7 @@ export class Scene1 extends SceneObject {
         this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
         this.time_start = startTime;
         this.currentText = [];
-        this.currentPanorama = PanoramaImage(omni, "studyData/img/PlanetA.jpg");
-        var data = require("d3").csv.parse(require("fs").readFileSync("studyData/data/scene1.csv", "utf-8"));
+        var data = require("d3").csv.parse(require("fs").readFileSync("studyData/data/scene3.2.csv", "utf-8"));
 
          this.cubeSpec = Stardust.mark.compile(`
             //import the object you wanna use see https://github.com/stardustjs/stardust-core/blob/master/src/core/library/primitives3d.ts
@@ -60,9 +57,44 @@ export class Scene1 extends SceneObject {
                 let cz = size *  cos(lon * PI/-180) * cos(lat * PI/180 );
 
                 //depending on t and speed the particle mooves on in the sphere
-                Cube(Vector3(cx, cy, cz), 0.03, Color(1, 1, 1, 1));
+                //  Cube(Vector3(cx, cy, cz), 0.03, Color(1, 1, 1, 1));
+                
+                let w = 0.5;
+                let l = val/2;
+                let center = Vector3(cx, cy, cz);
+              
+                let normal = normalize(center);
+                let up = Vector3(0, 1, 0);
+                let eX = normalize(cross(normal, up))* w;
+                let eY = normalize(cross(normal, eX))* -l;
+                let length = (normalize(Vector3(cx,cy,cz))*w);
 
-               
+                let radius = 0.04;
+                let color = Color(1, 1, 1, 1);
+
+                let p000 = center;
+                let p001 = center+ eX + eY;
+                let p010 = center+ eX;
+                let p011 = center+ eY;
+                let p100 = center - length;
+                let p101 = center - length+ eX + eY;
+                let p110 = center -length+ eX ;
+                let p111 = center -length+  eY;
+                let nx = Vector3(1, 0, 0);
+                let ny = Vector3(0, 1, 0);
+                let nz = Vector3(0, 0, 1);
+                emit [ { position: p000, color: color, normal: nz }, { position: p001, color: color, normal: nz }, { position: p011, color: color, normal: nz } ,
+                 { position: p000, color: color, normal: nz }, { position: p010, color: color, normal: nz }, { position: p001, color: color, normal: nz } ,
+                 { position: p000, color: color, normal: nz }, { position: p111, color: color, normal: nz }, { position: p100, color: color, normal: nz } ,
+                 { position: p000, color: color, normal: nz }, { position: p011, color: color, normal: nz }, { position: p111, color: color, normal: nz } ,
+                 { position: p000, color: color, normal: ny }, { position: p010, color: color, normal: ny }, { position: p100, color: color, normal: ny } ,
+                 { position: p000, color: color, normal: ny }, { position: p101, color: color, normal: ny }, { position: p110, color: color, normal: ny } ,
+                 { position: p011, color: color, normal: ny }, { position: p001, color: color, normal: ny }, { position: p101, color: color, normal: ny } ,
+                 { position: p011, color: color, normal: ny }, { position: p101, color: color, normal: ny }, { position: p111, color: color, normal: ny } ,
+                 { position: p010, color: color, normal: nx }, { position: p001, color: color, normal: nx }, { position: p101, color: color, normal: nx } ,
+                 { position: p010, color: color, normal: nx }, { position: p101, color: color, normal: nx }, { position: p110, color: color, normal: nx } ,
+                 { position: p100, color: color, normal: nx }, { position: p110, color: color, normal: nx }, { position: p101, color: color, normal: nx } ,
+                 { position: p100, color: color, normal: nx }, { position: p101, color: color, normal: nx }, { position: p111, color: color, normal: nx } ];
             }
         `)["Mark"];
 
@@ -83,6 +115,7 @@ export class Scene1 extends SceneObject {
          let cubes = Stardust.mark.create(this.cubeSpec, this.platform);
          cubes.attr("lon", d => d.lon);
          cubes.attr("lat", d => d.lat );
+          cubes.attr("val", d => d.val );
 -        cubes.data(this.currentText);
          this.cubes = cubes;
 
@@ -108,12 +141,13 @@ export class Scene1 extends SceneObject {
     }
 
     public render(): void {
-        this.currentPanorama.render();
+        
         GL.depthMask(GL.FALSE);
+         this.cubes.render();
         this.text.render(this.omni);
        
         GL.depthMask(GL.TRUE);
-          this.cubes.render();
+         
     }
 
     public frame(): void {
