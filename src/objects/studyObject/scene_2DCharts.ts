@@ -9,6 +9,7 @@ var shape3d = require("allofw-shape3d");
 import * as Stardust from "stardust-core";
 import * as StardustAllofw from "stardust-allofw";
 import { PanoramaImage } from "../../media/panorama_image";
+import { PlanarImage } from "../../media/planar_image";
 
 
 
@@ -36,6 +37,7 @@ export class scene_2DCharts extends SceneObject {
     private transit = false;
     private switch = false;
     private cubes: Stardust.Mark;
+    private legend: any;
 
     constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, startTime: number,size:number) {
         super(omni)
@@ -43,7 +45,18 @@ export class scene_2DCharts extends SceneObject {
         this.time_start = startTime;
         this.currentText = [];
         this.currentPanorama = PanoramaImage(omni, "studyData/img/earth.jpg");
-       var data = require("d3").csv.parse(require("fs").readFileSync("studyData/data/temperatur.csv", "utf-8"));
+        this.legend = PlanarImage(omni, "studyData/img/Legend.PNG");
+                 Math.sin(0 * Math.PI / -180) * Math.cos(0 * Math.PI / 180),
+                Math.sin(0 * Math.PI / 180),
+                Math.cos(0 * Math.PI / -180) * Math.cos(0 * Math.PI / 180)
+            ).normalize().scale(2);
+            var ex = center.cross(new allofwutils.Vector3(0, 1, 0)).normalize();
+            var ey = ex.cross(center).normalize();
+
+        this.legend.setLocation(center, ex, ey, 2);
+
+
+        var data = require("d3").csv.parse(require("fs").readFileSync("studyData/data/temperatur.csv", "utf-8"));
 
          this.cubeSpec = Stardust.mark.compile(`
             //import the object you wanna use see https://github.com/stardustjs/stardust-core/blob/master/src/core/library/primitives3d.ts
@@ -156,6 +169,7 @@ export class scene_2DCharts extends SceneObject {
 
     public render(): void {
         this.currentPanorama.render();
+         this.legend.render();
         GL.depthMask(GL.FALSE);
       
        
