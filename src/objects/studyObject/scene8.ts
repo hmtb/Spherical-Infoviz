@@ -45,11 +45,7 @@ export class Scene8 extends SceneObject {
         this.time_start = startTime;
         this.currentText = [];
    
-        this.currentPanorama = PanoramaImage(omni, "studyData/img/earth.jpg");
-
-        var data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/data/emissionByCountry.csv", "utf-8"));
-        this.powerPlants = new PlanetSteam(window, omni, data, startTime);
-
+        this.currentPanorama = PanoramaImage(omni, "studyData/img/PlanetB.png");
 
     }
 
@@ -59,7 +55,6 @@ export class Scene8 extends SceneObject {
 
     public render(): void {
        this.currentPanorama.render();
-       this.powerPlants.render();
         GL.depthMask(GL.FALSE);
        
         GL.depthMask(GL.TRUE);
@@ -67,8 +62,6 @@ export class Scene8 extends SceneObject {
     }
 
     public frame(): void {
-        this.powerPlants.setTime(this.time);
-        this.powerPlants.frame();
     }
 }
 

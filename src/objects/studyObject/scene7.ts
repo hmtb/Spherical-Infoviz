@@ -45,7 +45,7 @@ export class Scene7 extends SceneObject {
         this.time_start = startTime;
         this.currentText = [];
         var data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/data/emissionByCountry.csv", "utf-8"));
-        this.currentPanorama = PanoramaImage(omni, "studyData/img/earth.jpg");
+        this.currentPanorama = PanoramaImage(omni, "studyData/img/PlanteB2.png");
         this.powerPlants = new PlanetSteam(window, omni, data, startTime);
 
 

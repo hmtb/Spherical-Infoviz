@@ -23,6 +23,7 @@ import { Scene6 } from "./objects/studyObject/scene6";
 import { Scene7 } from "./objects/studyObject/scene7";
 import { Scene5_2 } from "./objects/studyObject/scene5_2";
 import { Scene8 } from "./objects/studyObject/scene8";
+import { scene_2DCharts } from "./objects/studyObject/scene_2dCharts";
 //variables for the study
 let currentID = 1;
 let targetHeight = 1.65;
@@ -188,10 +189,20 @@ export class MainScene {
 
        public loadScene(sceneInfo: any, time: number, startTime: number) {
         //if visualisation is already loaded return
-        console.log("hallo",sceneInfo)
+          for (let key in this.currentVisu) {
+                delete this.currentVisu[key];
+            }
       //  if(this.currentScene == sceneInfo.Id)
          this.currentPanorama = [];
         switch(sceneInfo.id) { 
+             case 'scene_2DCharts': { 
+                 var visu: any = {
+                    object: new scene_2DCharts(this.app.window,this.app.omni,this.GetCurrentTime(),10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break; 
+            } 
             case '1': { 
                  var visu: any = {
                     object: new Scene1(this.app.window,this.app.omni,this.GetCurrentTime(),10),
@@ -284,7 +295,7 @@ export class MainScene {
                 this.currentVisu[sceneInfo.id] = visu;
                 break; 
             } 
-              case '7': { 
+              case '8': { 
                  var visu: any = {
                     object: new Scene8(this.app.window,this.app.omni,this.GetCurrentTime(),10),
                     renderMode: 'foreground'
@@ -302,9 +313,10 @@ export class MainScene {
     }
 
     public hideScene(media: any) {
-        var id = media.id;
-        if (!this.currentVisu[id]) return;
-        delete this.currentVisu[id];
+     this.currentPanorama = [];
+            for (let key in this.currentVisu) {
+                delete this.currentVisu[key];
+            }
     }
 
     public frame() {

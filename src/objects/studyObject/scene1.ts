@@ -70,7 +70,6 @@ export class Scene1 extends SceneObject {
 
               
          for (let item of data) {
-
             this.currentText.push({
                             lon: item.lon,
                             lat: item.lat,
