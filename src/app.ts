@@ -10,11 +10,27 @@ import { PanoramaImage } from "./media/panorama_image";
 import { PanoramaVideoPlayer } from "./media/panorama_video_player";
 
 import { MyNavigator } from "./navigator";
+import { StudyController } from "./studyController";
 import { Text } from "./objects/text";
-
+import { Scene1 } from "./objects/studyObject/scene1";
+import { Scene2 } from "./objects/studyObject/scene2";
+import { PlanarImage } from "./media/planar_image";
+import { Scene3 } from "./objects/studyObject/scene3";
+import { Scene3_2 } from "./objects/studyObject/scene3_2";
+import { Scene4 } from "./objects/studyObject/scene4";
+import { Scene5 } from "./objects/studyObject/scene5";
+import { Scene6 } from "./objects/studyObject/scene6";
+import { Scene7 } from "./objects/studyObject/scene7";
+import { Scene5_2 } from "./objects/studyObject/scene5_2";
+import { Scene8 } from "./objects/studyObject/scene8";
+import { scene_2DCharts } from "./objects/studyObject/scene_2dCharts";
 //variables for the study
 let currentID = 1;
 let targetHeight = 1.65;
+let radius = 5;
+var allofwutils = require("allofw-utils");
+
+// PCM data from stdin gets piped into the speaker
 
 export class MainScene {
     type: any;
@@ -36,7 +52,11 @@ export class MainScene {
     private currentYear: number;
 
     private navigator: MyNavigator;
+    private studyController: StudyController;
     private tutorText: Text;
+    public currentScene: number;
+
+
 
     constructor(app: IRendererRuntime) {
         this.app = app;
@@ -47,7 +67,9 @@ export class MainScene {
         this.currentVisu = {};
         this.currentPanorama = PanoramaImage(this.app.omni, "preprocessed/img/earth.jpg")
         this.navigator = new MyNavigator(this.app, this.currentVisu, this.currentPanorama)
+        this.studyController = new StudyController(this.app, this.currentVisu, this.currentPanorama)
         this.tutorText = new Text(this.app.window, this.app.omni, null, this.GetCurrentTime());
+        this.currentScene = 0;
         this.type = {
             PANORAMIC_VIDEO: 'panorama-video',
             PLANAR_VIDEO: 'planar-video',
@@ -82,6 +104,17 @@ export class MainScene {
         this.app.networking.on("media/hide", (media: any) => {
             this.navigator.hideVisualisation(media);
         });
+
+        //Navigaton
+        this.app.networking.on("scene/show", (sceneInfo: any, startTime: number) => {
+            this.loadScene(sceneInfo, this.GetCurrentTime(), startTime);
+        });
+
+        this.app.networking.on("scene/hide", (sceneInfo: any) => {
+            this.hideScene(sceneInfo);
+        });
+
+
         //Navigaton
         this.app.networking.on("data/show", (media: any, startTime: number) => {
             this.navigator.loadVisualisation(media, this.GetCurrentTime(), startTime);
@@ -110,7 +143,7 @@ export class MainScene {
         });
 
         this.app.networking.on("panorama/hide", (media: any) => {
-            this.currentPanorama = {};
+            this.currentPanorama = [];
         });
         //stop All Visualisation
         this.app.networking.on("stop", () => {
@@ -130,6 +163,9 @@ export class MainScene {
         this.app.networking.on("year", (y: number) => {
             this.currentYear = y;
         });
+    }
+    processAudio = function (inputBuffer: any) {
+        // Just print the value of the first sample on the left channel 
 
     }
 
@@ -142,6 +178,138 @@ export class MainScene {
         return (this.app.config as any).OpenVR == true;
     }
 
+
+    public loadScene(sceneInfo: any, time: number, startTime: number) {
+        //if visualisation is already loaded return
+        for (let key in this.currentVisu) {
+            delete this.currentVisu[key];
+        }
+        //  if(this.currentScene == sceneInfo.Id)
+        this.currentPanorama = [];
+        switch (sceneInfo.id) {
+            case 'scene_2DCharts': {
+                var visu: any = {
+                    object: new scene_2DCharts(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+            case '1': {
+                var visu: any = {
+                    object: new Scene1(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+            case '2': {
+                this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                var visu: any = {
+                    object: new Scene2(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                var pic: any = {
+                    object: PlanarImage(this.app.omni, "studyData/img/planetBincome.png"),
+                    renderMode: 'foreground'
+                }
+                var center = new allofwutils.Vector3(
+                    Math.sin(-180 * Math.PI / -180) * Math.cos(0 * Math.PI / 180),
+                    Math.sin(0 * Math.PI / 180),
+                    Math.cos(-180 * Math.PI / -180) * Math.cos(0 * Math.PI / 180)
+                ).normalize().scale(5);
+                var ex = center.cross(new allofwutils.Vector3(0, 1, 0)).normalize();
+                var ey = ex.cross(center).normalize();
+                pic.object.setLocation(center, ex, ey, 10);
+                this.currentVisu[sceneInfo.id + pic] = pic;
+                break;
+            }
+            case '3.1': {
+                this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                var visu: any = {
+                    object: new Scene3(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+            case '3.2': {
+                this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                var visu: any = {
+                    object: new Scene3_2(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+            case '4': {
+                this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                var visu: any = {
+                    object: new Scene4(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+            case '5': {
+                this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                var visu: any = {
+                    object: new Scene5(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+            case '5_2': {
+                this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                var visu: any = {
+                    object: new Scene5_2(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+            case '6': {
+                this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                var visu: any = {
+                    object: new Scene6(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+            case '7': {
+                var visu: any = {
+                    object: new Scene7(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+            case '8': {
+                var visu: any = {
+                    object: new Scene8(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+            default: {
+                //statements; 
+                break;
+            }
+        }
+
+
+    }
+
+    public hideScene(media: any) {
+        this.currentPanorama = [];
+        for (let key in this.currentVisu) {
+            delete this.currentVisu[key];
+        }
+    }
 
     public frame() {
         if (this.isRunningInVR()) {
@@ -244,9 +412,8 @@ export class Simulator {
             this.app.networking.broadcast("year", year);
         });
 
-        app.server.on("scene/set", function (scene_id: string) {
-        });
-
+        // app.server.on("scene/set", function (scene_id: string) {
+        // });
 
         app.server.on("stop", () => {
             this.app.networking.broadcast("stop");
@@ -260,6 +427,7 @@ export class Simulator {
                 AudioStart(media.audio.filename, GetCurrentTime() + 1, media.audio.x, media.audio.y, media.audio.z);
             }
         });
+
 
 
         app.server.on("media/hide", (media: any) => {
@@ -301,6 +469,12 @@ export class Simulator {
             this.app.networking.broadcast("data/hide", simulation);
         });
 
+        app.server.on("scene/show", (sceneInfo: any) => {
+            this.app.networking.broadcast("scene/show", sceneInfo, GetCurrentTime() + 1);
+        });
+        app.server.on("scene/hide", (sceneInfo: any) => {
+            this.app.networking.broadcast("scene/hide", sceneInfo, GetCurrentTime() + 1);
+        });
 
         var time_start = new Date().getTime() / 1000;
         var GetCurrentTime = function () {

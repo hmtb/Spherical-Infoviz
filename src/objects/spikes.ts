@@ -125,7 +125,7 @@ var FPlantsSpikes = function (omni: any, data: any) {
 
     var maxval = 36336000;
     // the radius of the Allosphere
-    var aradius = 5.0;
+    var aradius = 10.0;
     // the length of the longest cube
     var maxlen = 4.0;
 
@@ -145,9 +145,10 @@ var FPlantsSpikes = function (omni: any, data: any) {
     // Cube objects at given lat/lon with height = val
     // basic proportions are 0.25 * 0.25 * 1
     // what's missing right now is the orientation by lat and lon
+    console.log("hier")
     var spikes = shape3d.spikes()
-        .attr("vec3", "tip", "(5.0 - len) * normalize(pos) + vec3(0.0, -0.5, 0.0)")
-        .attr("vec3", "basement", "5.0 * normalize(pos)")
+        .attr("vec3", "tip", "(10.0 - len) * normalize(pos) + vec3(0.0, -0.5, 0.0)")
+        .attr("vec3", "basement", "10.0 * normalize(pos)")
         .attr("vec4", "color", "vec4(1,1,1,1)")
         .attr("float", "radius", "rad")
         // Variables are bound to data.
@@ -166,7 +167,7 @@ var FPlantsSpikes = function (omni: any, data: any) {
 
     var texts = shape3d.texts()
         //    .attr("vec3", "center", "5.0 * normalize(pos)")
-        .attr("vec3", "center", "(5.0 - len) * normalize(pos) + vec3(0.0, -0.5, 0.0)")
+        .attr("vec3", "center", "(10.0 - len) * normalize(pos) + vec3(0.0, -0.5, 0.0)")
         .attr("vec3", "up", "vec3(0, 1, 0.001)")
         .attr("vec3", "normal", "-normalize(pos)")
         .attr("float", "scale", "0.001")

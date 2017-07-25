@@ -96,10 +96,27 @@
                 <div data-bind="foreach: current_scene().stories">
                     <p><button class="btn" data-bind="click: $root.nextPreviousChapter">Zurueck</button>
                         <span data-bind="text: $data.name"></span>
+                         <div style="margin-left: 140px">
                         <button class="btn" data-bind="click: $root.nextChapter">Next</button>
 
                     </p>
+                    
                 </div>
+            </div>
+                <h2>Study</h2>
+            <div class="media-entry" style="border-bottom: 1px solid #333">
+                <div data-bind="foreach: current_scene().studyScene">
+                 <div style="float: left">
+                        <button class="btn" data-bind="click: $root.showScene">show</button>
+                     <button class="btn" data-bind="click: $root.hideScene">hide</button>
+                </div>
+                    <div style="margin-left: 140px">
+                        <p style="color: #EEE" data-bind="text: $data.name"></p>
+                        <p style="font-style: italic" data-bind="text: $data.description"></p>
+                    </div>
+                    <div style="clear: both"></div>
+                </div>
+                
             </div>
         </div>
     </div>
@@ -291,6 +308,12 @@
                             description: "Information visualization about rising sea levels from An Inconvenient Truth",
                             filename: "preprocessed/videos/inconvenienttruth-wtc.mp4",
                             filename_audio: "preprocessed/videos/inconvenienttruth-wtc.wav",
+                            audio: {
+                                filename: "preprocessed/videos/inconvenienttruth-wtc.wav",
+                                x: 0,
+                                y: 0,
+                                z: 0
+                            },
                             "fps": 59.93,
                             location: { lon: -40, lat: 40 }
                         },
@@ -301,7 +324,12 @@
                             name: "Rising Sea Levels CO2",
                             description: "Information visualization about rising sea levels from An Inconvenient Truth",
                             filename: "preprocessed/videos/inconvenienttruth-co2.mp4",
-                            filename_audio: "preprocessed/videos/inconvenienttruth-co2.wav",
+                            audio: {
+                                filename: "preprocessed/videos/inconvenienttruth-co2.wav",
+                                x: 0,
+                                y: 0,
+                                z: 0
+                            },
                             "fps": 59.93,
                             location: { lon: -40, lat: 40 }
                         },
@@ -360,7 +388,30 @@
                             name: "Coastlines",
                             description: "Coastlines",
                         },
-
+                        {
+                            id: "dark_world",
+                            type: type.PANORAMIC_IMAGE,
+                            rendermode: rm.BACKGROUND,
+                            name: "Dark_world",
+                            description: "dark World",
+                            filename: "preprocessed/dark_world.jpg"
+                        },
+                           {
+                            id: "CT3OPZk",
+                            type: type.PANORAMIC_IMAGE,
+                            rendermode: rm.BACKGROUND,
+                            name: "CT3OPZk",
+                            description: "waterlevel 2100",
+                            filename: "preprocessed/CT3OPZk.jpg"
+                        },
+                        {
+                            id: "nasa_co2",
+                            type: type.PANORAMIC_IMAGE,
+                            rendermode: rm.BACKGROUND,
+                            name: "nasa_co2",
+                            description: "C02 Image",
+                            filename: "preprocessed/nasa-co2.jpg"
+                        },
                         {
                             id: "simulation_normal",
                             type: type.DATA_VISUALISATION,
@@ -390,7 +441,7 @@
                         }
                     ]
                 }, {
-                    id: "spherical", name: "Sperical Infoviz Studz",
+                    id: "spherical", name: "Sperical Infoviz Exploration",
                     panorama: [
                         {
                             type: type.PANORAMIC_IMAGE,
@@ -523,6 +574,79 @@
                             text: "can you see how big africa is?"
                         }
                     ]
+                }, {
+                    id: "spherical", name: "Sperical Infoviz Exploration",
+                    studyScene: [
+                        {
+                            type: type.StudyScene,
+                            id: "scene_2DCharts",
+                            name: "Scene 2d Charts",
+                            description: "Showing 2D Charts"
+                        },{
+                            type: type.StudyScene,
+                            id: "1",
+                            name: "Scene 1",
+                            description: "Basic"
+                        },
+                         {
+                            type: type.StudyScene,
+                            id: "2",
+                            name: "Scene 2",
+                            description: "Liefactor questions"
+                        }
+                        ,
+                         {
+                            type: type.StudyScene,
+                            id: "3.1",
+                            name: "Scene 3.1",
+                            description: "centric design"
+                        }
+                        ,
+                         {
+                            type: type.StudyScene,
+                            id: "3.2",
+                            name: "Scene 3.2",
+                            description: "vertical design"
+                        },
+                         {
+                            type: type.StudyScene,
+                            id: "4",
+                            name: "Scene 4",
+                            description: "Recall"
+                        },
+                         {
+                            type: type.StudyScene,
+                            id: "5",
+                            name: "Scene 5",
+                            description: "Label Front"
+                        },
+                        {
+                            type: type.StudyScene,
+                            id: "5_2",
+                            name: "Scene 5_2",
+                            description: "Label Back"
+                        },
+                         {
+                            type: type.StudyScene,
+                            id: "6",
+                            name: "Scene 6",
+                            description: "Color perception"
+                        }
+                        ,
+                        {
+                            type: type.StudyScene,
+                            id: "7",
+                            name: "Scene 7",
+                            description: "Modalities"
+                        }
+                        ,
+                         {
+                            type: type.StudyScene,
+                            id: "8",
+                            name: "Scene 8",
+                            description: "Fear World"
+                        }
+                    ],
                 }
             ];
             this.current_scene = ko.observable(this.scenes[0]);
@@ -547,6 +671,14 @@
             this.hideText = function (text) {
                 server.message("text/hide", text);
             }
+
+             this.showScene = function (text) {
+                server.message("scene/show", text);
+            }
+            this.hideScene = function (text) {
+                server.message("scene/hide", text);
+            }
+
             this.launchSimulation = function (simulation) {
                 if (simulation.type == "plasim") {
                     server.message("plasim/stream/start", simulation.filename);
