@@ -16,6 +16,7 @@ import { randomRange, slerp, slerpDistance } from "./utils";
 
 import { PlanetSteamText } from "./objects/steamWithText";
 import { PlanetSteam } from "./objects/steam";
+import { PlanetSteamCity } from "./objects/steamCity";
 import { PlanetSteamOld } from "./objects/steamOld"
 
 
@@ -116,6 +117,15 @@ export class MyNavigator {
                 var data = require("d3").csv.parse(require("fs").readFileSync(media.filename, "utf-8"));
                 var visu: any = {
                     object: new PlanetSteam(this.app.window, this.app.omni, data, startTime),
+                    renderMode: media.rendermode
+
+                }
+                this.currentVisu[id] = visu;
+            }
+            else if (id == 'simulation_steam_city') {
+                var data = require("d3").csv.parse(require("fs").readFileSync(media.filename, "utf-8"));
+                var visu: any = {
+                    object: new PlanetSteamCity(this.app.window, this.app.omni, data, startTime),
                     renderMode: media.rendermode
 
                 }

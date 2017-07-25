@@ -28,16 +28,8 @@ import { scene_2DCharts } from "./objects/studyObject/scene_2dCharts";
 let currentID = 1;
 let targetHeight = 1.65;
 let radius = 5;
-var coreAudio = require("node-core-audio");
-var Speaker = require('speaker');
 var allofwutils = require("allofw-utils");
-// Create the Speaker instance
-var speaker = new Speaker({
-  channels: 2,          // 2 channels
-  bitDepth: 16,         // 16-bit samples
-  sampleRate: 44100     // 44,100 Hz sample rate
 
-});
 // PCM data from stdin gets piped into the speaker
 
 export class MainScene {
@@ -63,7 +55,7 @@ export class MainScene {
     private studyController: StudyController;
     private tutorText: Text;
     public currentScene: number;
-    
+
 
 
     constructor(app: IRendererRuntime) {
@@ -113,7 +105,7 @@ export class MainScene {
             this.navigator.hideVisualisation(media);
         });
 
-         //Navigaton
+        //Navigaton
         this.app.networking.on("scene/show", (sceneInfo: any, startTime: number) => {
             this.loadScene(sceneInfo, this.GetCurrentTime(), startTime);
         });
@@ -131,7 +123,7 @@ export class MainScene {
         this.app.networking.on("data/hide", (media: any) => {
             this.navigator.hideVisualisation(media);
         });
-        
+
 
         this.app.networking.on("panorama/show", (media: any, startTime: number) => {
             //Panorama 
@@ -172,7 +164,7 @@ export class MainScene {
             this.currentYear = y;
         });
     }
-    processAudio = function( inputBuffer:any ) {
+    processAudio = function (inputBuffer: any) {
         // Just print the value of the first sample on the left channel 
 
     }
@@ -185,42 +177,42 @@ export class MainScene {
     public isRunningInVR() {
         return (this.app.config as any).OpenVR == true;
     }
-   
 
-       public loadScene(sceneInfo: any, time: number, startTime: number) {
+
+    public loadScene(sceneInfo: any, time: number, startTime: number) {
         //if visualisation is already loaded return
-          for (let key in this.currentVisu) {
-                delete this.currentVisu[key];
+        for (let key in this.currentVisu) {
+            delete this.currentVisu[key];
+        }
+        //  if(this.currentScene == sceneInfo.Id)
+        this.currentPanorama = [];
+        switch (sceneInfo.id) {
+            case 'scene_2DCharts': {
+                var visu: any = {
+                    object: new scene_2DCharts(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
             }
-      //  if(this.currentScene == sceneInfo.Id)
-         this.currentPanorama = [];
-        switch(sceneInfo.id) { 
-             case 'scene_2DCharts': { 
-                 var visu: any = {
-                    object: new scene_2DCharts(this.app.window,this.app.omni,this.GetCurrentTime(),10),
+            case '1': {
+                var visu: any = {
+                    object: new Scene1(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
-                break; 
-            } 
-            case '1': { 
-                 var visu: any = {
-                    object: new Scene1(this.app.window,this.app.omni,this.GetCurrentTime(),10),
-                    renderMode: 'foreground'
-                }
-                this.currentVisu[sceneInfo.id] = visu;
-                break; 
-            } 
-            case '2': { 
-                 this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
-                 var visu: any = {
-                    object: new Scene2(this.app.window,this.app.omni,this.GetCurrentTime(),10),
+                break;
+            }
+            case '2': {
+                this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                var visu: any = {
+                    object: new Scene2(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
                 var pic: any = {
-                        object: PlanarImage(this.app.omni, "studyData/img/planetBincome.png"),
-                        renderMode: 'foreground'
+                    object: PlanarImage(this.app.omni, "studyData/img/planetBincome.png"),
+                    renderMode: 'foreground'
                 }
                 var center = new allofwutils.Vector3(
                     Math.sin(-180 * Math.PI / -180) * Math.cos(0 * Math.PI / 180),
@@ -230,93 +222,93 @@ export class MainScene {
                 var ex = center.cross(new allofwutils.Vector3(0, 1, 0)).normalize();
                 var ey = ex.cross(center).normalize();
                 pic.object.setLocation(center, ex, ey, 10);
-            this.currentVisu[sceneInfo.id+pic] = pic ;
-                break; 
-            } 
-            case '3.1': { 
-                 this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
-                 var visu: any = {
-                    object: new Scene3(this.app.window,this.app.omni,this.GetCurrentTime(),10),
-                    renderMode: 'foreground'
-                }
-                this.currentVisu[sceneInfo.id] = visu;
-                break; 
-            } 
-              case '3.2': { 
-                 this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
-                 var visu: any = {
-                    object: new Scene3_2(this.app.window,this.app.omni,this.GetCurrentTime(),10),
-                    renderMode: 'foreground'
-                }
-                this.currentVisu[sceneInfo.id] = visu;
-                break; 
-            } 
-            case '4': { 
-                 this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
-                 var visu: any = {
-                    object: new Scene4(this.app.window,this.app.omni,this.GetCurrentTime(),10),
-                    renderMode: 'foreground'
-                }
-                this.currentVisu[sceneInfo.id] = visu;
-                break; 
-            } 
-             case '5': { 
-                 this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
-                 var visu: any = {
-                    object: new Scene5(this.app.window,this.app.omni,this.GetCurrentTime(),10),
-                    renderMode: 'foreground'
-                }
-                this.currentVisu[sceneInfo.id] = visu;
-                break; 
-            } 
-              case '5_2': { 
-                 this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
-                 var visu: any = {
-                    object: new Scene5_2(this.app.window,this.app.omni,this.GetCurrentTime(),10),
-                    renderMode: 'foreground'
-                }
-                this.currentVisu[sceneInfo.id] = visu;
-                break; 
-            } 
-             case '6': { 
-                 this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
-                 var visu: any = {
-                    object: new Scene6(this.app.window,this.app.omni,this.GetCurrentTime(),10),
+                this.currentVisu[sceneInfo.id + pic] = pic;
+                break;
+            }
+            case '3.1': {
+                this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                var visu: any = {
+                    object: new Scene3(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
                 break;
-             } 
-            case '7': { 
-                 var visu: any = {
-                    object: new Scene7(this.app.window,this.app.omni,this.GetCurrentTime(),10),
+            }
+            case '3.2': {
+                this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                var visu: any = {
+                    object: new Scene3_2(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
-                break; 
-            } 
-              case '8': { 
-                 var visu: any = {
-                    object: new Scene8(this.app.window,this.app.omni,this.GetCurrentTime(),10),
+                break;
+            }
+            case '4': {
+                this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                var visu: any = {
+                    object: new Scene4(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
-                break; 
-            } 
-            default: { 
+                break;
+            }
+            case '5': {
+                this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                var visu: any = {
+                    object: new Scene5(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+            case '5_2': {
+                this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                var visu: any = {
+                    object: new Scene5_2(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+            case '6': {
+                this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                var visu: any = {
+                    object: new Scene6(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+            case '7': {
+                var visu: any = {
+                    object: new Scene7(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+            case '8': {
+                var visu: any = {
+                    object: new Scene8(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+            default: {
                 //statements; 
-                break; 
-            } 
-            } 
+                break;
+            }
+        }
 
-        
+
     }
 
     public hideScene(media: any) {
-     this.currentPanorama = [];
-            for (let key in this.currentVisu) {
-                delete this.currentVisu[key];
-            }
+        this.currentPanorama = [];
+        for (let key in this.currentVisu) {
+            delete this.currentVisu[key];
+        }
     }
 
     public frame() {
@@ -353,7 +345,7 @@ export class MainScene {
         GL.enable(GL.DEPTH_TEST);
 
         this.currentPanorama.render && this.currentPanorama.render();
-process.stdin.pipe(speaker);
+
         for (let key in this.currentVisu) {
             var visu: any = this.currentVisu[key]
             if (visu.renderMode == 'background') {
@@ -392,7 +384,7 @@ export class Simulator {
 
         // audio
         var audio_connection = require("zmq").socket("pub");
-    audio_connection.connect((app.config as any).audio.endpoint);
+        audio_connection.connect((app.config as any).audio.endpoint);
         function SendAudioMessage(type: number, filename: string, current_time: number, play_time: number, x: number, y: number, z: number) {
             var buffer = new Buffer(8 + 256 + 40);
             buffer.fill(0);
@@ -409,7 +401,7 @@ export class Simulator {
 
         function AudioStart(filename: string, time: number, x: number, y: number, z: number) {
             SendAudioMessage(1, filename, GetCurrentTime(), time, x, y, z);
-          }
+        }
         function AudioStop(filename: string) {
             SendAudioMessage(2, filename, GetCurrentTime(), 0, 0, 0, 0);
         }
@@ -435,7 +427,7 @@ export class Simulator {
                 AudioStart(media.audio.filename, GetCurrentTime() + 1, media.audio.x, media.audio.y, media.audio.z);
             }
         });
-     
+
 
 
         app.server.on("media/hide", (media: any) => {

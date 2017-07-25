@@ -39,13 +39,15 @@ export class scene_2DCharts extends SceneObject {
     private cubes: Stardust.Mark;
     private legend: any;
 
-    constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, startTime: number,size:number) {
+    constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, startTime: number, size: number) {
         super(omni)
         this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
         this.time_start = startTime;
         this.currentText = [];
         this.currentPanorama = PanoramaImage(omni, "studyData/img/earth.jpg");
+
         this.legend = PlanarImage(omni, "studyData/img/Legend.PNG");
+        var center = new allofwutils.Vector3(
                  Math.sin(0 * Math.PI / -180) * Math.cos(0 * Math.PI / 180),
                 Math.sin(0 * Math.PI / 180),
                 Math.cos(0 * Math.PI / -180) * Math.cos(0 * Math.PI / 180)
@@ -55,10 +57,9 @@ export class scene_2DCharts extends SceneObject {
 
         this.legend.setLocation(center, ex, ey, 2);
 
-
         var data = require("d3").csv.parse(require("fs").readFileSync("studyData/data/temperatur.csv", "utf-8"));
 
-         this.cubeSpec = Stardust.mark.compile(`
+        this.cubeSpec = Stardust.mark.compile(`
             //import the object you wanna use see https://github.com/stardustjs/stardust-core/blob/master/src/core/library/primitives3d.ts
             import { Triangle, Cube } from P3D;
 
@@ -78,7 +79,7 @@ export class scene_2DCharts extends SceneObject {
               //  Cube(Vector3(cx, cy, cz), 0.03, Color(val,val,val, val));
 
 
-                let w = 0.05;
+                let w = 0.01;
                 let l = (val)*7;
                 let center = Vector3(cx, cy, cz);
               
@@ -88,9 +89,9 @@ export class scene_2DCharts extends SceneObject {
                 let eY = normalize(cross(normal, eX))* w;
                 let length = Vector3(0, 1, 0);
                 if(sin(t)>0){
-                    length = (normalize(Vector3(cx,cy,cz))*l * sin(t) );
+                    length = (normalize(Vector3(cx,cy,cz))*l * sin(t) )+ (eY*40);
                 }else{
-                     length = (normalize(Vector3(cx,cy,cz))*l * -sin(t) );
+                     length = (normalize(Vector3(cx,cy,cz))*l * -sin(t) )+ (eY*40);
                 }
                 let color = Color( val, 0, 1-val, 1);
                 if(val <0.25)
@@ -135,33 +136,33 @@ export class scene_2DCharts extends SceneObject {
             }
         `)["Mark"];
 
-         
-                for (let item of data) {
-            
-                       for (let i = 1; i <= 360; i++) {  
-                         if(item[i-180.5] == 'NaN') continue;
-                        this.currentText.push({
-                                    lon: i-180.5,
-                                    lat: item.lat,
-                                    val: this.mymap(item[i-180.5]),
-                                    name: item.name
-                                })
-                       }
-                    }
-        
 
-         let cubes = Stardust.mark.create(this.cubeSpec, this.platform);
-         cubes.attr("lon", d => d.lon);
-         cubes.attr("lat", d => d.lat );
-         cubes.attr("val", d => d.val );
-         cubes.attr("t",0 );
--        cubes.data(this.currentText);
-         this.cubes = cubes;
+        for (let item of data) {
+
+            for (let i = 1; i <= 360; i++) {
+                if (item[i - 180.5] == 'NaN') continue;
+                this.currentText.push({
+                    lon: i - 180.5,
+                    lat: item.lat,
+                    val: this.mymap(item[i - 180.5]),
+                    name: item.name
+                })
+            }
+        }
+
+
+        let cubes = Stardust.mark.create(this.cubeSpec, this.platform);
+        cubes.attr("lon", d => d.lon);
+        cubes.attr("lat", d => d.lat);
+        cubes.attr("val", d => d.val);
+        cubes.attr("t", 0);
+        -        cubes.data(this.currentText);
+        this.cubes = cubes;
 
     }
-    public mymap (int_myNumber:number) {
-     return (int_myNumber - -20) * (1 - 0) / (14.4 - -20) +0;
-}
+    public mymap(int_myNumber: number) {
+        return (int_myNumber - -20) * (1 - 0) / (14.4 - -20) + 0;
+    }
 
     public setTime(t: number) {
         this.time = t;
@@ -171,10 +172,10 @@ export class scene_2DCharts extends SceneObject {
         this.currentPanorama.render();
          this.legend.render();
         GL.depthMask(GL.FALSE);
-      
-       
+
+
         GL.depthMask(GL.TRUE);
-          this.cubes.render();
+        this.cubes.render();
     }
 
     public frame(): void {
