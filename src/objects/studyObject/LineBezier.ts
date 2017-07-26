@@ -12,7 +12,7 @@ import { PanoramaImage } from "../../media/panorama_image";
 
 
 
-export class Scene1 extends SceneObject {
+export class LineBezier extends SceneObject {
     currentPanorama: any;
     instant = false;
     year: any;
@@ -48,6 +48,7 @@ export class Scene1 extends SceneObject {
          this.cubeSpec = Stardust.mark.compile(`
             //import the object you wanna use see https://github.com/stardustjs/stardust-core/blob/master/src/core/library/primitives3d.ts
             import { Triangle, Cube } from P3D;
+            import { Line } from P2D;
             //create mark and extend the constructor with the values you need
 
             mark Mark(lon: float, lat: float, val: float) {
@@ -59,9 +60,27 @@ export class Scene1 extends SceneObject {
                 let cz = size *  cos(lon * PI/-180) * cos(lat * PI/180 );
 
                 //depending on t and speed the particle mooves on in the sphere
-                Cube(Vector3(cx, cy, cz), 0.03, Color(1, 1, 1, 1));
+                let p1 = Vector3(cx, cy, cz);
+                let p2 = Vector3(cy, cx, cz);
+                let w = 0.01;
+                let color = Color(1, 1, 1, 1);
+                let up = Vector3(0, 1, 0);
 
-               
+                //p1
+                let normalp1 = normalize(p1);
+                let eXp1 = normalize(cross(normalp1, up))* (w/2);
+                let eYp1 = normalize(cross(normalp1, eXp1))* (w/2);
+
+                  let normalp2 = normalize(p2);
+                let eXp2 = normalize(cross(normalp2, up))* (w/2);
+                let eYp2 = normalize(cross(normalp2, eXp2))*(w/2);
+
+
+
+                let width = 0.01;
+                let d = normalize(p2 - p1);
+                // let t = Vector3(d.y, -d.x) * (width / 2);
+                
             }
         `)["Mark"];
 

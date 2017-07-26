@@ -20,10 +20,14 @@ import { Scene3_2 } from "./objects/studyObject/scene3_2";
 import { Scene4 } from "./objects/studyObject/scene4";
 import { Scene5 } from "./objects/studyObject/scene5";
 import { Scene6 } from "./objects/studyObject/scene6";
-import { Scene7 } from "./objects/studyObject/scene7";
 import { Scene5_2 } from "./objects/studyObject/scene5_2";
 import { Scene8 } from "./objects/studyObject/scene8";
-import { scene_2DCharts } from "./objects/studyObject/scene_2dCharts";
+import { scene_TA } from "./objects/studyObject/scene_tempAnomali";
+import { Line } from "./objects/studyObject/Line";
+import { LineBezier } from "./objects/studyObject/LineBezier";
+import { Chart2D } from "./objects/studyObject/2DCharts";
+import { scene_TANM } from "./objects/studyObject/scene_tempAnomalinm";
+import { Steam_PlanetB } from "./objects/studyObject/steam_planetb";
 //variables for the study
 let currentID = 1;
 let targetHeight = 1.65;
@@ -187,9 +191,17 @@ export class MainScene {
         //  if(this.currentScene == sceneInfo.Id)
         this.currentPanorama = [];
         switch (sceneInfo.id) {
-            case 'scene_2DCharts': {
+            case 'scene_TA': {
                 var visu: any = {
-                    object: new scene_2DCharts(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    object: new scene_TA(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+              case 'scene_TANM': {
+                var visu: any = {
+                    object: new scene_TANM(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
@@ -278,10 +290,10 @@ export class MainScene {
                 }
                 this.currentVisu[sceneInfo.id] = visu;
                 break;
-            }
-            case '7': {
+            } 
+            case 'steam_planetb': {
                 var visu: any = {
-                    object: new Scene7(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    object: new Steam_PlanetB(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
@@ -290,6 +302,30 @@ export class MainScene {
             case '8': {
                 var visu: any = {
                     object: new Scene8(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+            case 'Line': {
+                var visu: any = {
+                    object: new Line(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+
+                
+            }case 'LineBezier': {
+                var visu: any = {
+                    object: new LineBezier(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }case 'Chart2D': {
+                var visu: any = {
+                    object: new Chart2D(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;

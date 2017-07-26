@@ -13,7 +13,7 @@ import { PlanetSteam } from "../steam";
 
 
 
-export class Scene7 extends SceneObject {
+export class Steam_PlanetB extends SceneObject {
     powerPlants: any;
     currentPanorama: any;
     instant = false;
@@ -45,7 +45,7 @@ export class Scene7 extends SceneObject {
         this.time_start = startTime;
         this.currentText = [];
         var data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/data/emissionByCountry.csv", "utf-8"));
-        this.currentPanorama = PanoramaImage(omni, "studyData/img/PlanteB2.png");
+        this.currentPanorama = PanoramaImage(omni, "studyData/img/PlanetB.png");
         this.powerPlants = new PlanetSteam(window, omni, data, startTime);
 
 

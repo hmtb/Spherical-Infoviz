@@ -59,7 +59,7 @@ export class Scene5_2 extends SceneObject {
                 //depending on t and speed the particle mooves on in the sphere
                 //  Cube(Vector3(cx, cy, cz), 0.03, Color(1, 1, 1, 1));
                 
-                let w = 0.5;
+                let w = 0.1;
                 let l = val/2;
                 let center = Vector3(cx, cy, cz);
               

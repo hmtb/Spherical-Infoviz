@@ -13,7 +13,7 @@ import { PlanarImage } from "../../media/planar_image";
 
 
 
-export class scene_2DCharts extends SceneObject {
+export class scene_TA extends SceneObject {
     currentPanorama: any;
     instant = false;
     year: any;
@@ -48,9 +48,9 @@ export class scene_2DCharts extends SceneObject {
 
         this.legend = PlanarImage(omni, "studyData/img/Legend.PNG");
         var center = new allofwutils.Vector3(
-                 Math.sin(0 * Math.PI / -180) * Math.cos(0 * Math.PI / 180),
-                Math.sin(0 * Math.PI / 180),
-                Math.cos(0 * Math.PI / -180) * Math.cos(0 * Math.PI / 180)
+                 Math.sin(-180 * Math.PI / -180) * Math.cos(-20 * Math.PI / 180),
+                Math.sin(-20 * Math.PI / 180),
+                Math.cos(-180 * Math.PI / -180) * Math.cos(-20 * Math.PI / 180)
             ).normalize().scale(2);
             var ex = center.cross(new allofwutils.Vector3(0, 1, 0)).normalize();
             var ey = ex.cross(center).normalize();
@@ -80,7 +80,7 @@ export class scene_2DCharts extends SceneObject {
 
 
                 let w = 0.01;
-                let l = (val)*7;
+                let l = (val)*10;
                 let center = Vector3(cx, cy, cz);
               
                 let normal = normalize(center)*-3;
@@ -89,9 +89,9 @@ export class scene_2DCharts extends SceneObject {
                 let eY = normalize(cross(normal, eX))* w;
                 let length = Vector3(0, 1, 0);
                 if(sin(t)>0){
-                    length = (normalize(Vector3(cx,cy,cz))*l * sin(t) )+ (eY*40);
+                    length = (normalize(Vector3(cx,cy,cz))*l * sin(t) );
                 }else{
-                     length = (normalize(Vector3(cx,cy,cz))*l * -sin(t) )+ (eY*40);
+                     length = (normalize(Vector3(cx,cy,cz))*l * -sin(t) );
                 }
                 let color = Color( val, 0, 1-val, 1);
                 if(val <0.25)
