@@ -93,6 +93,10 @@ export class scene_TA extends SceneObject {
                 }else{
                      length = (normalize(Vector3(cx,cy,cz))*l * -sin(t) );
                 }
+
+                // length = (normalize(Vector3(cx,cy,cz))*l * abs(sin(t)));
+
+
                 let color = Color( val, 0, 1-val, 1);
                 if(val <0.25)
                 {

@@ -42,8 +42,8 @@ export class LineBezier extends SceneObject {
         this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
         this.time_start = startTime;
         this.currentText = [];
-        this.currentPanorama = PanoramaImage(omni, "studyData/img/PlanetA.jpg");
-        var data = require("d3").csv.parse(require("fs").readFileSync("studyData/data/scene1.csv", "utf-8"));
+        this.currentPanorama = PanoramaImage(omni, "studyData/img/earth.jpg");
+        var data = require("d3").csv.parse(require("fs").readFileSync("studyData/data/PowerPlants.csv", "utf-8"));
 
          this.cubeSpec = Stardust.mark.compile(`
             //import the object you wanna use see https://github.com/stardustjs/stardust-core/blob/master/src/core/library/primitives3d.ts
@@ -58,30 +58,63 @@ export class LineBezier extends SceneObject {
                 let cx = size *  sin(lon * PI/-180) * cos(lat * PI/180 );
                 let cy = size *  sin(lat  * PI/180);
                 let cz = size *  cos(lon * PI/-180) * cos(lat * PI/180 );
+             
 
                 //depending on t and speed the particle mooves on in the sphere
-                let p1 = Vector3(cx, cy, cz);
-                let p2 = Vector3(cy, cx, cz);
-                let w = 0.01;
+                let pStart = Vector3(cx, cy, cz);
+                let pStartHelp = Vector3(cx, cy+3, cz)* 0.8;
+                let pEnd = Vector3(cy, cx, cz);
+                let pEndHelp = Vector3(cy, cx+3, cz)* 0.8; 
+
+
+                let w = 0.02;
                 let color = Color(1, 1, 1, 1);
                 let up = Vector3(0, 1, 0);
-
                 //p1
-                let normalp1 = normalize(p1);
+                let normalp1 = normalize(pStart);
                 let eXp1 = normalize(cross(normalp1, up))* (w/2);
                 let eYp1 = normalize(cross(normalp1, eXp1))* (w/2);
-
-                  let normalp2 = normalize(p2);
+                let normalp2 = normalize(pEnd);
                 let eXp2 = normalize(cross(normalp2, up))* (w/2);
                 let eYp2 = normalize(cross(normalp2, eXp2))*(w/2);
+              
+
+                for(i in 1..10){
+
+                      let t = (i-1)/10;
+                      let tnew = i/10;
+
+                      let p1 = ((1-t)*(1-t)*(1-t))*pStart+ 3*((1-t)*(1-t))*t*pStartHelp + 3*(1-t)*t*t*pEndHelp + t*t*t*pEnd;
+
+                      let p2 =((1-tnew)*(1-tnew)*(1-tnew))*pStart+ 3*((1-tnew)*(1-tnew))*tnew*pStartHelp + 3*(1-tnew)*tnew*tnew*pEndHelp + tnew*tnew*tnew*pEnd ;
 
 
+                        emit [
+                            { position: p1 + eXp1, color: color },
+                            { position: p1 - eXp1, color: color },
+                            { position: p2 + eXp2, color: color }
+                        ];
+                        emit [
+                            { position: p1 - eXp1, color: color },
+                            { position: p2 - eXp2, color: color },
+                            { position: p2 + eXp2, color: color }
+                        ];
+                        emit [
+                            { position: p1 + eYp1, color: color },
+                            { position: p1 - eYp1, color: color },
+                            { position: p2 + eYp2, color: color }
+                        ];
+                        emit [
+                            { position: p1 - eYp1, color: color },
+                            { position: p2 - eYp2, color: color },
+                            { position: p2 + eYp2, color: color }
+                        ];
 
-                let width = 0.01;
-                let d = normalize(p2 - p1);
-                // let t = Vector3(d.y, -d.x) * (width / 2);
-                
-            }
+
+                  }
+                  }
+            
+
         `)["Mark"];
 
 
@@ -130,6 +163,7 @@ export class LineBezier extends SceneObject {
         this.text.render(this.omni);
        
         GL.depthMask(GL.TRUE);
+        
           this.cubes.render();
     }
 
