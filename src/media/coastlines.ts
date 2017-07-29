@@ -40,6 +40,7 @@ var FCoastlinesRenderer = function (omni: any, info: any) {
 
     GL.bindBuffer(GL.ARRAY_BUFFER, vertex_buffer);
     var data = require("fs").readFileSync("preprocessed/data/coordinates.bin");
+    console.log(data);
     GL.bufferData(GL.ARRAY_BUFFER, data.length, data, GL.STATIC_DRAW);
     var total_points = data.length / 8;
 

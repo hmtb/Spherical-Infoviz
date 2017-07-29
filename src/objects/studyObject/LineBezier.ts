@@ -43,7 +43,7 @@ export class LineBezier extends SceneObject {
         this.time_start = startTime;
         this.currentText = [];
         this.currentPanorama = PanoramaImage(omni, "studyData/img/earth.jpg");
-        var data = require("d3").csv.parse(require("fs").readFileSync("studyData/data/PowerPlants.csv", "utf-8"));
+        var data = require("d3").csv.parse(require("fs").readFileSync("studyData/data/internationalFlights.csv", "utf-8"));
 
          this.cubeSpec = Stardust.mark.compile(`
             //import the object you wanna use see https://github.com/stardustjs/stardust-core/blob/master/src/core/library/primitives3d.ts
@@ -51,23 +51,26 @@ export class LineBezier extends SceneObject {
             import { Line } from P2D;
             //create mark and extend the constructor with the values you need
 
-            mark Mark(lon: float, lat: float, val: float) {
+            mark Mark(lonS: float, latS: float, lonD: float, latD: float) {
               
                 let size = 9.9;
                 // all start at one point a bit randomised
-                let cx = size *  sin(lon * PI/-180) * cos(lat * PI/180 );
-                let cy = size *  sin(lat  * PI/180);
-                let cz = size *  cos(lon * PI/-180) * cos(lat * PI/180 );
+                let cx = size *  sin(lonS * PI/-180) * cos(latS * PI/180 );
+                let cy = size *  sin(latS  * PI/180);
+                let cz = size *  cos(lonS * PI/-180) * cos(latS * PI/180 );
              
+                let cxD = size *  sin(lonD * PI/-180) * cos(latD * PI/180 );
+                let cyD = size *  sin(latD  * PI/180);
+                let czD = size *  cos(lonD * PI/-180) * cos(latD * PI/180 );
 
                 //depending on t and speed the particle mooves on in the sphere
                 let pStart = Vector3(cx, cy, cz);
-                let pStartHelp = Vector3(cx, cy+3, cz)* 0.8;
-                let pEnd = Vector3(cy, cx, cz);
-                let pEndHelp = Vector3(cy, cx+3, cz)* 0.8; 
+                let pStartHelp = Vector3(cx, cy, cz)* 0.8;
+                let pEnd = Vector3(cxD, cyD, czD);
+                let pEndHelp = Vector3(cxD, cyD, czD)* 0.8; 
 
 
-                let w = 0.02;
+                let w = 0.01;
                 let color = Color(1, 1, 1, 1);
                 let up = Vector3(0, 1, 0);
                 //p1
@@ -122,34 +125,23 @@ export class LineBezier extends SceneObject {
               
          for (let item of data) {
             this.currentText.push({
-                            lon: item.lon,
-                            lat: item.lat,
-                            val: item.val,
-                            name: item.name
+                            lonS: item.lonS,
+                            latS: item.latS,
+                            lonD: item.lonD,
+                            latD: item.latD
                         })
          }
 
 
          let cubes = Stardust.mark.create(this.cubeSpec, this.platform);
-         cubes.attr("lon", d => d.lon);
-         cubes.attr("lat", d => d.lat );
+         cubes.attr("lonS", d => d.lonS);
+         cubes.attr("latS", d => d.latS );
+         cubes.attr("lonD", d => d.lonD);
+         cubes.attr("latD", d => d.latD );
 -        cubes.data(this.currentText);
          this.cubes = cubes;
 
 
-        this.text = shape3d.texts()
-            .attr("vec3", "center", "9.8 * normalize(pos)")
-            .attr("vec3", "up", "vec3(0, 1, 0)")
-            .attr("vec3", "normal", "-normalize(pos)")
-            .attr("float", "scale", "0.006")
-            .text((d: any) => (d.name))
-            // Variables are bound to data.
-            .variable("vec3", "pos", (d: any) => [
-                Math.sin(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180),
-                Math.sin((d.lat-2) * Math.PI / 180),
-                Math.cos(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180)])
-            .compile(this.omni)
-            .data(this.currentText);
 
     }
 
@@ -160,7 +152,6 @@ export class LineBezier extends SceneObject {
     public render(): void {
         this.currentPanorama.render();
         GL.depthMask(GL.FALSE);
-        this.text.render(this.omni);
        
         GL.depthMask(GL.TRUE);
         

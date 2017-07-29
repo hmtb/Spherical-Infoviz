@@ -28,6 +28,7 @@ import { LineBezier } from "./objects/studyObject/LineBezier";
 import { Chart2D } from "./objects/studyObject/2DCharts";
 import { scene_TANM } from "./objects/studyObject/scene_tempAnomalinm";
 import { Steam_PlanetB } from "./objects/studyObject/steam_planetb";
+import { Steam_Earth } from "./objects/studyObject/Steam_Earth";
 //variables for the study
 let currentID = 1;
 let targetHeight = 1.65;
@@ -316,16 +317,26 @@ export class MainScene {
                 break;
 
                 
-            }case 'LineBezier': {
+            }
+            case 'LineBezier': {
                 var visu: any = {
                     object: new LineBezier(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
                 break;
-            }case 'Chart2D': {
+            }
+            case 'Chart2D': {
                 var visu: any = {
                     object: new Chart2D(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+            case 'Steam_Earth': {
+                var visu: any = {
+                    object: new Steam_Earth(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
