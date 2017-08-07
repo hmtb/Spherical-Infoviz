@@ -27,11 +27,11 @@ import { Line } from "./objects/studyObject/Line";
 import { LineBezier } from "./objects/studyObject/LineBezier";
 import { Chart2D } from "./objects/studyObject/2DCharts";
 import { scene_TANM } from "./objects/studyObject/scene_tempAnomalinm";
-import { Steam_PlanetB } from "./objects/studyObject/steam_planetb";
 import { Steam_Earth } from "./objects/studyObject/Steam_Earth";
 import { scene_TA_Montly } from "./objects/studyObject/scene_tempMonlty";
 import { Chart2DTemp } from "./objects/studyObject/2DChartsTemp";
 import { Chart2DC02 } from "./objects/studyObject/2DChartsC02";
+import { PlanetSteamName } from "./objects/studyObject/steamCountryName";
 //variables for the study
 let currentID = 1;
 let targetHeight = 1.65;
@@ -306,14 +306,14 @@ export class MainScene {
                 this.currentVisu[sceneInfo.id] = visu;
                 break;
             } 
-            case 'steam_planetb': {
-                var visu: any = {
-                    object: new Steam_PlanetB(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
-                    renderMode: 'foreground'
-                }
-                this.currentVisu[sceneInfo.id] = visu;
-                break;
-            }
+            // case 'steam_planetb': {
+            //     var visu: any = {
+            //         object: new Steam_PlanetB(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+            //         renderMode: 'foreground'
+            //     }
+            //     this.currentVisu[sceneInfo.id] = visu;
+            //     break;
+            // }
             case '8': {
                 var visu: any = {
                     object: new Scene8(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
@@ -365,8 +365,10 @@ export class MainScene {
                 break;
             }
             case 'Steam_Earth': {
+                  var data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/data/emissionByCountry.csv", "utf-8"));
+      
                 var visu: any = {
-                    object: new Steam_Earth(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    object: new PlanetSteamName(this.app.window, this.app.omni,data, this.GetCurrentTime() ),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
