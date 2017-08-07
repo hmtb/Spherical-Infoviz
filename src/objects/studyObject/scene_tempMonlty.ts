@@ -13,7 +13,7 @@ import { PlanarImage } from "../../media/planar_image";
 
 
 
-export class scene_TA extends SceneObject {
+export class scene_TA_Montly extends SceneObject {
     currentPanorama: any;
     instant = false;
     year: any;
@@ -57,7 +57,7 @@ export class scene_TA extends SceneObject {
 
         this.legend.setLocation(center, ex, ey, 2);
 
-        var data = require("d3").csv.parse(require("fs").readFileSync("studyData/data/temperatur.csv", "utf-8"));
+        var data = require("d3").csv.parse(require("fs").readFileSync("studyData/data/tempMarch2016.csv", "utf-8"));
 
         this.cubeSpec = Stardust.mark.compile(`
             //import the object you wanna use see https://github.com/stardustjs/stardust-core/blob/master/src/core/library/primitives3d.ts
@@ -80,7 +80,7 @@ export class scene_TA extends SceneObject {
 
 
                 let w = 0.01;
-                let l = (val)*10;
+                let l = (val)*5;
                 let center = Vector3(cx, cy, cz);
               
                 let normal = normalize(center)*-3;
@@ -157,10 +157,6 @@ export class scene_TA extends SceneObject {
                 }
             }
         }
-
-        console.log(min);
-        console.log(max);
-
         for (let item of data) {
 
             for (let i = 1; i <= 360; i++) {
@@ -168,7 +164,7 @@ export class scene_TA extends SceneObject {
                 this.currentText.push({
                     lon: i - 180.5,
                     lat: item.lat,
-                    val: this.mymap(item[i - 180.5],-20,14.4),
+                    val: this.mymap(item[i - 180.5],-4,4),
                     name: item.name
                 })
             }
@@ -194,7 +190,7 @@ export class scene_TA extends SceneObject {
 
     public render(): void {
         this.currentPanorama.render();
-         this.legend.render();
+    //     this.legend.render();
         GL.depthMask(GL.FALSE);
 
 

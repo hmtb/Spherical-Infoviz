@@ -29,6 +29,9 @@ import { Chart2D } from "./objects/studyObject/2DCharts";
 import { scene_TANM } from "./objects/studyObject/scene_tempAnomalinm";
 import { Steam_PlanetB } from "./objects/studyObject/steam_planetb";
 import { Steam_Earth } from "./objects/studyObject/Steam_Earth";
+import { scene_TA_Montly } from "./objects/studyObject/scene_tempMonlty";
+import { Chart2DTemp } from "./objects/studyObject/2DChartsTemp";
+import { Chart2DC02 } from "./objects/studyObject/2DChartsC02";
 //variables for the study
 let currentID = 1;
 let targetHeight = 1.65;
@@ -140,8 +143,10 @@ export class MainScene {
                     renderMode: media.rendermode,
                     mode: media.mode
                 }
-                this.currentPanorama = player;
+                 this.currentVisu[media.id] = visu;
+                 console.log(visu)
             }
+
             if (media.type == this.type.PANORAMIC_IMAGE) {
                 this.currentPanorama = PanoramaImage(this.app.omni, media.filename);
             }
@@ -185,6 +190,7 @@ export class MainScene {
 
 
     public loadScene(sceneInfo: any, time: number, startTime: number) {
+        console.log(sceneInfo)
         //if visualisation is already loaded return
         for (let key in this.currentVisu) {
             delete this.currentVisu[key];
@@ -203,6 +209,14 @@ export class MainScene {
               case 'scene_TANM': {
                 var visu: any = {
                     object: new scene_TANM(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+            case 'scene_TA_Monthly': {
+                var visu: any = {
+                    object: new scene_TA_Montly(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
@@ -329,6 +343,22 @@ export class MainScene {
             case 'Chart2D': {
                 var visu: any = {
                     object: new Chart2D(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+            case 'Chart2Dtemp': {
+                var visu: any = {
+                    object: new Chart2DTemp(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+            case 'Chart2DC02': {
+                var visu: any = {
+                    object: new Chart2DC02(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
@@ -487,9 +517,9 @@ export class Simulator {
 
         app.server.on("panorama/show", (media: any) => {
             this.app.networking.broadcast("panorama/show", media, GetCurrentTime() + 1);
-            if (media.audio) {
-                AudioStart(media.audio.filename, GetCurrentTime() + 1, media.audio.x, media.audio.y, media.audio.z);
-            }
+            // if (media.audio) {
+            //     AudioStart(media.audio.filename, GetCurrentTime() + 1, media.audio.x, media.audio.y, media.audio.z);
+            // }
         });
 
 

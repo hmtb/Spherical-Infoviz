@@ -68,7 +68,7 @@ function FPanoramaVideoPlayer(omni: any, filename: any, fps: any) {
     GL.uniform1i(GL.getUniformLocation(program, "texImageRight"), 1);
     GL.useProgram(0);
 
-    var color_map = allofw.graphics.loadImageData(require("fs").readFileSync("preprocessed/cm_temperature_-50_30.png"));
+    //var color_map = allofw.graphics.loadImageData(require("fs").readFileSync("preprocessed/cm_temperature_-50_30.png"));
 
     var video = new allofw.graphics.VideoSurface2D(filename);
     // Create an OpenGL texture, set parameters.
