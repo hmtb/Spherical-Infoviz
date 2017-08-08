@@ -26,12 +26,12 @@ import { Line } from "./objects/Line";
 import { LineBezier } from "./objects/LineBezier";
 import { Chart2D } from "./Scenes/2DCharts";
 import { scene_TANM } from "./Scenes/scene_tempAnomalinm";
-import { Steam_Earth } from "./Scenes/Steam_Earth";
+import { Steam_Earth } from "./Scenes/steam_Earth";
 import { scene_TA_Montly } from "./Scenes/scene_tempMonlty";
 import { Chart2DTemp } from "./Scenes/2DChartsTemp";
 import { Chart2DC02 } from "./Scenes/2DChartsC02";
 import { PlanetSteamName } from "./Scenes/steamCountryName";
-import { Modalities } from "./Scenes/Modalities";
+import { Modalities } from "./Scenes/modalities";
 //variables for the study
 let currentID = 1;
 let targetHeight = 1.65;
