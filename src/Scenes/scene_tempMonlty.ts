@@ -89,9 +89,9 @@ export class scene_TA_Montly extends SceneObject {
                 let eY = normalize(cross(normal, eX))* w;
                 let length = Vector3(0, 1, 0);
                 if(sin(t)>0){
-                    length = (normalize(Vector3(cx,cy,cz))*l * sin(t) );
+                    length = ((normalize(Vector3(cx,cy,cz))*l -Vector3(0, 1, 0)) * sin(t) );
                 }else{
-                     length = (normalize(Vector3(cx,cy,cz))*l * -sin(t) );
+                     length = ((normalize(Vector3(cx,cy,cz))*l -Vector3(0, 1, 0)) * -sin(t)  );
                 }
 
                 // length = (normalize(Vector3(cx,cy,cz))*l * abs(sin(t)));
