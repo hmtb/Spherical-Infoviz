@@ -52,7 +52,7 @@ export class Scene1 extends SceneObject {
 
             mark Mark(lon: float, lat: float, val: float) {
               
-                let size = 9.9;
+                let size = 4.9;
                 // all start at one point a bit randomised
                 let cx = size *  sin(lon * PI/-180) * cos(lat * PI/180 );
                 let cy = size *  sin(lat  * PI/180);

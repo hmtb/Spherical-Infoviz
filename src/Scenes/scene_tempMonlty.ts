@@ -67,7 +67,7 @@ export class scene_TA_Montly extends SceneObject {
 
             mark Mark(lon: float, lat: float, val: float, t: float) {
               
-                let size = 9.9;
+                let size = 4.9;
                 // all start at one point a bit randomised
                 let cx = size *  sin(lon * PI/-180) * cos(lat * PI/180 );
                 let cy = size *  sin(lat  * PI/180);
@@ -80,7 +80,7 @@ export class scene_TA_Montly extends SceneObject {
 
 
                 let w = 0.01;
-                let l = (val)*5;
+                let l = (val)*3;
                 let center = Vector3(cx, cy, cz);
               
                 let normal = normalize(center)*-3;
@@ -89,9 +89,9 @@ export class scene_TA_Montly extends SceneObject {
                 let eY = normalize(cross(normal, eX))* w;
                 let length = Vector3(0, 1, 0);
                 if(sin(t)>0){
-                    length = ((normalize(Vector3(cx,cy,cz))*l -Vector3(0, 1, 0)) * sin(t) );
+                    length = ((normalize(Vector3(cx,cy,cz))*l -Vector3(1, 0, 0)) * sin(t) );
                 }else{
-                     length = ((normalize(Vector3(cx,cy,cz))*l -Vector3(0, 1, 0)) * -sin(t)  );
+                     length = ((normalize(Vector3(cx,cy,cz))*l -Vector3(1, 0, 0)) * -sin(t)  );
                 }
 
                 // length = (normalize(Vector3(cx,cy,cz))*l * abs(sin(t)));

@@ -1,7 +1,7 @@
 // Distortable panorama.
 
 function MakeSphere(radius: number, subdivide: any) {
-    radius = 10;
+    radius = 5;
     if (subdivide === undefined) subdivide = 5;
     // Vertices for a icosahedron.
     var t = (1.0 + Math.sqrt(5.0)) / 2.0;

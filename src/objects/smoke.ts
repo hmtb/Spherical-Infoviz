@@ -80,7 +80,7 @@ ParticleObject.prototype._fragmentShader = function () {
     void main() {
         float r = length(s3_go_center - s3_go_position) / s3_go_radius;
         fragment_color = s3_go_color;
-        fragment_color.a *= exp(-r * r * 10.0);
+        fragment_color.a *= exp(-r * r * 5.0);
         fragment_color.rgb *= fragment_color.a;
     }
 `;
@@ -106,7 +106,7 @@ var FPlantsSmoke = function (omni: any, data: any) {
     // the maximum value in the data set
     var maxval = 20000000;
     // the radius of the Allosphere
-    var aradius = 10.0;
+    var aradius = 5.0;
     // the length of the longest cube
     var maxlen = 8.0;
 
@@ -182,7 +182,7 @@ var FPlantsSmoke = function (omni: any, data: any) {
 
     var texts = shape3d.texts()
         //    .attr("vec3", "center", "5.0 * normalize(pos)")
-        .attr("vec3", "center", "9.9 * normalize(pos)")
+        .attr("vec3", "center", "4.9 * normalize(pos)")
         .attr("vec3", "up", "vec3(0, 1, 0)")
         .attr("vec3", "normal", "-normalize(pos)")
         .attr("float", "scale", "0.0005 * len")

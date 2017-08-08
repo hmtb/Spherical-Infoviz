@@ -50,7 +50,7 @@ export class Scene6 extends SceneObject {
 
             mark Mark(lon: float, lat: float, val: float,r:float,g:float,b:float) {
               
-                let size = 9.9;
+                let size = 4.9;
                 // all start at one point a bit randomised
                 let cx = size *  sin(lon * PI/-180) * cos(lat * PI/180 );
                 let cy = size *  sin(lat  * PI/180);
@@ -60,7 +60,7 @@ export class Scene6 extends SceneObject {
                 //  Cube(Vector3(cx, cy, cz), 0.03, Color(1, 1, 1, 1));
                 
                 let w = 0.2;
-                let l = val/2;
+                let l = val/4;
                 let center = Vector3(cx, cy, cz);
               
                 let normal = normalize(center);
@@ -128,10 +128,10 @@ export class Scene6 extends SceneObject {
 
         this.text = shape3d.texts()
            // .attr("vec3", "center", "(9.8- len) * normalize(pos)")
-            .attr("vec3", "center", "9.8*normalize(pos)")
+            .attr("vec3", "center", "4.8*normalize(pos)")
             .attr("vec3", "up", "vec3(0, 1, 0)")
             .attr("vec3", "normal", "-normalize(pos)")
-            .attr("float", "scale", "0.008")
+            .attr("float", "scale", "0.004")
             .text((d: any) => (d.name))
             // Variables are bound to data.
             .variable("vec3", "pos", (d: any) => [

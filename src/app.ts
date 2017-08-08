@@ -246,10 +246,10 @@ export class MainScene {
                     Math.sin(-180 * Math.PI / -180) * Math.cos(0 * Math.PI / 180),
                     Math.sin(0 * Math.PI / 180),
                     Math.cos(-180 * Math.PI / -180) * Math.cos(0 * Math.PI / 180)
-                ).normalize().scale(5);
+                ).normalize().scale(2);
                 var ex = center.cross(new allofwutils.Vector3(0, 1, 0)).normalize();
                 var ey = ex.cross(center).normalize();
-                pic.object.setLocation(center, ex, ey, 10);
+                pic.object.setLocation(center, ex, ey, 3);
                 this.currentVisu[sceneInfo.id + pic] = pic;
                 break;
             }
@@ -358,7 +358,7 @@ export class MainScene {
             }
             case 'Chart2DC02': {
                 var visu: any = {
-                    object: new Chart2DC02(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    object: new Chart2DC02(this.app.window, this.app.omni, this.GetCurrentTime(), 5),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
@@ -375,12 +375,12 @@ export class MainScene {
                 break;
             }case 'scene_CompareBoth': {
                   var visu: any = {
-                    object: new scene_TA_Montly(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    object: new scene_TA_Montly(this.app.window, this.app.omni, this.GetCurrentTime(), 5),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
                 var visu: any = {
-                    object: new Chart2DTemp(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    object: new Chart2DTemp(this.app.window, this.app.omni, this.GetCurrentTime(), 5),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id+1] = visu;

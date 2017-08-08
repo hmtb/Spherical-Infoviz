@@ -56,9 +56,9 @@ export class Steam_Earth extends SceneObject {
                 if(year == 2009){
                 //static variables
                 let duration = 20;
-                let minsize = 4+randomx;
+                let minsize = 2+randomx;
                 let tduration= t/1;
-                let maxRadius= 10;
+                let maxRadius= 5;
                 let size = maxRadius - (position + tduration)%(maxRadius-minsize);
                 let spread = ((position + tduration)%(maxRadius-minsize))*0.2;
                 let spread2 = ((position + tduration)%(maxRadius-minsize));

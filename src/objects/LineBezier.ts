@@ -51,7 +51,7 @@ export class LineBezier extends SceneObject {
 
             mark Mark(lonS: float, latS: float, lonD: float, latD: float) {
               
-                let size = 9.9;
+                let size = 4.9;
                 // all start at one point a bit randomised
                 let cx = size *  sin(lonS * PI/-180) * cos(latS * PI/180 );
                 let cy = size *  sin(latS  * PI/180);

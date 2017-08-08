@@ -49,7 +49,7 @@ export class Bars extends SceneObject {
 
             mark Mark(lon: float, lat: float, val: float,r1:float,r2:float,r3:float,r4:float) {
               
-                let size = 9.9;
+                let size = 4.9;
                 // all start at one point a bit randomised
                 let cx = size *  sin(lon * PI/-180) * cos(lat * PI/180 );
                 let cy = size *  sin(lat  * PI/180);
@@ -59,7 +59,7 @@ export class Bars extends SceneObject {
                 //  Cube(Vector3(cx, cy, cz), 0.03, Color(1, 1, 1, 1));
                 
                 let w = 0.1;
-                let l = val/7000000;
+                let l = val/9000000;
                 let center = Vector3(cx, cy, cz);
               
                 let normal = normalize(center);
