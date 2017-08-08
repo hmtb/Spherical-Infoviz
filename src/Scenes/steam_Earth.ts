@@ -3,51 +3,47 @@ import * as path from "path";
 import * as allofw from "allofw";
 import * as allofwutils from "allofw-utils";
 import { GL3 as GL } from "allofw";
-import { SceneObject } from "../object";
+import { SceneObject } from "../objects/object";
 var shape3d = require("allofw-shape3d");
 
 import * as Stardust from "stardust-core";
 import * as StardustAllofw from "stardust-allofw";
-import { PanoramaImage } from "../../media/panorama_image";
+import { PanoramaImage } from "../media/panorama_image";
+import { PlanetSteam } from "../objects/steam";
 
 
-export class PlanetSteamName extends SceneObject {
+
+export class Steam_Earth extends SceneObject {
+    powerPlants: any;
     currentPanorama: any;
+    instant = false;
     year: any;
-    private _program: GL.Program;
-    private _vertexArray: GL.VertexArray;
-    private _buffer: GL.Buffer;
-    private _lightPosition: allofwutils.Vector3;
-    private _lightColor: allofwutils.Vector3;
-    private _flipX: boolean;
 
 
-    public get lightPosition(): allofwutils.Vector3 { return this._lightPosition; }
-    public set lightPosition(pos: allofwutils.Vector3) { this._lightPosition = pos; }
-
-    public get lightColor(): allofwutils.Vector3 { return this._lightColor; }
-    public set lightColor(pos: allofwutils.Vector3) { this._lightColor = pos; }
-
-    private cubes: Stardust.Mark;
     private texts: any;
     private time: number;
-    private currentYear: number;
 
     private dataBuffer: any[];
 
-    private data: any;
-    private dataText: any;
+    private text: any;
     private timer: number;
-    private cubeSpec: Stardust.Specification.Mark;
-    private platform: StardustAllofw.AllofwPlatform3D;
     private time_start: number;
+    private platform: StardustAllofw.AllofwPlatform3D;
+    private cubeSpec: Stardust.Specification.Mark;
+    private intens: number;
+    first = true;
+    frameCount = 0;
+    private dataText: any[];
+    private newText: any[];
+    private transit = false;
+    private switch = false;
+    private cubes: Stardust.Mark;
 
-    constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, data: any, startTime: number) {
+    constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, startTime: number,size:number) {
         super(omni)
         this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
-        this.timer = 0;
         this.time_start = startTime;
-        this.currentYear = 2009;
+        var data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/data/emissionByCountry.csv", "utf-8"));
         this.currentPanorama = PanoramaImage(omni, "studyData/img/earth.jpg");
         this.cubeSpec = Stardust.mark.compile(`
             //import the object you wanna use see https://github.com/stardustjs/stardust-core/blob/master/src/core/library/primitives3d.ts
@@ -150,7 +146,7 @@ export class PlanetSteamName extends SceneObject {
             }
             let ilon: number = item.lon;
             let ilat: number = item.lat;
-            let name: string = item.Country;
+            let name: string = item.ISO;
             this.dataText.push({
                 lon: ilon,
                 lat: ilat,
@@ -174,12 +170,11 @@ export class PlanetSteamName extends SceneObject {
         // console.log(this.dataBuffer);
         this.cubes = cubes;
 
-
         var texts = shape3d.texts()
-            .attr("vec3", "center", "8.9 * normalize(pos)  + vec3(0.0, -0.5, 0.0) ")
+            .attr("vec3", "center", "4.9 * normalize(pos)  + vec3(0.0, -0.2, 0.0) ")
             .attr("vec3", "up", "vec3(0, 1, 0)")
             .attr("vec3", "normal", "-normalize(pos)")
-            .attr("float", "scale", "0.0006 * len")
+            .attr("float", "scale", "0.0005 * len")
             .text((d: any) => (d.name))
             // Variables are bound to data.
             .variable("vec3", "pos", (d: any) => [
@@ -190,37 +185,29 @@ export class PlanetSteamName extends SceneObject {
             .compile(this.omni)
             .data(this.dataText);
         this.texts = texts;
+        console.log(this.texts)
     }
 
     public setTime(t: number) {
-        this.time = t - this.time_start;
+        this.time = t;
     }
-
-    public setYear(y: number) {
-    }
-
-    private updateText(year: number) {
-       
-    }
-
 
     public render(): void {
-          this.currentPanorama.render();
+         if(this.time - this.time_start > 60) return;
+       this.currentPanorama.render();
+       
         GL.depthMask(GL.FALSE);
-        this.texts.render(this.omni);
+        if(this.texts)
+             this.texts.render();
 
-        this.cubes.render();
-
+       this.cubes.render();
+     
         GL.depthMask(GL.TRUE);
-
-
+         
     }
 
     public frame(): void {
         this.cubes.attr("t", this.time);
-        this.cubes.attr("currentYear", this.currentYear);
-
     }
-
 }
 

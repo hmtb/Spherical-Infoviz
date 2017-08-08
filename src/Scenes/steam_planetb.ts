@@ -3,13 +3,13 @@ import * as path from "path";
 import * as allofw from "allofw";
 import * as allofwutils from "allofw-utils";
 import { GL3 as GL } from "allofw";
-import { SceneObject } from "../object";
+import { SceneObject } from "../objects/object";
 var shape3d = require("allofw-shape3d");
 
 import * as Stardust from "stardust-core";
 import * as StardustAllofw from "stardust-allofw";
-import { PanoramaImage } from "../../media/panorama_image";
-import { PlanetSteam } from "../steam";
+import { PanoramaImage } from "../media/panorama_image";
+import { PlanetSteam } from "../objects/steam";
 
 
 

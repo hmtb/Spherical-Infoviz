@@ -12,26 +12,26 @@ import { PanoramaVideoPlayer } from "./media/panorama_video_player";
 import { MyNavigator } from "./navigator";
 import { StudyController } from "./studyController";
 import { Text } from "./objects/text";
-import { Scene1 } from "./objects/studyObject/scene1";
-import { Scene2 } from "./objects/studyObject/scene2";
+import { Scene1 } from "./Scenes/scene1";
+import { Scene2 } from "./Scenes/scene2";
 import { PlanarImage } from "./media/planar_image";
-import { Scene3 } from "./objects/studyObject/scene3";
-import { Scene3_2 } from "./objects/studyObject/scene3_2";
-import { Scene4 } from "./objects/studyObject/scene4";
-import { Scene5 } from "./objects/studyObject/scene5";
-import { Scene6 } from "./objects/studyObject/scene6";
-import { Scene5_2 } from "./objects/studyObject/scene5_2";
-import { Scene8 } from "./objects/studyObject/scene8";
-import { scene_TA } from "./objects/studyObject/scene_tempAnomali";
-import { Line } from "./objects/studyObject/Line";
-import { LineBezier } from "./objects/studyObject/LineBezier";
-import { Chart2D } from "./objects/studyObject/2DCharts";
-import { scene_TANM } from "./objects/studyObject/scene_tempAnomalinm";
-import { Steam_Earth } from "./objects/studyObject/Steam_Earth";
-import { scene_TA_Montly } from "./objects/studyObject/scene_tempMonlty";
-import { Chart2DTemp } from "./objects/studyObject/2DChartsTemp";
-import { Chart2DC02 } from "./objects/studyObject/2DChartsC02";
-import { PlanetSteamName } from "./objects/studyObject/steamCountryName";
+import { Scene3 } from "./Scenes/scene3";
+import { Scene3_2 } from "./Scenes/scene3_2";
+import { Scene4 } from "./Scenes/scene4";
+import { Scene5 } from "./Scenes/scene5";
+import { Scene6 } from "./Scenes/scene6";
+import { Scene5_2 } from "./Scenes/scene5_2";
+import { scene_TA } from "./Scenes/scene_tempAnomali";
+import { Line } from "./objects/Line";
+import { LineBezier } from "./objects/LineBezier";
+import { Chart2D } from "./Scenes/2DCharts";
+import { scene_TANM } from "./Scenes/scene_tempAnomalinm";
+import { Steam_Earth } from "./Scenes/Steam_Earth";
+import { scene_TA_Montly } from "./Scenes/scene_tempMonlty";
+import { Chart2DTemp } from "./Scenes/2DChartsTemp";
+import { Chart2DC02 } from "./Scenes/2DChartsC02";
+import { PlanetSteamName } from "./Scenes/steamCountryName";
+import { Modalities } from "./Scenes/Modalities";
 //variables for the study
 let currentID = 1;
 let targetHeight = 1.65;
@@ -154,6 +154,7 @@ export class MainScene {
 
         this.app.networking.on("panorama/hide", (media: any) => {
             this.currentPanorama = [];
+            delete this.currentVisu[media.id];
         });
         //stop All Visualisation
         this.app.networking.on("stop", () => {
@@ -314,32 +315,23 @@ export class MainScene {
             //     this.currentVisu[sceneInfo.id] = visu;
             //     break;
             // }
-            case '8': {
+           
+             case 'modalities': {
                 var visu: any = {
-                    object: new Scene8(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    object: new Modalities(this.app.window, this.app.omni, this.GetCurrentTime()),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
                 break;
             }
-            case 'Line': {
-                var visu: any = {
-                    object: new Line(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
-                    renderMode: 'foreground'
-                }
-                this.currentVisu[sceneInfo.id] = visu;
-                break;
-
-                
-            }
-            case 'LineBezier': {
-                var visu: any = {
-                    object: new LineBezier(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
-                    renderMode: 'foreground'
-                }
-                this.currentVisu[sceneInfo.id] = visu;
-                break;
-            }
+            // case 'LineBezier': {
+            //     var visu: any = {
+            //         object: new LineBezier(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+            //         renderMode: 'foreground'
+            //     }
+            //     this.currentVisu[sceneInfo.id] = visu;
+            //     break;
+            // }
             case 'Chart2D': {
                 var visu: any = {
                     object: new Chart2D(this.app.window, this.app.omni, this.GetCurrentTime(), 10),

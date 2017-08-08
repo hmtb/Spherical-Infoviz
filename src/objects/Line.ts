@@ -3,15 +3,17 @@ import * as path from "path";
 import * as allofw from "allofw";
 import * as allofwutils from "allofw-utils";
 import { GL3 as GL } from "allofw";
-import { SceneObject } from "../object";
+import { SceneObject } from "./object";
 var shape3d = require("allofw-shape3d");
 
 import * as Stardust from "stardust-core";
 import * as StardustAllofw from "stardust-allofw";
+import { PanoramaImage } from "../media/panorama_image";
 
 
 
-export class Scene2 extends SceneObject {
+export class Line extends SceneObject {
+    currentPanorama: any;
     instant = false;
     year: any;
 
@@ -35,17 +37,16 @@ export class Scene2 extends SceneObject {
     private switch = false;
     private cubes: Stardust.Mark;
 
-    constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, startTime: number,size:number) {
+    constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, startTime: number,data:any,size:number) {
         super(omni)
         this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
         this.time_start = startTime;
         this.currentText = [];
-        var data = require("d3").csv.parse(require("fs").readFileSync("studyData/data/scene1.csv", "utf-8"));
 
          this.cubeSpec = Stardust.mark.compile(`
             //import the object you wanna use see https://github.com/stardustjs/stardust-core/blob/master/src/core/library/primitives3d.ts
             import { Triangle, Cube } from P3D;
-
+            import { Line } from P2D;
             //create mark and extend the constructor with the values you need
 
             mark Mark(lon: float, lat: float, val: float) {
@@ -57,44 +58,48 @@ export class Scene2 extends SceneObject {
                 let cz = size *  cos(lon * PI/-180) * cos(lat * PI/180 );
 
                 //depending on t and speed the particle mooves on in the sphere
-                //  Cube(Vector3(cx, cy, cz), 0.03, Color(1, 1, 1, 1));
-                
-                let w = 0.5;
-                let l = val/2;
-                let center = Vector3(cx, cy, cz);
-              
-                let normal = normalize(center);
-                let up = Vector3(0, 1, 0);
-                let eX = normalize(cross(normal, up))* w;
-                let eY = normalize(cross(normal, eX))* w;
-                let length = (normalize(Vector3(-cx,-cy,-cz))*-l )+ (eY*5);
-
-                let radius = 0.04;
+                let p1 = Vector3(cx, cy, cz);
+                let p2 = Vector3(cy, cx, cz);
+                let w = 0.01;
                 let color = Color(1, 1, 1, 1);
+                let up = Vector3(0, 1, 0);
 
-                let p000 = center;
-                let p001 = center+ eX + eY;
-                let p010 = center+ eX;
-                let p011 = center+ eY;
-                let p100 = center - length;
-                let p101 = center - length+ eX + eY;
-                let p110 = center -length+ eX ;
-                let p111 = center -length+  eY;
-                let nx = Vector3(1, 0, 0);
-                let ny = Vector3(0, 1, 0);
-                let nz = Vector3(0, 0, 1);
-                emit [ { position: p000, color: color, normal: nz }, { position: p001, color: color, normal: nz }, { position: p011, color: color, normal: nz } ,
-                 { position: p000, color: color, normal: nz }, { position: p010, color: color, normal: nz }, { position: p001, color: color, normal: nz } ,
-                 { position: p000, color: color, normal: nz }, { position: p111, color: color, normal: nz }, { position: p100, color: color, normal: nz } ,
-                 { position: p000, color: color, normal: nz }, { position: p011, color: color, normal: nz }, { position: p111, color: color, normal: nz } ,
-                 { position: p000, color: color, normal: ny }, { position: p010, color: color, normal: ny }, { position: p100, color: color, normal: ny } ,
-                 { position: p000, color: color, normal: ny }, { position: p101, color: color, normal: ny }, { position: p110, color: color, normal: ny } ,
-                 { position: p011, color: color, normal: ny }, { position: p001, color: color, normal: ny }, { position: p101, color: color, normal: ny } ,
-                 { position: p011, color: color, normal: ny }, { position: p101, color: color, normal: ny }, { position: p111, color: color, normal: ny } ,
-                 { position: p010, color: color, normal: nx }, { position: p001, color: color, normal: nx }, { position: p101, color: color, normal: nx } ,
-                 { position: p010, color: color, normal: nx }, { position: p101, color: color, normal: nx }, { position: p110, color: color, normal: nx } ,
-                 { position: p100, color: color, normal: nx }, { position: p110, color: color, normal: nx }, { position: p101, color: color, normal: nx } ,
-                 { position: p100, color: color, normal: nx }, { position: p101, color: color, normal: nx }, { position: p111, color: color, normal: nx } ];
+                //p1
+                let normalp1 = normalize(p1);
+                let eXp1 = normalize(cross(normalp1, up))* (w/2);
+                let eYp1 = normalize(cross(normalp1, eXp1))* (w/2);
+
+                  let normalp2 = normalize(p2);
+                let eXp2 = normalize(cross(normalp2, up))* (w/2);
+                let eYp2 = normalize(cross(normalp2, eXp2))*(w/2);
+
+
+
+                let width = 0.01;
+                let d = normalize(p2 - p1);
+                // let t = Vector3(d.y, -d.x) * (width / 2);
+                emit [
+                    { position: p1 + eXp1, color: color },
+                    { position: p1 - eXp1, color: color },
+                    { position: p2 + eXp2, color: color }
+                ];
+                emit [
+                    { position: p1 - eXp1, color: color },
+                    { position: p2 - eXp2, color: color },
+                    { position: p2 + eXp2, color: color }
+                ];
+                emit [
+                    { position: p1 + eYp1, color: color },
+                    { position: p1 - eYp1, color: color },
+                    { position: p2 + eYp2, color: color }
+                ];
+                emit [
+                    { position: p1 - eYp1, color: color },
+                    { position: p2 - eYp2, color: color },
+                    { position: p2 + eYp2, color: color }
+                ];
+
+                    
             }
         `)["Mark"];
 
@@ -102,7 +107,6 @@ export class Scene2 extends SceneObject {
 
               
          for (let item of data) {
-
             this.currentText.push({
                             lon: item.lon,
                             lat: item.lat,
@@ -115,10 +119,8 @@ export class Scene2 extends SceneObject {
          let cubes = Stardust.mark.create(this.cubeSpec, this.platform);
          cubes.attr("lon", d => d.lon);
          cubes.attr("lat", d => d.lat );
-          cubes.attr("val", d => d.val );
 -        cubes.data(this.currentText);
          this.cubes = cubes;
-
 
         this.text = shape3d.texts()
             .attr("vec3", "center", "9.8 * normalize(pos)")
@@ -141,13 +143,11 @@ export class Scene2 extends SceneObject {
     }
 
     public render(): void {
-        
         GL.depthMask(GL.FALSE);
-         this.cubes.render();
         this.text.render(this.omni);
        
         GL.depthMask(GL.TRUE);
-         
+          this.cubes.render();
     }
 
     public frame(): void {

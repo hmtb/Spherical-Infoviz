@@ -3,16 +3,16 @@ import * as path from "path";
 import * as allofw from "allofw";
 import * as allofwutils from "allofw-utils";
 import { GL3 as GL } from "allofw";
-import { SceneObject } from "../object";
+import { SceneObject } from "../objects/object";
 var shape3d = require("allofw-shape3d");
 
 import * as Stardust from "stardust-core";
 import * as StardustAllofw from "stardust-allofw";
-import { PanoramaImage } from "../../media/panorama_image";
+import { PanoramaImage } from "../media/panorama_image";
 
 
 
-export class Line extends SceneObject {
+export class Scene1 extends SceneObject {
     currentPanorama: any;
     instant = false;
     year: any;
@@ -48,7 +48,6 @@ export class Line extends SceneObject {
          this.cubeSpec = Stardust.mark.compile(`
             //import the object you wanna use see https://github.com/stardustjs/stardust-core/blob/master/src/core/library/primitives3d.ts
             import { Triangle, Cube } from P3D;
-            import { Line } from P2D;
             //create mark and extend the constructor with the values you need
 
             mark Mark(lon: float, lat: float, val: float) {
@@ -60,48 +59,9 @@ export class Line extends SceneObject {
                 let cz = size *  cos(lon * PI/-180) * cos(lat * PI/180 );
 
                 //depending on t and speed the particle mooves on in the sphere
-                let p1 = Vector3(cx, cy, cz);
-                let p2 = Vector3(cy, cx, cz);
-                let w = 0.01;
-                let color = Color(1, 1, 1, 1);
-                let up = Vector3(0, 1, 0);
+                Cube(Vector3(cx, cy, cz), 0.03, Color(1, 1, 1, 1));
 
-                //p1
-                let normalp1 = normalize(p1);
-                let eXp1 = normalize(cross(normalp1, up))* (w/2);
-                let eYp1 = normalize(cross(normalp1, eXp1))* (w/2);
-
-                  let normalp2 = normalize(p2);
-                let eXp2 = normalize(cross(normalp2, up))* (w/2);
-                let eYp2 = normalize(cross(normalp2, eXp2))*(w/2);
-
-
-
-                let width = 0.01;
-                let d = normalize(p2 - p1);
-                // let t = Vector3(d.y, -d.x) * (width / 2);
-                emit [
-                    { position: p1 + eXp1, color: color },
-                    { position: p1 - eXp1, color: color },
-                    { position: p2 + eXp2, color: color }
-                ];
-                emit [
-                    { position: p1 - eXp1, color: color },
-                    { position: p2 - eXp2, color: color },
-                    { position: p2 + eXp2, color: color }
-                ];
-                emit [
-                    { position: p1 + eYp1, color: color },
-                    { position: p1 - eYp1, color: color },
-                    { position: p2 + eYp2, color: color }
-                ];
-                emit [
-                    { position: p1 - eYp1, color: color },
-                    { position: p2 - eYp2, color: color },
-                    { position: p2 + eYp2, color: color }
-                ];
-
-                    
+               
             }
         `)["Mark"];
 

@@ -3,7 +3,7 @@ import * as path from "path";
 import * as allofw from "allofw";
 import * as allofwutils from "allofw-utils";
 import { GL3 as GL } from "allofw";
-import { SceneObject } from "../object";
+import { SceneObject } from "../objects/object";
 var shape3d = require("allofw-shape3d");
 
 import * as Stardust from "stardust-core";
@@ -11,7 +11,7 @@ import * as StardustAllofw from "stardust-allofw";
 
 
 
-export class Scene5 extends SceneObject {
+export class Scene3 extends SceneObject {
     instant = false;
     year: any;
 
@@ -40,7 +40,7 @@ export class Scene5 extends SceneObject {
         this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
         this.time_start = startTime;
         this.currentText = [];
-        var data = require("d3").csv.parse(require("fs").readFileSync("studyData/data/scene5.csv", "utf-8"));
+        var data = require("d3").csv.parse(require("fs").readFileSync("studyData/data/scene3.1.csv", "utf-8"));
 
          this.cubeSpec = Stardust.mark.compile(`
             //import the object you wanna use see https://github.com/stardustjs/stardust-core/blob/master/src/core/library/primitives3d.ts
@@ -59,7 +59,7 @@ export class Scene5 extends SceneObject {
                 //depending on t and speed the particle mooves on in the sphere
                 //  Cube(Vector3(cx, cy, cz), 0.03, Color(1, 1, 1, 1));
                 
-                let w = 0.1;
+                let w = 0.5;
                 let l = val/2;
                 let center = Vector3(cx, cy, cz);
               
@@ -67,8 +67,7 @@ export class Scene5 extends SceneObject {
                 let up = Vector3(0, 1, 0);
                 let eX = normalize(cross(normal, up))* w;
                 let eY = normalize(cross(normal, eX))* w;
-                let length = (normalize(Vector3(cx,cy,cz))*l )+ (eY*5);
-
+                let length = (normalize(Vector3(-cx,-cy,-cz))*-l );
 
                 let radius = 0.04;
                 let color = Color(1, 1, 1, 1);
@@ -122,18 +121,16 @@ export class Scene5 extends SceneObject {
 
 
         this.text = shape3d.texts()
-           // .attr("vec3", "center", "(9.8- len) * normalize(pos)")
-            .attr("vec3", "center", "9.8*normalize(pos) -(normalize(pos)*len + normalize(cross(pos,cross(pos,vec3(0, 1, 0)))))")
+            .attr("vec3", "center", "9.8 * normalize(pos)")
             .attr("vec3", "up", "vec3(0, 1, 0)")
             .attr("vec3", "normal", "-normalize(pos)")
-            .attr("float", "scale", "0.008")
+            .attr("float", "scale", "0.006")
             .text((d: any) => (d.name))
             // Variables are bound to data.
             .variable("vec3", "pos", (d: any) => [
                 Math.sin(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180),
-                Math.sin((d.lat) * Math.PI / 180),
+                Math.sin((d.lat-2) * Math.PI / 180),
                 Math.cos(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180)])
-            .variable("float", "len", (d: any) => ( d.val / 2))
             .compile(this.omni)
             .data(this.currentText);
 
@@ -144,8 +141,9 @@ export class Scene5 extends SceneObject {
     }
 
     public render(): void {
+        
         GL.depthMask(GL.FALSE);
-        this.cubes.render();
+         this.cubes.render();
         this.text.render(this.omni);
        
         GL.depthMask(GL.TRUE);

@@ -31,6 +31,8 @@ import { PanoramaImage } from "./media/panorama_image";
 import { PlanarVideoPlayer } from "./media/planar_video_player";
 import { PanoramaVideoPlayer } from "./media/panorama_video_player";
 import { PlanarImage } from "./media/planar_image";
+import { LineBezier } from "./objects/LineBezier";
+import { Line } from "./objects/Line";
 var allofwutils = require("allofw-utils");
 
 
@@ -232,6 +234,25 @@ export class MyNavigator {
                 }
                 this.currentVisu[id] = visu;
             }
+            else if (media.id == 'LineBezier') {
+                var data = require("d3").csv.parse(require("fs").readFileSync(media.filename, "utf-8"));
+                var visu: any = {
+                    object: new LineBezier(this.app.window, this.app.omni, startTime, data, 10),
+                    renderMode: media.rendermode
+                }
+                this.currentVisu[id] = visu;
+            }
+             else if (media.id == 'line') {
+                var data = require("d3").csv.parse(require("fs").readFileSync(media.filename, "utf-8"));
+                var visu: any = {
+                    object: new Line(this.app.window, this.app.omni, startTime, data, 10),
+                    renderMode: media.rendermode
+                }
+                this.currentVisu[id] = visu;
+            }
+
+
+
         }
     }
 

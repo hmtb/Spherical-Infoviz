@@ -42,81 +42,92 @@
             <p data-bind="if: current_scene().id == 'plasim'">
                 TODO: Message for plasim simulations.
             </p>
-            <h2>Panorama</h2>
-            <div data-bind="foreach: current_scene().panorama">
-                <div class="panorama-entry" style="border-bottom: 1px solid #333">
-                    <div style="float: left">
-                        <button class="btn" data-bind="click: $root.showPanorama">Show</button>
-                        <button class="btn" data-bind="click: $root.hidePanorama">Hide</button>
+            <div data-bind="if: current_scene().panorama">
+                <h2>Panorama</h2>
+                <div data-bind="foreach: current_scene().panorama">
+                    <div class="panorama-entry" style="border-bottom: 1px solid #333">
+                        <div style="float: left">
+                            <button class="btn" data-bind="click: $root.showPanorama">Show</button>
+                            <button class="btn" data-bind="click: $root.hidePanorama">Hide</button>
+                        </div>
+                        <div style="margin-left: 140px">
+                            <p style="color: #EEE" data-bind="text: $data.name"></p>
+                            <p style="font-style: italic" data-bind="text: $data.description"></p>
+                        </div>
+                        <div style="clear: both"></div>
                     </div>
-                    <div style="margin-left: 140px">
-                        <p style="color: #EEE" data-bind="text: $data.name"></p>
-                        <p style="font-style: italic" data-bind="text: $data.description"></p>
-                    </div>
-                    <div style="clear: both"></div>
                 </div>
             </div>
-            <h2>Media</h2>
-            <div data-bind="foreach: current_scene().media">
+            <div data-bind="if: current_scene().media">
+                <h2>Media</h2>
+                <div data-bind="foreach: current_scene().media">
+                    <div class="media-entry" style="border-bottom: 1px solid #333">
+                        <div style="float: left">
+                            <button class="btn" data-bind="click: $root.showMedia">Show</button>
+                            <button class="btn" data-bind="click: $root.hideMedia">Hide</button>
+                        </div>
+                        <div style="margin-left: 140px">
+                            <p style="color: #EEE" data-bind="text: $data.name"></p>
+                            <p style="font-style: italic" data-bind="text: $data.description"></p>
+                        </div>
+                        <div style="clear: both"></div>
+                    </div>
+                </div>
+            </div>
+            <div data-bind="if: current_scene().simulations">
+                <h2>Simulations</h2>
                 <div class="media-entry" style="border-bottom: 1px solid #333">
-                    <div style="float: left">
-                        <button class="btn" data-bind="click: $root.showMedia">Show</button>
-                        <button class="btn" data-bind="click: $root.hideMedia">Hide</button>
+                    <div data-bind="foreach: current_scene().simulations">
+                        <p>
+                            <button class="btn" data-bind="click: $root.launchSimulation">Launch</button>
+                            <button class="btn" data-bind="click: $root.stopSimulation">Stop</button>
+                            <span data-bind="text: $data.name"></span>
+                        </p>
                     </div>
-                    <div style="margin-left: 140px">
-                        <p style="color: #EEE" data-bind="text: $data.name"></p>
-                        <p style="font-style: italic" data-bind="text: $data.description"></p>
+                </div>
+            </div>
+            <div data-bind="if: current_scene().text">
+                <h2>TutorialText</h2>
+                <div class="media-entry" style="border-bottom: 1px solid #333">
+                    <div data-bind="foreach: current_scene().text">
+                        <button class="btn" data-bind="click: $root.showText">show</button>
+                        <button class="btn" data-bind="click: $root.hideText">hide</button>
+                        <span data-bind="text: $data.text"></span>
+
+                        </p>
                     </div>
-                    <div style="clear: both"></div>
                 </div>
             </div>
-            <h2>Simulations</h2>
-            <div class="media-entry" style="border-bottom: 1px solid #333">
-                <div data-bind="foreach: current_scene().simulations">
-                    <p>
-                        <button class="btn" data-bind="click: $root.launchSimulation">Launch</button>
-                        <button class="btn" data-bind="click: $root.stopSimulation">Stop</button>
-                        <span data-bind="text: $data.name"></span>
-                    </p>
-                </div>
-            </div>
+            <div data-bind="if: current_scene().stories">
+                <h2>Stories</h2>
+                <div class="media-entry" style="border-bottom: 1px solid #333">
+                    <div data-bind="foreach: current_scene().stories">
+                        <p><button class="btn" data-bind="click: $root.nextPreviousChapter">Zurueck</button>
+                            <span data-bind="text: $data.name"></span>
+                            <div style="margin-left: 140px">
+                                <button class="btn" data-bind="click: $root.nextChapter">Next</button>
 
-            <h2>TutorialText</h2>
-            <div class="media-entry" style="border-bottom: 1px solid #333">
-                <div data-bind="foreach: current_scene().text">
-                    <button class="btn" data-bind="click: $root.showText">show</button>
-                    <button class="btn" data-bind="click: $root.hideText">hide</button>
-                    <span data-bind="text: $data.text"></span>
+                        </p>
 
-                    </p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <h2>Stories</h2>
-            <div class="media-entry" style="border-bottom: 1px solid #333">
-                <div data-bind="foreach: current_scene().stories">
-                    <p><button class="btn" data-bind="click: $root.nextPreviousChapter">Zurueck</button>
-                        <span data-bind="text: $data.name"></span>
-                         <div style="margin-left: 140px">
-                        <button class="btn" data-bind="click: $root.nextChapter">Next</button>
-
-                    </p>
-                    
-                </div>
-            </div>
+            <div data-bind="if: current_scene().studyScene">
                 <h2>Study</h2>
-            <div class="media-entry" style="border-bottom: 1px solid #333">
-                <div data-bind="foreach: current_scene().studyScene">
-                 <div style="float: left">
-                        <button class="btn" data-bind="click: $root.showScene">show</button>
-                     <button class="btn" data-bind="click: $root.hideScene">hide</button>
-                </div>
-                    <div style="margin-left: 140px">
-                        <p style="color: #EEE" data-bind="text: $data.name"></p>
-                        <p style="font-style: italic" data-bind="text: $data.description"></p>
+                <div class="media-entry" style="border-bottom: 1px solid #333">
+                    <div data-bind="foreach: current_scene().studyScene">
+                        <div style="float: left">
+                            <button class="btn" data-bind="click: $root.showScene">show</button>
+                            <button class="btn" data-bind="click: $root.hideScene">hide</button>
+                        </div>
+                        <div style="margin-left: 140px">
+                            <p style="color: #EEE" data-bind="text: $data.name"></p>
+                            <p style="font-style: italic" data-bind="text: $data.description"></p>
+                        </div>
+                        <div style="clear: both"></div>
                     </div>
-                    <div style="clear: both"></div>
                 </div>
-                
             </div>
         </div>
     </div>
@@ -168,11 +179,11 @@
                             id: "reducing-carbon-pollution-in-our-power-plants",
                             name: "Obama on Carbon",
                             description: "President Obama on Reducing Carbon Pollution in Our Power Plants",
-                            filename: "preprocessed/videos/reducing-carbon-pollution-in-our-power-plants.mp4",
+                            filename: "videos/reducing-carbon-pollution-in-our-power-plants.mp4",
                             "fps": 29.97,
                             location: { lon: 180, lat: 10 },
                             audio: {
-                                filename: "../../preprocessed/videos/reducing-carbon-pollution-in-our-power-plants.wav",
+                                filename: "../../videos/reducing-carbon-pollution-in-our-power-plants.wav",
                                 x: 0,
                                 y: 0,
                                 z: 0
@@ -184,9 +195,10 @@
                             id: "intro-1-small",
                             name: "Assuming a global perspective",
                             description: "A camera flight from the allosphere to a view of the earth from space",
-                            filename: "preprocessed/videos/intro-1-small.mov",
-                            "duration": 200, "fps": 30,
-                            location: { lon: 180, lat: 10 }
+                            filename: "videos/intro-1-small.mov",
+                            "duration": 200,
+                            "fps": 30,
+                            location: { lon: -90, lat: 10 }
                         },
 
                     ]
@@ -200,7 +212,7 @@
                             rendermode: rm.BACKGROUND,
                             name: "A Year in the Life of Earth's CO2",
                             description: "A Year in the Life of Earth's CO2",
-                            filename: "preprocessed/videos/a-year-in-the-life-of-earths-co2.mp4",
+                            filename: "videos/a-year-in-the-life-of-earths-co2.mp4",
                             "fps": 60
                         },
                         {
@@ -209,7 +221,7 @@
                             rendermode: rm.BACKGROUND,
                             name: "NASA GEOS-5 Aerosols Distribution",
                             description: "Dust (red), sea salt (blue), organic/black carbon (green), and sulfates (white) displayed by their extinction aerosol optical thickness.",
-                            filename: "preprocessed/videos/geos5_aerosols_svs030017_2048x1024.mp4",
+                            filename: "videos/geos5_aerosols_svs030017_2048x1024.mp4",
                             "fps": 30
                         },
                         {
@@ -218,7 +230,7 @@
                             rendermode: rm.BACKGROUND,
                             name: "NASA GEOS-5 Surface Temperature",
                             description: "Surface temperature (colors 270-310 Kelvin) and outgoing longwave radiation at the top of the atmosphere (white) representative of clouds in the model.",
-                            filename: "preprocessed/videos/geos5_outgoing_radiation_svs030017_2048x1024.mp4",
+                            filename: "videos/geos5_outgoing_radiation_svs030017_2048x1024.mp4",
                             "fps": 30
                         },
                         {
@@ -227,7 +239,7 @@
                             rendermode: rm.BACKGROUND,
                             name: "NASA GEOS-5 Precipitable Water",
                             description: "Total precipitable water (white) and rainfall (colors 0-15 millimeters/hour; red=highest).",
-                            filename: "preprocessed/videos/geos5_precipitable_water_svs030017_2048x1024.mp4",
+                            filename: "videos/geos5_precipitable_water_svs030017_2048x1024.mp4",
                             "fps": 30
                         },
                         {
@@ -236,7 +248,7 @@
                             rendermode: rm.BACKGROUND,
                             name: "NASA GEOS-5 Surface Winds",
                             description: "Surface winds (white 0-40 meters/second) and upper-level (250 hPa) winds (colors 0-175 meters/second; red=faster).",
-                            filename: "preprocessed/videos/geos5_surface_winds_svs030017_2048x1024.mp4",
+                            filename: "videos/geos5_surface_winds_svs030017_2048x1024.mp4",
                             "fps": 30
                         }
                     ]
@@ -256,15 +268,58 @@
                     media: [
                         {
                             type: type.PLANAR_VIDEO,
+                            rendermode: rm.INTERMEDIATE,
+                            name: "inconvenienttruth-wtc",
+                            description: "Information visualization about rising sea levels from An Inconvenient Truth",
+                            filename: "videos/inconvenienttruth-wtc.mp4",
+                            filename_audio: "videos/inconvenienttruth-wtc.wav",
+                            audio: {
+                                filename: "videos/inconvenienttruth-wtc.wav",
+                                x: 0,
+                                y: 0,
+                                z: 0
+                            },
+                            "fps": 59.93,
+                            location: { lon: -40, lat: 40 }
+                        },
+                        {
+                            type: type.PLANAR_VIDEO,
+                            rendermode: rm.INTERMEDIATE,
+                            id: "inconvenienttruth-co2",
+                            name: "Rising Sea Levels CO2",
+                            description: "Information visualization about rising sea levels from An Inconvenient Truth",
+                            filename: "videos/inconvenienttruth-co2.mp4",
+                            audio: {
+                                filename: "videos/inconvenienttruth-co2.wav",
+                                x: 0,
+                                y: 0,
+                                z: 0
+                            },
+                            "fps": 59.93,
+                            location: { lon: -40, lat: 40 }
+                        },
+                        {
+                            type: type.PLANAR_VIDEO,
+                            rendermode: rm.INTERMEDIATE,
+                            id: "reducing-carbon-pollution-in-our-power-plants",
+                            name: "Obama Video",
+                            description: "Obama: Reducing Carbon Pollution in Our Power Plants",
+                            filename: "videos/reducing-carbon-pollution-in-our-power-plants.mp4",
+                            filename_audio: "videos/reducing-carbon-pollution-in-our-power-plants.wav",
+                            "fps": 29.97,
+                            location: { lon: 180, lat: 0 }
+                        },
+                        {
+                            type: type.PLANAR_VIDEO,
                             rendermode: rm.BACKGROUND,
                             id: "inconvenienttruthwtc-mov",
                             name: "Rising Sea Levels",
                             description: "Information visualization about rising sea levels from An Inconvenient Truth",
-                            filename: "preprocessed/videos/inconvenienttruthwtc-mov-2.mp4",
+                            filename: "videos/inconvenienttruthwtc-mov-2.mp4",
                             "fps": 25,
                             location: { lon: -40, lat: 40 },
                             audio: {
-                                filename: "../../preprocessed/videos/inconvenienttruthwtc-mov.wav",
+                                filename: "../../videos/inconvenienttruthwtc-mov.wav",
                                 x: 0,
                                 y: 0,
                                 z: 0
@@ -291,137 +346,6 @@
                     ]
                 },
                 {
-                    id: "power-plants", name: "Power Plants CO2",
-                    media: [
-                        {
-                            type: type.DATA_VISUALISATION,
-                            rendermode: rm.INTERMEDIATE,
-                            id: "simulation_smoke",
-                            name: "Powerplants producing C02",
-                            description: "Information visualization about powerplants c02 production",
-                            filename: "preprocessed/img/plants_data_50.csv"
-                        },
-                        {
-                            type: type.PLANAR_VIDEO,
-                            rendermode: rm.INTERMEDIATE,
-                            name: "inconvenienttruth-wtc",
-                            description: "Information visualization about rising sea levels from An Inconvenient Truth",
-                            filename: "preprocessed/videos/inconvenienttruth-wtc.mp4",
-                            filename_audio: "preprocessed/videos/inconvenienttruth-wtc.wav",
-                            audio: {
-                                filename: "preprocessed/videos/inconvenienttruth-wtc.wav",
-                                x: 0,
-                                y: 0,
-                                z: 0
-                            },
-                            "fps": 59.93,
-                            location: { lon: -40, lat: 40 }
-                        },
-                        {
-                            type: type.PLANAR_VIDEO,
-                            rendermode: rm.INTERMEDIATE,
-                            id: "inconvenienttruth-co2",
-                            name: "Rising Sea Levels CO2",
-                            description: "Information visualization about rising sea levels from An Inconvenient Truth",
-                            filename: "preprocessed/videos/inconvenienttruth-co2.mp4",
-                            audio: {
-                                filename: "preprocessed/videos/inconvenienttruth-co2.wav",
-                                x: 0,
-                                y: 0,
-                                z: 0
-                            },
-                            "fps": 59.93,
-                            location: { lon: -40, lat: 40 }
-                        },
-                        {
-                            type: type.PLANAR_VIDEO,
-                            rendermode: rm.INTERMEDIATE,
-                            id: "reducing-carbon-pollution-in-our-power-plants",
-                            name: "Obama Video",
-                            description: "Obama: Reducing Carbon Pollution in Our Power Plants",
-                            filename: "preprocessed/videos/reducing-carbon-pollution-in-our-power-plants.mp4",
-                            filename_audio: "preprocessed/videos/reducing-carbon-pollution-in-our-power-plants.wav",
-                            "fps": 29.97,
-                            location: { lon: 180, lat: 0 }
-                        }
-                    ]
-                },
-                {
-                    id: "co2-data", name: "Climate Change Study",
-                    panorama: [
-                        {
-                            id: "dark_world",
-                            type: type.PANORAMIC_IMAGE,
-                            rendermode: rm.BACKGROUND,
-                            name: "Dark_world",
-                            description: "dark World",
-                            filename: "preprocessed/img/dark_world.jpg"
-                        },
-                        {
-                            id: "nasa_co2",
-                            type: type.PANORAMIC_IMAGE,
-                            rendermode: rm.BACKGROUND,
-                            name: "nasa_co2",
-                            description: "C02 Image",
-                            filename: "preprocessed/img/nasa-co2.jpg"
-                        },
-                    ],
-                    media: [
-                        {
-                            id: "simulation_steam",
-                            type: type.DATA_VISUALISATION,
-                            rendermode: rm.INTERMEDIATE,
-                            name: "C02 Data last 30 years",
-                            description: "Showes the C02 Data from the last 30 years",
-                        },
-                        {
-                            id: "simulation_standart",
-                            type: type.DATA_VISUALISATION,
-                            rendermode: rm.INTERMEDIATE,
-                            name: "Standart",
-                            description: "standart Chart",
-                        },
-                        {
-                            id: "sphere_coastlines",
-                            type: type.DATA_VISUALISATION,
-                            rendermode: rm.BACKGROUND,
-                            name: "Coastlines",
-                            description: "Coastlines",
-                        },
-                        {
-                            id: "dark_world",
-                            type: type.PANORAMIC_IMAGE,
-                            rendermode: rm.BACKGROUND,
-                            name: "Dark_world",
-                            description: "dark World",
-                            filename: "preprocessed/dark_world.jpg"
-                        },
-                           {
-                            id: "CT3OPZk",
-                            type: type.PANORAMIC_IMAGE,
-                            rendermode: rm.BACKGROUND,
-                            name: "CT3OPZk",
-                            description: "waterlevel 2100",
-                            filename: "preprocessed/CT3OPZk.jpg"
-                        },
-                        {
-                            id: "nasa_co2",
-                            type: type.PANORAMIC_IMAGE,
-                            rendermode: rm.BACKGROUND,
-                            name: "nasa_co2",
-                            description: "C02 Image",
-                            filename: "preprocessed/nasa-co2.jpg"
-                        },
-                        {
-                            id: "simulation_normal",
-                            type: type.DATA_VISUALISATION,
-                            rendermode: rm.FOREGROUND,
-                            name: "simulation_normal",
-                            description: "C02 Image",
-                        }
-                    ]
-                },
-                {
                     id: "plasim", name: "Plasim Simulation",
                     simulations: [
                         {
@@ -441,7 +365,7 @@
                         }
                     ]
                 }, {
-                    id: "spherical", name: "Sperical Infoviz Modalities",
+                    id: "spherical", name: "Sperical Infoviz Exploration",
                     panorama: [
                         {
                             type: type.PANORAMIC_IMAGE,
@@ -457,13 +381,6 @@
                             name: "Dark_world",
                             description: "dark World",
                             filename: "preprocessed/img/dark_world.jpg"
-                        }, {
-                            type: type.PANORAMIC_IMAGE,
-                            rendermode: rm.BACKGROUND,
-                            id: "beautiful-earth",
-                            name: "Beautiful Earth Backdrop",
-                            description: "A beautiful image of the earth's surface",
-                            filename: "preprocessed/img/earth.jpg"
                         }, {
                             type: type.PANORAMIC_IMAGE,
                             rendermode: rm.BACKGROUND,
@@ -491,6 +408,14 @@
                             rendermode: rm.INTERMEDIATE,
                             name: "Coastlines",
                             description: "Coastlines",
+                        },
+                        {
+                            type: type.DATA_VISUALISATION,
+                            rendermode: rm.INTERMEDIATE,
+                            id: "simulation_smoke",
+                            name: "Powerplants producing C02",
+                            description: "Information visualization about powerplants c02 production",
+                            filename: "preprocessed/data/plants_data_50.csv"
                         },
                         {
                             id: "simulation_steam",
@@ -549,6 +474,21 @@
                             description: "Showes the C02 Data from the last 30 years",
                             filename: "preprocessed/data/emissionStudy.csv",
                             label: "on"
+                        }, {
+                            id: "line",
+                            type: type.DATA_VISUALISATION,
+                            rendermode: rm.INTERMEDIATE,
+                            name: "Line",
+                            filename: "studyData/data/scene1.csv",
+                            description: "just lines in an artifical world"
+                        },
+                        {
+                            type: type.DATA_VISUALISATION,
+                            id: "LineBezier",
+                            name: "LineBezier",
+                            description: "LineBezier from aviation routes",
+                            filename: "preprocessed/data/internationalFlights.csv",
+                            rendermode: rm.INTERMEDIATE
                         },
                     ],
                     text: [
@@ -573,9 +513,23 @@
                             lat: 10,
                             text: "can you see how big africa is?"
                         }
+                    ],
+                    studyScene: [
+                         {
+                            type: type.StudyScene,
+                            id: "scene_TA",
+                            name: "Scene temparatur anomali",
+                            description: "This file contains surface temperature anomaly field gridded on a 1 (longitude) by 1 (latitude) grid-box basis."
+                        }, {
+                            type: type.StudyScene,
+                            id: "scene_TANM",
+                            name: "Scene temparatur anomaliNM",
+                            description: "This file contains surface temperature anomaly field gridded on a 1 (longitude) by 1 (latitude) grid-box basis."
+                        }
+
                     ]
                 }, {
-                    id: "spherical", name: "Sperical Infoviz Exploration",
+                    id: "spherical", name: "Sperical Infoviz Study",
                     studyScene: [
                         {
                             type: type.StudyScene,
@@ -583,7 +537,7 @@
                             name: "Chart2D Temperatur",
                             description: "Chart2D Temperatur"
                         },
-                         {
+                        {
                             type: type.StudyScene,
                             id: "Chart2DC02",
                             name: "Chart2D C02",
@@ -595,39 +549,39 @@
                             name: "Chart2D",
                             description: "Chart2D"
                         },
-                       {
+                        {
                             type: type.StudyScene,
                             id: "1",
                             name: "Scene 1",
                             description: "Basic"
                         },
-                         {
+                        {
                             type: type.StudyScene,
                             id: "2",
                             name: "Scene 2",
                             description: "Liefactor questions"
                         }
                         ,
-                         {
+                        {
                             type: type.StudyScene,
                             id: "3.1",
                             name: "Scene 3.1",
                             description: "centric design"
                         }
                         ,
-                         {
+                        {
                             type: type.StudyScene,
                             id: "3.2",
                             name: "Scene 3.2",
                             description: "vertical design"
                         },
-                         {
+                        {
                             type: type.StudyScene,
                             id: "4",
                             name: "Scene 4",
                             description: "Recall"
                         },
-                         {
+                        {
                             type: type.StudyScene,
                             id: "5",
                             name: "Scene 5",
@@ -639,45 +593,17 @@
                             name: "Scene 5_2",
                             description: "Label Back"
                         },
-                         {
+                        {
                             type: type.StudyScene,
                             id: "6",
                             name: "Scene 6",
                             description: "Color perception"
-                        }
-                        ,
+                        },
                         {
                             type: type.StudyScene,
-                            id: "steam_planetb",
-                            name: "Steam Planet B",
-                            description: "Steam Planet B"
-                        }
-                        ,
-                         {
-                            type: type.StudyScene,
-                            id: "8",
-                            name: "Scene 8",
-                            description: "Fear World"
-                        }, {
-                            type: type.StudyScene,
-                            id: "scene_TA",
-                            name: "Scene temparatur anomali",
-                            description: "This file contains surface temperature anomaly field gridded on a 1 (longitude) by 1 (latitude) grid-box basis."
-                        },{
-                            type: type.StudyScene,
-                            id: "scene_TANM",
-                            name: "Scene temparatur anomaliNM",
-                            description: "This file contains surface temperature anomaly field gridded on a 1 (longitude) by 1 (latitude) grid-box basis."
-                        }, {
-                            type: type.StudyScene,
-                            id: "Line",
-                            name: "Line",
-                            description: "Line"
-                        }, {
-                            type: type.StudyScene,
-                            id: "LineBezier",
-                            name: "LineBezier",
-                            description: "LineBezier"
+                            id: "modalities",
+                            name: "Compare Modalities",
+                            description: "Modalities"
                         }, {
                             type: type.StudyScene,
                             id: "Steam_Earth",
@@ -686,7 +612,7 @@
                         }, {
                             type: type.StudyScene,
                             id: "scene_TA_Monthly",
-                            name: "Temperatur Anomaly Monthly (One Month example for September 2016)",
+                            name: "Temperatur Anomaly Monthly (One Month example for March 2016)",
                             description: "Temperatur Anomaly Monthly"
                         }
                     ],
@@ -715,7 +641,7 @@
                 server.message("text/hide", text);
             }
 
-             this.showScene = function (text) {
+            this.showScene = function (text) {
                 server.message("scene/show", text);
             }
             this.hideScene = function (text) {

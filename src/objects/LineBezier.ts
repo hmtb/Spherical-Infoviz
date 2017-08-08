@@ -3,12 +3,12 @@ import * as path from "path";
 import * as allofw from "allofw";
 import * as allofwutils from "allofw-utils";
 import { GL3 as GL } from "allofw";
-import { SceneObject } from "../object";
+import { SceneObject } from "./object";
 var shape3d = require("allofw-shape3d");
 
 import * as Stardust from "stardust-core";
 import * as StardustAllofw from "stardust-allofw";
-import { PanoramaImage } from "../../media/panorama_image";
+import { PanoramaImage } from "../media/panorama_image";
 
 
 
@@ -37,13 +37,11 @@ export class LineBezier extends SceneObject {
     private switch = false;
     private cubes: Stardust.Mark;
 
-    constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, startTime: number,size:number) {
+    constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, startTime: number,data: any, size:number) {
         super(omni)
         this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
         this.time_start = startTime;
         this.currentText = [];
-        this.currentPanorama = PanoramaImage(omni, "studyData/img/earth.jpg");
-        var data = require("d3").csv.parse(require("fs").readFileSync("studyData/data/internationalFlights.csv", "utf-8"));
 
          this.cubeSpec = Stardust.mark.compile(`
             //import the object you wanna use see https://github.com/stardustjs/stardust-core/blob/master/src/core/library/primitives3d.ts
@@ -150,11 +148,6 @@ export class LineBezier extends SceneObject {
     }
 
     public render(): void {
-        this.currentPanorama.render();
-        GL.depthMask(GL.FALSE);
-       
-        GL.depthMask(GL.TRUE);
-        
           this.cubes.render();
     }
 

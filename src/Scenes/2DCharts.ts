@@ -3,17 +3,17 @@ import * as path from "path";
 import * as allofw from "allofw";
 import * as allofwutils from "allofw-utils";
 import { GL3 as GL } from "allofw";
-import { SceneObject } from "../object";
+import { SceneObject } from "../objects/object";
 var shape3d = require("allofw-shape3d");
 
 import * as Stardust from "stardust-core";
 import * as StardustAllofw from "stardust-allofw";
-import { PanoramaImage } from "../../media/panorama_image";
-import { PlanarImage } from "../../media/planar_image";
+import { PanoramaImage } from "../media/panorama_image";
+import { PlanarImage } from "../media/planar_image";
 
 
 
-export class Chart2DTemp extends SceneObject {
+export class Chart2D extends SceneObject {
     private time_start: number;
     private platform: StardustAllofw.AllofwPlatform3D;
    
@@ -29,7 +29,7 @@ export class Chart2DTemp extends SceneObject {
         this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
         this.time_start = startTime;
 
-        this.chartTemperatur = PlanarImage(omni, "studyData/img/2dTemp.PNG");
+        this.chartCarbon = PlanarImage(omni, "studyData/img/C02.png");
         var center = new allofwutils.Vector3(
                  Math.sin(-90 * Math.PI / -180) * Math.cos(0 * Math.PI / 180),
                 Math.sin(0 * Math.PI / 180),
@@ -37,14 +37,27 @@ export class Chart2DTemp extends SceneObject {
             ).normalize().scale(3);
             var ex = center.cross(new allofwutils.Vector3(0, 1, 0)).normalize();
             var ey = ex.cross(center).normalize();
+        this.chartCarbon.setLocation(center, ex, ey, 5);
+        console.log("hier")
+        this.chartTemperatur = PlanarImage(omni, "studyData/img/2dTemp.PNG");
+        center = new allofwutils.Vector3(
+                 Math.sin(90 * Math.PI / -180) * Math.cos(0 * Math.PI / 180),
+                Math.sin(0 * Math.PI / 180),
+                Math.cos(90 * Math.PI / -180) * Math.cos(0 * Math.PI / 180)
+            ).normalize().scale(2);
+            var ex = center.cross(new allofwutils.Vector3(0, 1, 0)).normalize();
+            var ey = ex.cross(center).normalize();
+
         this.chartTemperatur.setLocation(center, ex, ey, 5);
+
     }
     public setTime(t: number) {
         this.time = t;
     }
 
     public render(): void {
-        this.chartTemperatur.render();
+        this.chartCarbon.render();
+          this.chartTemperatur.render();
         GL.depthMask(GL.FALSE);
         GL.depthMask(GL.TRUE);
     }

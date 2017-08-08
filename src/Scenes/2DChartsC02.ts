@@ -3,17 +3,17 @@ import * as path from "path";
 import * as allofw from "allofw";
 import * as allofwutils from "allofw-utils";
 import { GL3 as GL } from "allofw";
-import { SceneObject } from "../object";
+import { SceneObject } from "../objects/object";
 var shape3d = require("allofw-shape3d");
 
 import * as Stardust from "stardust-core";
 import * as StardustAllofw from "stardust-allofw";
-import { PanoramaImage } from "../../media/panorama_image";
-import { PlanarImage } from "../../media/planar_image";
+import { PanoramaImage } from "../media/panorama_image";
+import { PlanarImage } from "../media/planar_image";
 
 
 
-export class Chart2D extends SceneObject {
+export class Chart2DC02 extends SceneObject {
     private time_start: number;
     private platform: StardustAllofw.AllofwPlatform3D;
    
@@ -38,17 +38,6 @@ export class Chart2D extends SceneObject {
             var ex = center.cross(new allofwutils.Vector3(0, 1, 0)).normalize();
             var ey = ex.cross(center).normalize();
         this.chartCarbon.setLocation(center, ex, ey, 5);
-        console.log("hier")
-        this.chartTemperatur = PlanarImage(omni, "studyData/img/2dTemp.PNG");
-        center = new allofwutils.Vector3(
-                 Math.sin(90 * Math.PI / -180) * Math.cos(0 * Math.PI / 180),
-                Math.sin(0 * Math.PI / 180),
-                Math.cos(90 * Math.PI / -180) * Math.cos(0 * Math.PI / 180)
-            ).normalize().scale(2);
-            var ex = center.cross(new allofwutils.Vector3(0, 1, 0)).normalize();
-            var ey = ex.cross(center).normalize();
-
-        this.chartTemperatur.setLocation(center, ex, ey, 5);
 
     }
     public setTime(t: number) {
@@ -56,8 +45,8 @@ export class Chart2D extends SceneObject {
     }
 
     public render(): void {
+        if(this.time - this.time_start > 60) return;
         this.chartCarbon.render();
-          this.chartTemperatur.render();
         GL.depthMask(GL.FALSE);
         GL.depthMask(GL.TRUE);
     }
