@@ -12,7 +12,7 @@ import { PanoramaImage } from "../media/panorama_image";
 import { PlanetSteam } from "../objects/steam";
 import { PlanetSpikes } from "../objects/spikes";
 import { PlantsSmoke } from "../objects/smoke";
-import { Bars } from "../objects/Bars";
+import { Bars } from "../objects/bars";
 
 
 
