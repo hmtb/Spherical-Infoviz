@@ -39,7 +39,7 @@ export class Chart2D extends SceneObject {
             var ey = ex.cross(center).normalize();
         this.chartCarbon.setLocation(center, ex, ey, 5);
         console.log("hier")
-        this.chartTemperatur = PlanarImage(omni, "studyData/img/2dTemp.PNG");
+        this.chartTemperatur = PlanarImage(omni, "studyData/img/2dTemp1.png");
         center = new allofwutils.Vector3(
                  Math.sin(90 * Math.PI / -180) * Math.cos(0 * Math.PI / 180),
                 Math.sin(0 * Math.PI / 180),
