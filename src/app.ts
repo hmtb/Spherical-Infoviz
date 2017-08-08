@@ -318,7 +318,15 @@ export class MainScene {
            
              case 'modalities': {
                 var visu: any = {
-                    object: new Modalities(this.app.window, this.app.omni, this.GetCurrentTime()),
+                    object: new Modalities(this.app.window, this.app.omni, this.GetCurrentTime(),false),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+             case 'modalities_color': {
+                var visu: any = {
+                    object: new Modalities(this.app.window, this.app.omni, this.GetCurrentTime(),true),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
@@ -364,6 +372,19 @@ export class MainScene {
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }case 'scene_CompareBoth': {
+                  var visu: any = {
+                    object: new scene_TA_Montly(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                var visu: any = {
+                    object: new Chart2DTemp(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id+1] = visu;
+
                 break;
             }
             default: {

@@ -35,7 +35,7 @@ export class Bars extends SceneObject {
     private switch = false;
     private cubes: Stardust.Mark;
 
-    constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, startTime: number, data: any) {
+    constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, startTime: number, data: any,color:boolean) {
         super(omni)
         this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
         this.time_start = startTime;
@@ -59,7 +59,7 @@ export class Bars extends SceneObject {
                 //  Cube(Vector3(cx, cy, cz), 0.03, Color(1, 1, 1, 1));
                 
                 let w = 0.1;
-                let l = val/5000000;
+                let l = val/7000000;
                 let center = Vector3(cx, cy, cz);
               
                 let normal = normalize(center);
@@ -107,10 +107,10 @@ export class Bars extends SceneObject {
                 lat: item.lat,
                 val: item.val,
                 name: item.name,
-                r1: Math.random(),
-                r2: Math.random(),
-                r3: Math.random(),
-                r4: Math.random()
+                r1: color? Math.random():1,
+                r2:color? Math.random():1,
+                r3:color? Math.random():1,
+                r4:color? Math.random():1
             })
         }
 

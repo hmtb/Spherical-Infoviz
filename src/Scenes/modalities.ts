@@ -45,7 +45,7 @@ export class Modalities extends SceneObject {
     private switch = false;
     private cubes: Stardust.Mark;
 
-    constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, startTime: number) {
+    constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, startTime: number,color:boolean) {
         super(omni)
         this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
         this.time_start = startTime;
@@ -58,7 +58,7 @@ export class Modalities extends SceneObject {
         var dataSmoke = require("d3").csv.parse(require("fs").readFileSync("preprocessed/data/plants_data_50.csv", "utf-8"));
         this.smoke = PlantsSmoke(omni, dataSmoke);
         var data = require("d3").csv.parse(require("fs").readFileSync("preprocessed/data/AllPowerPlantsv1.csv", "utf-8"));
-        this.bars = new Bars(window, omni, startTime,data);
+        this.bars = new Bars(window, omni, startTime,data, color);
 
 
 

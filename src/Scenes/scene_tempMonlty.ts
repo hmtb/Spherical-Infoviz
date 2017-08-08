@@ -46,7 +46,7 @@ export class scene_TA_Montly extends SceneObject {
         this.currentText = [];
         this.currentPanorama = PanoramaImage(omni, "studyData/img/earth.jpg");
 
-        this.legend = PlanarImage(omni, "studyData/img/Legend.PNG");
+        this.legend = PlanarImage(omni, "studyData/img/Legend1.png");
         var center = new allofwutils.Vector3(
                  Math.sin(-180 * Math.PI / -180) * Math.cos(-20 * Math.PI / 180),
                 Math.sin(-20 * Math.PI / 180),
@@ -170,7 +170,6 @@ export class scene_TA_Montly extends SceneObject {
             }
         }
 
-
         let cubes = Stardust.mark.create(this.cubeSpec, this.platform);
         cubes.attr("lon", d => d.lon);
         cubes.attr("lat", d => d.lat);
@@ -190,7 +189,7 @@ export class scene_TA_Montly extends SceneObject {
 
     public render(): void {
         this.currentPanorama.render();
-    //     this.legend.render();
+         this.legend.render();
         GL.depthMask(GL.FALSE);
 
 
