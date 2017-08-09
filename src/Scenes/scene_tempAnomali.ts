@@ -80,7 +80,7 @@ export class scene_TA extends SceneObject {
 
 
                 let w = 0.01;
-                let l = (val)*10;
+                let l = (val)*5;
                 let center = Vector3(cx, cy, cz);
               
                 let normal = normalize(center)*-3;
@@ -197,9 +197,9 @@ export class scene_TA extends SceneObject {
          this.legend.render();
         GL.depthMask(GL.FALSE);
 
-
+ this.cubes.render();
         GL.depthMask(GL.TRUE);
-        this.cubes.render();
+       
     }
 
     public frame(): void {

@@ -80,7 +80,7 @@ export class scene_TANM extends SceneObject {
 
 
                 let w = 0.01;
-                let l = (val)*7;
+                let l = (val)*3;
                 let center = Vector3(cx, cy, cz);
               
                 let normal = normalize(center)*-3;
@@ -168,9 +168,9 @@ export class scene_TANM extends SceneObject {
          this.legend.render();
         GL.depthMask(GL.FALSE);
 
-
+ this.cubes.render();
         GL.depthMask(GL.TRUE);
-        this.cubes.render();
+       
     }
 
     public frame(): void {

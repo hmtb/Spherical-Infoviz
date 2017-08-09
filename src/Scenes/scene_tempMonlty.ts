@@ -190,6 +190,7 @@ export class scene_TA_Montly extends SceneObject {
     public render(): void {
         this.currentPanorama.render();
          this.legend.render();
+       
         GL.depthMask(GL.FALSE);
 
 

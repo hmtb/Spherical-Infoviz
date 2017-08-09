@@ -183,7 +183,7 @@ var FPlantsSpikes = function (omni: any, data: any) {
 
     this.render = function () {
         spikes.render(omni);
-        texts.render(omni);
+    //    texts.render(omni);
     };
 
 };

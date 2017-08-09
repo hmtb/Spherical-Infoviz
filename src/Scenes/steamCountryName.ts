@@ -207,6 +207,7 @@ export class PlanetSteamName extends SceneObject {
     public render(): void {
          if(this.time - this.time_start > 60) return;
           this.currentPanorama.render();
+          
         GL.depthMask(GL.FALSE);
         this.texts.render(this.omni);
 
