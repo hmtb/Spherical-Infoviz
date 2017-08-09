@@ -139,7 +139,7 @@ var FPlantsSmoke = function (omni: any, data: any) {
                 Math.sin(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180),
                 Math.sin(d.lat * Math.PI / 180),
                 Math.cos(d.lon * Math.PI / -180) * Math.cos(d.lat * Math.PI / 180)
-            ).normalize().scale(10);
+            ).normalize().scale(5);
             var up = new allofwutils.Vector3(0, 1, 0);
             var e1 = p.cross(up).normalize();
             var e2 = e1.cross(p).normalize();
