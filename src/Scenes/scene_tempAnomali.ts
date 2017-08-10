@@ -80,7 +80,7 @@ export class scene_TA extends SceneObject {
 
 
                 let w = 0.01;
-                let l = (val)*5;
+                let l = (val)*4;
                 let center = Vector3(cx, cy, cz);
               
                 let normal = normalize(center)*-3;

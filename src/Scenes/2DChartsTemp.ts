@@ -29,11 +29,11 @@ export class Chart2DTemp extends SceneObject {
         this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
         this.time_start = startTime;
 
-        this.chartTemperatur = PlanarImage(omni, "studyData/img/2dTemp1.png");
+        this.chartTemperatur = PlanarImage(omni, "studyData/img/2DTemp1.png");
         var center = new allofwutils.Vector3(
-                 Math.sin(-90 * Math.PI / -180) * Math.cos(0 * Math.PI / 180),
+                 Math.sin(180 * Math.PI / -180) * Math.cos(0 * Math.PI / 180),
                 Math.sin(0 * Math.PI / 180),
-                Math.cos(-90 * Math.PI / -180) * Math.cos(0 * Math.PI / 180)
+                Math.cos(180 * Math.PI / -180) * Math.cos(0 * Math.PI / 180)
             ).normalize().scale(3);
             var ex = center.cross(new allofwutils.Vector3(0, 1, 0)).normalize();
             var ey = ex.cross(center).normalize();

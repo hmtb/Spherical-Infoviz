@@ -34,7 +34,7 @@ export class Chart2DC02 extends SceneObject {
                  Math.sin(180 * Math.PI / -180) * Math.cos(0 * Math.PI / 180),
                 Math.sin(0 * Math.PI / 180),
                 Math.cos(180 * Math.PI / -180) * Math.cos(0 * Math.PI / 180)
-            ).normalize().scale(2);
+            ).normalize().scale(3);
             var ex = center.cross(new allofwutils.Vector3(0, 1, 0)).normalize();
             var ey = ex.cross(center).normalize();
         this.chartCarbon.setLocation(center, ex, ey, 5);

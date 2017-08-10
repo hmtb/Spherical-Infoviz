@@ -33,6 +33,8 @@ import { Chart2DC02 } from "./Scenes/2DChartsC02";
 import { PlanetSteamName } from "./Scenes/steamCountryName";
 import { Modalities } from "./Scenes/modalities";
 import { scene_TA_Montly2 } from "./Scenes/scene_tempMonlty2";
+import { scene_TA_Montly3 } from "./Scenes/scene_tempMonlty3";
+import { Scene42D } from "./Scenes/scene42d";
 //variables for the study
 let currentID = 1;
 let targetHeight = 1.65;
@@ -232,6 +234,14 @@ export class MainScene {
                 this.currentVisu[sceneInfo.id] = visu;
                 break;
             }
+             case 'scene_TA_Monthly3': {
+                var visu: any = {
+                    object: new scene_TA_Montly3(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
             case '1': {
                 var visu: any = {
                     object: new Scene1(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
@@ -284,6 +294,15 @@ export class MainScene {
                 this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
                 var visu: any = {
                     object: new Scene4(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    renderMode: 'foreground'
+                }
+                this.currentVisu[sceneInfo.id] = visu;
+                break;
+            }
+               case '42D': {
+                this.currentPanorama = PanoramaImage(this.app.omni, "studyData/img/PlanetA.jpg");
+                var visu: any = {
+                    object: new Scene42D(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
