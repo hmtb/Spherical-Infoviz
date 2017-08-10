@@ -220,7 +220,7 @@ export class MainScene {
             }
             case 'scene_TA_Monthly': {
                 var visu: any = {
-                    object: new scene_TA_Montly(this.app.window, this.app.omni, this.GetCurrentTime(), 10),
+                    object: new scene_TA_Montly(this.app.window, this.app.omni, this.GetCurrentTime(), 10,true),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;
@@ -403,7 +403,7 @@ export class MainScene {
                 break;
             }case 'scene_CompareBoth': {
                   var visu: any = {
-                    object: new scene_TA_Montly(this.app.window, this.app.omni, this.GetCurrentTime(), 5),
+                    object: new scene_TA_Montly(this.app.window, this.app.omni, this.GetCurrentTime(), 5,false),
                     renderMode: 'foreground'
                 }
                 this.currentVisu[sceneInfo.id] = visu;

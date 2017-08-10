@@ -14,6 +14,7 @@ import { PlanarImage } from "../media/planar_image";
 
 
 export class scene_TA_Montly extends SceneObject {
+    legendshow: boolean;
     currentPanorama: any;
     instant = false;
     year: any;
@@ -39,13 +40,13 @@ export class scene_TA_Montly extends SceneObject {
     private cubes: Stardust.Mark;
     private legend: any;
 
-    constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, startTime: number, size: number) {
+    constructor(window: allofw.OpenGLWindow, omni: allofw.IOmniStereo, startTime: number, size: number,legend:boolean) {
         super(omni)
         this.platform = new StardustAllofw.AllofwPlatform3D(window, omni);
         this.time_start = startTime;
         this.currentText = [];
         this.currentPanorama = PanoramaImage(omni, "studyData/img/earth.jpg");
-
+        this.legendshow = legend;
         this.legend = PlanarImage(omni, "studyData/img/Legend1.png");
         var center = new allofwutils.Vector3(
                  Math.sin(-180 * Math.PI / -180) * Math.cos(-20 * Math.PI / 180),
@@ -189,6 +190,7 @@ export class scene_TA_Montly extends SceneObject {
 
     public render(): void {
         this.currentPanorama.render();
+        if(  this.legendshow)
          this.legend.render();
        
         GL.depthMask(GL.FALSE);
