@@ -86,10 +86,10 @@ export class Scene1 extends SceneObject {
 
 
         this.text = shape3d.texts()
-            .attr("vec3", "center", "4.8 * normalize(pos)")
+            .attr("vec3", "center", "4.7 * normalize(pos)")
             .attr("vec3", "up", "vec3(0, 1, 0)")
             .attr("vec3", "normal", "-normalize(pos)")
-            .attr("float", "scale", "0.003")
+            .attr("float", "scale", "0.001")
             .text((d: any) => (d.name))
             // Variables are bound to data.
             .variable("vec3", "pos", (d: any) => [
