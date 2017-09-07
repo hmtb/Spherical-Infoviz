@@ -188,6 +188,7 @@ export class scene_TA_Montly2 extends SceneObject {
     }
 
     public render(): void {
+        if(this.time - this.time_start > 30) return;
         this.currentPanorama.render();
          this.legend.render();
        

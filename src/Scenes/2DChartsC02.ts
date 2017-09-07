@@ -34,7 +34,7 @@ export class Chart2DC02 extends SceneObject {
                  Math.sin(180 * Math.PI / -180) * Math.cos(0 * Math.PI / 180),
                 Math.sin(0 * Math.PI / 180),
                 Math.cos(180 * Math.PI / -180) * Math.cos(0 * Math.PI / 180)
-            ).normalize().scale(3);
+            ).normalize().scale(2);
             var ex = center.cross(new allofwutils.Vector3(0, 1, 0)).normalize();
             var ey = ex.cross(center).normalize();
         this.chartCarbon.setLocation(center, ex, ey, 5);
@@ -45,7 +45,7 @@ export class Chart2DC02 extends SceneObject {
     }
 
     public render(): void {
-        if(this.time - this.time_start > 60) return;
+        if(this.time - this.time_start > 30) return;
         this.chartCarbon.render();
         GL.depthMask(GL.FALSE);
         GL.depthMask(GL.TRUE);

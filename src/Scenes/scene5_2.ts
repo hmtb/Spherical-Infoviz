@@ -126,7 +126,7 @@ export class Scene5_2 extends SceneObject {
             .attr("vec3", "center", "4.8*normalize(pos) + vec3(0.0, -0.2, 0.0)")
             .attr("vec3", "up", "vec3(0, 1, 0)")
             .attr("vec3", "normal", "-normalize(pos)")
-            .attr("float", "scale", "0.003")
+            .attr("float", "scale", "0.005")
             .text((d: any) => (d.name))
             // Variables are bound to data.
             .variable("vec3", "pos", (d: any) => [

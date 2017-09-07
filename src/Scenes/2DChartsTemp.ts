@@ -44,7 +44,7 @@ export class Chart2DTemp extends SceneObject {
     }
 
     public render(): void {
-         if(this.time - this.time_start > 60) return;
+         if(this.time - this.time_start > 30) return;
         this.chartTemperatur.render();
         GL.depthMask(GL.FALSE);
         GL.depthMask(GL.TRUE);
